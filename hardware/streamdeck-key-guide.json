@@ -1,0 +1,169 @@
+{
+  "title": "Sanctuary AV Controller — Stream Deck & Companion Key Definitions",
+  "version": "2.0",
+  "base_url": "http://127.0.0.1:3050",
+  "keys": [
+    {
+      "key_index": 1,
+      "label": "CAM 1\nPULPIT",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/atem/program",
+      "body": { "input": 1 },
+      "color": "#dc2626",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 2,
+      "label": "CAM 2\nWIDE",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/atem/program",
+      "body": { "input": 2 },
+      "color": "#dc2626",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 3,
+      "label": "PROCLAIM\nHDMI 3",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/atem/program",
+      "body": { "input": 3 },
+      "color": "#2563eb",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 4,
+      "label": "MEDIA\nSTILL 1",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/atem/program",
+      "body": { "input": 3010 },
+      "color": "#475569",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 5,
+      "label": "⚡ CUT\nINSTANT",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/atem/cut",
+      "body": {},
+      "color": "#ffffff",
+      "text_color": "#000000"
+    },
+    {
+      "key_index": 6,
+      "label": "✨ AUTO\nMIX DISSOLVE",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/atem/auto",
+      "body": {},
+      "color": "#f59e0b",
+      "text_color": "#000000"
+    },
+    {
+      "key_index": 7,
+      "label": "🎯 PRESET 1\nPULPIT",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/ptz/preset/recall",
+      "body": { "camera": "cam1", "preset": 1 },
+      "color": "#06b6d4",
+      "text_color": "#000000"
+    },
+    {
+      "key_index": 8,
+      "label": "🎯 PRESET 2\nWIDE STAGE",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/ptz/preset/recall",
+      "body": { "camera": "cam1", "preset": 2 },
+      "color": "#06b6d4",
+      "text_color": "#000000"
+    },
+    {
+      "key_index": 9,
+      "label": "🎯 PRESET 4\nPIANO",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/ptz/preset/recall",
+      "body": { "camera": "cam1", "preset": 4 },
+      "color": "#06b6d4",
+      "text_color": "#000000"
+    },
+    {
+      "key_index": 10,
+      "label": "🎯 PRESET 6\nALTAR",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/ptz/preset/recall",
+      "body": { "camera": "cam1", "preset": 6 },
+      "color": "#06b6d4",
+      "text_color": "#000000"
+    },
+    {
+      "key_index": 11,
+      "label": "📺 REOPEN\nSCREEN",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/control/reopen-screen",
+      "body": {},
+      "color": "#d97706",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 12,
+      "label": "🚨 PANIC\nBLANK / MUTE",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/control/panic",
+      "body": {},
+      "color": "#991b1b",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 13,
+      "label": "📋 PRE-FLIGHT\nCHECKLIST",
+      "action": "GET",
+      "url": "http://127.0.0.1:3050/checklist",
+      "body": {},
+      "color": "#7c3aed",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 14,
+      "label": "⏸️ CAPTIONS\nTOGGLE",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/control/toggle",
+      "body": {},
+      "color": "#0284c7",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 15,
+      "label": "🌑 FTB\nFADE TO BLACK",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/atem/ftb",
+      "body": {},
+      "color": "#000000",
+      "text_color": "#94a3b8"
+    },
+    {
+      "key_index": 16,
+      "label": "🔴 OBS STREAM\nSTART / STOP",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/obs/stream/toggle",
+      "body": {},
+      "color": "#dc2626",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 17,
+      "label": "📼 OBS RECORD\nSTART / STOP",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/obs/record/toggle",
+      "body": {},
+      "color": "#d97706",
+      "text_color": "#ffffff"
+    },
+    {
+      "key_index": 18,
+      "label": "🎬 OBS STUDIO\nMODE TRANSITION",
+      "action": "POST",
+      "url": "http://127.0.0.1:3050/api/obs/transition",
+      "body": {},
+      "color": "#2563eb",
+      "text_color": "#ffffff"
+    }
+  ]
+}

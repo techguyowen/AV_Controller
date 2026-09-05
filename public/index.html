@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#0a0d13]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/icon.svg">
+    <meta name="theme-color" content="#0a0d13">
+    
+    <!-- Google Fonts: Plus Jakarta Sans, Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style>
+        :root {
+            --bg-base: #0a0e17;
+            --bg-panel: #101726;
+            --bg-card: #161f32;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(6, 182, 212, 0.5);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-base);
+            color: #cbd5e1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums slashed-zero;
+        }
+
+        /* Broadcast Hardware Panel */
+        .hardware-panel {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .hardware-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Tally Status LEDs */
+        .tally-led {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.25s ease;
+        }
+        .tally-green {
+            background-color: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+        }
+        .tally-red {
+            background-color: #ef4444;
+            box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+        }
+        .tally-amber {
+            background-color: #f59e0b;
+            box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+        }
+        .tally-off {
+            background-color: #334155;
+            box-shadow: none;
+        }
+
+        /* Pipeline Flow Connector (Static & Calm) */
+        .signal-track {
+            height: 2px;
+            background: #1e293b;
+        }
+
+        /* Precision Broadcast VU Meter */
+        .meter-track {
+            position: relative;
+            width: 22px;
+            height: 280px;
+            background-color: #07090e;
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .meter-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, 
+                #10b981 0%, 
+                #10b981 68%, 
+                #f59e0b 68%, 
+                #f59e0b 88%, 
+                #ef4444 88%, 
+                #ef4444 100%);
+            transition: height 80ms ease-out;
+        }
+
+        .meter-peak-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+            box-shadow: 0 0 4px #ffffff;
+            transition: bottom 80ms ease-out;
+            z-index: 2;
+        }
+
+        /* Custom Scrollbar */
+        .console-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .console-scroll::-webkit-scrollbar-track {
+            background: #0d111a;
+        }
+        .console-scroll::-webkit-scrollbar-thumb {
+            background: #252e42;
+            border-radius: 3px;
+        }
+        .console-scroll::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+
+        /* Silence Alarm Flash */
+        @keyframes silencePulse {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
+            50% { background-color: rgba(239, 68, 68, 0.35); border-color: rgba(239, 68, 68, 0.8); color: #ffffff; }
+        }
+        .silence-flashing {
+            animation: silencePulse 0.8s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased text-slate-300 select-none">
+
+<div class="max-w-[1400px] w-full mx-auto p-4 md:p-6 lg:p-7 flex flex-col gap-5 flex-grow">
+
+    <!-- Top Master Control Bar -->
+    <header class="hardware-panel rounded-xl px-5 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4 border border-white/[0.08]">
+        <!-- Brand & Facility -->
+        <div class="flex items-center gap-3.5 w-full md:w-auto">
+            <div class="w-10 h-10 rounded-lg p-1.5 flex items-center justify-center shrink-0 shadow-sm border border-cyan-500/30 bg-cyan-950/40">
+                <img src="/favicon.svg" alt="Sanctuary AV Logo" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 id="brand-facility-name" class="text-sm font-extrabold tracking-tight text-white uppercase">WAYPOINT AV CONTROLLER</h1>
+                    <span id="brand-facility-subtitle" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-700 font-bold">LIVE RACK</span>
+                </div>
+                <div id="brand-facility-desc" class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)] inline-block animate-pulse"></span>
+                    <span>Live Telemetry, Switcher &amp; Audio Watchdog</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Master Clock -->
+        <div class="flex items-center gap-6">
+            <div class="text-center px-4 py-1.5 rounded-lg bg-black/40 border border-white/[0.05]">
+                <div id="clock-time" class="text-2xl font-mono font-bold text-white tracking-tight">00:00:00</div>
+                <div id="clock-date" class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">---</div>
+            </div>
+        </div>
+
+        <!-- Global Status & Quick Settings -->
+        <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+            <div id="global-status" class="px-3.5 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-2 transition-colors bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
+                <div class="tally-led tally-green"></div>
+                <span id="global-status-text">All Systems Online</span>
+            </div>
+
+            <!-- Emergency Screen Restore Button -->
+            <button id="btn-reopen-screen" onclick="LiveEngine.triggerReopenScreen()" class="px-3.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer" title="Forcefully restore fullscreen preview to LONTIUM screen (Monitor 1) & auto-resume captions">
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <span>📺 Reopen Screen</span>
+            </button>
+
+            <!-- Emergency Caption Panic Mute Button -->
+            <button id="btn-panic-captions" onclick="LiveEngine.triggerPanic()" class="px-3.5 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/50 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer" title="Emergency Panic: Instantly blank all screen captions and mute output">
+                <svg class="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span>🚨 Panic</span>
+            </button>
+
+            <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-3 py-1.5 bg-purple-950/40 hover:bg-purple-900/50 text-purple-300 border border-purple-800 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
+                <span>📖 Ops Guide</span>
+            </a>
+
+            <button onclick="window.open('/hud', 'SanctuaryHUD', 'width=720,height=160,top=40,left=40')" class="px-3 py-1.5 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-300 border border-cyan-800 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm" title="Launch floating mini stream stats bar for Mixing Station">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                <span>HUD</span>
+            </button>
+
+            <button id="btn-settings" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm">
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span>Settings</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Simple Direct Station Navigation Bar -->
+    <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+        <div class="flex items-center gap-1.5 min-w-max">
+            <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">🎛️ Master Hub</a>
+            <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
+            <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+            <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+            <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">💬 Captions</a>
+            <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
+            <a href="/guide" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 hover:text-white border border-emerald-800 transition-colors flex items-center gap-1.5">📖 Training & Setup</a>
+        </div>
+        <div class="flex items-center gap-2 min-w-max">
+            <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
+                <span>📖 Booth Ops</span>
+            </a>
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">🪟 HUD</a>
+        </div>
+    </nav>
+
+    <!-- 🚨 2-Hour Stream Overtime Warning Banner (Hidden unless duration >= 120 min) -->
+    <div id="overtime-alert-banner" class="hidden p-4 rounded-xl bg-red-950/90 border-2 border-red-500 shadow-2xl flex items-center justify-between gap-4 animate-pulse font-mono">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">🚨</span>
+            <div>
+                <h3 class="text-sm font-black text-red-100 uppercase tracking-wider">MAX STREAM DURATION EXCEEDED (> 2 HOURS)</h3>
+                <p class="text-xs text-red-300">The live broadcast has been streaming for over 120 minutes. Please verify if the service has finished and stop the stream.</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="/broadcast" class="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-black uppercase tracking-wider shadow-lg">
+                Broadcast Controls ↗
+            </a>
+        </div>
+    </div>
+
+    <!-- 1. Signal Pipeline Flow -->
+    <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg space-y-3">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-cyan-600/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-white">Signal Chain & Device Routing</h2>
+                    <p class="text-[10px] font-mono text-slate-400">End-to-End Live Audio/Video Production Pipeline</p>
+                </div>
+            </div>
+            <span class="text-[11px] font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-slate-800">5 Active Nodes</span>
+        </div>
+
+        <div id="signal-chain-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 relative">
+            <!-- Dynamically populated from active configuration -->
+        </div>
+    </section>
+
+    <!-- 2. VoxStream Live Captioning Telemetry Banner -->
+    <section id="voxstream-bar" class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg space-y-3">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-amber-600/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-white">Live Spoken Captions (VoxStream AI)</h2>
+                    <p class="text-[10px] font-mono text-slate-400">Pulpit Speech-to-Text & In-OBS / Stage Monitor Feeds (Port 8765)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 font-mono">
+                <span id="voxstream-dot" class="tally-led tally-off"></span>
+                <span id="voxstream-status-badge" class="px-2.5 py-1 rounded text-[10px] font-bold bg-slate-900 border border-slate-800 text-slate-400">Offline</span>
+                <span id="voxstream-wpm-badge" class="hidden px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-amber-950/60 border border-amber-800 text-amber-300">⚡ 0 WPM</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-center">
+            <!-- Transcript Box (8 cols) -->
+            <div class="lg:col-span-8 bg-black/50 p-3.5 rounded-xl border border-slate-800 flex items-center min-h-[56px]">
+                <div class="text-xs font-mono text-slate-300 truncate w-full">
+                    <span class="text-slate-500 font-bold mr-2 uppercase text-[10px]">Real-Time Speech:</span>
+                    <span id="voxstream-live-text" class="text-white font-medium italic">"Standing by for speech transcription..."</span>
+                </div>
+            </div>
+
+            <!-- Actions (4 cols) -->
+            <div class="lg:col-span-4 flex items-center gap-2 justify-end flex-wrap">
+                <button onclick="LiveEngine.toggleCaptions()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs cursor-pointer transition-colors shadow-sm">
+                    Start / Stop
+                </button>
+                <button onclick="LiveEngine.clearCaptionsPreview()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold cursor-pointer transition-colors" title="Clear current speech preview text">
+                    🧹 Clear Text
+                </button>
+                <button onclick="LiveEngine.triggerPanic()" class="px-3 py-2 rounded-lg bg-red-950/40 hover:bg-red-900/50 text-red-400 border border-red-800 font-bold text-xs cursor-pointer transition-colors" title="Instantly blank all screen captions">
+                    🚨 Panic
+                </button>
+                <a href="http://127.0.0.1:8765/display" target="_blank" class="px-3 py-2 rounded-lg bg-amber-950/40 hover:bg-amber-900/50 text-amber-400 border border-amber-800/80 font-bold text-xs flex items-center gap-1 transition-colors" title="Open stage read-along display">
+                    📱 Stage ↗
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Video Switching & PTZ Camera Control Console (2-Camera Church Setup) -->
+    <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 font-bold">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-white">ATEM Video Switcher & PTZOptics Cameras</h2>
+                    <p class="text-[10px] font-mono text-slate-400">Live Video Matrix Bus & 2-Camera Motion Controls (VISCA over IP)</p>
+                </div>
+            </div>
+            <a href="/cameras" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-400 hover:text-cyan-300 text-xs font-mono font-bold flex items-center gap-1.5 transition-colors">
+                <span>Dedicated Cameras Page ↗</span>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            
+            <!-- LEFT: ATEM 2-Camera Switcher Strip (7 cols) -->
+            <div class="lg:col-span-7 bg-black/40 p-4 rounded-xl border border-slate-800/80 space-y-3.5 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">ATEM Mini Video Matrix</span>
+                        <div class="flex items-center gap-2 text-[10px] font-mono">
+                            <span class="text-red-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> PROGRAM (LIVE)</span>
+                            <span class="text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> PREVIEW (CUED)</span>
+                        </div>
+                    </div>
+
+                    <!-- Program Bus Row (Red) -->
+                    <div class="space-y-1 mb-3">
+                        <div class="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider">PROGRAM (ON AIR):</div>
+                        <div class="grid grid-cols-5 gap-1.5 font-mono text-xs">
+                            <button id="btn-pgm-1" onclick="LiveEngine.setAtemProgram(1)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">CAM 1</div>
+                                <div class="truncate text-xs">Pulpit</div>
+                            </button>
+                            <button id="btn-pgm-2" onclick="LiveEngine.setAtemProgram(2)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">CAM 2</div>
+                                <div class="truncate text-xs">Wide</div>
+                            </button>
+                            <button id="btn-pgm-3" onclick="LiveEngine.setAtemProgram(3)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 3</div>
+                                <div class="truncate text-xs">Proclaim</div>
+                            </button>
+                            <button id="btn-pgm-3010" onclick="LiveEngine.setAtemProgram(3010)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">MEDIA</div>
+                                <div class="truncate text-xs">Still 1</div>
+                            </button>
+                            <button id="btn-pgm-0" onclick="LiveEngine.setAtemProgram(0)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">BLACK</div>
+                                <div class="truncate text-xs">Fade</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Bus Row (Green) -->
+                    <div class="space-y-1">
+                        <div class="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider">PREVIEW (NEXT):</div>
+                        <div class="grid grid-cols-5 gap-1.5 font-mono text-xs">
+                            <button id="btn-pvw-1" onclick="LiveEngine.setAtemPreview(1)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">CAM 1</div>
+                                <div class="truncate text-xs">Pulpit</div>
+                            </button>
+                            <button id="btn-pvw-2" onclick="LiveEngine.setAtemPreview(2)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">CAM 2</div>
+                                <div class="truncate text-xs">Wide</div>
+                            </button>
+                            <button id="btn-pvw-3" onclick="LiveEngine.setAtemPreview(3)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 3</div>
+                                <div class="truncate text-xs">Proclaim</div>
+                            </button>
+                            <button id="btn-pvw-3010" onclick="LiveEngine.setAtemPreview(3010)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">MEDIA</div>
+                                <div class="truncate text-xs">Still 1</div>
+                            </button>
+                            <button id="btn-pvw-0" onclick="LiveEngine.setAtemPreview(0)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">BLACK</div>
+                                <div class="truncate text-xs">Fade</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transitions Bar -->
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800">
+                    <button onclick="LiveEngine.atemCut()" class="py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-white active:text-slate-950 text-white font-bold font-mono text-xs uppercase tracking-wider transition-all border border-slate-700 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                        <span>⚡ CUT (Instant)</span>
+                    </button>
+                    <button onclick="LiveEngine.atemAuto()" class="py-2.5 rounded-lg bg-red-950/40 hover:bg-red-900/50 active:bg-red-600 active:text-white text-red-300 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-red-800/80 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                        <span>✨ AUTO (Mix)</span>
+                    </button>
+                    <button onclick="LiveEngine.atemFtb()" class="py-2.5 rounded-lg bg-slate-900 hover:bg-black text-slate-400 active:text-red-400 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-slate-800 cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>🌑 FTB</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT: PTZOptics 2-Camera Motion & Preset Console (5 cols) -->
+            <div class="lg:col-span-5 bg-black/40 p-4 rounded-xl border border-slate-800/80 flex flex-col justify-between space-y-3.5">
+                <div class="flex items-center justify-between">
+                    <!-- 2-Camera Selector Tabs -->
+                    <div class="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-lg border border-slate-800 text-xs font-bold">
+                        <button id="ptz-tab-cam1" onclick="LiveEngine.selectPtzCamera('cam1')" class="px-2.5 py-1 rounded bg-cyan-500 text-slate-950 transition-all cursor-pointer">
+                            📷 Cam 1 (Pulpit)
+                        </button>
+                        <button id="ptz-tab-cam2" onclick="LiveEngine.selectPtzCamera('cam2')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all cursor-pointer">
+                            📷 Cam 2 (Wide)
+                        </button>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-400 flex items-center gap-1">
+                        <span id="ptz-conn-dot" class="tally-led tally-green"></span>
+                        <span id="ptz-cam-status">VISCA 1259 OK</span>
+                    </div>
+                </div>
+
+                <!-- D-Pad Directional Controller + Zoom / Speed -->
+                <div class="grid grid-cols-12 gap-3 items-center">
+                    <!-- 8-Way Pan/Tilt Compass (7 cols) -->
+                    <div class="col-span-7 flex flex-col items-center">
+                        <div class="grid grid-cols-3 gap-1 w-32 h-32 select-none">
+                            <button onpointerdown="LiveEngine.ptzMove('upleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◤</button>
+                            <button onpointerdown="LiveEngine.ptzMove('up')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▲</button>
+                            <button onpointerdown="LiveEngine.ptzMove('upright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◥</button>
+
+                            <button onpointerdown="LiveEngine.ptzMove('left')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">◀</button>
+                            <div class="p-1 rounded bg-slate-950 border border-slate-800 text-cyan-400 text-xs flex items-center justify-center select-none pointer-events-none shadow-inner">📷</div>
+                            <button onpointerdown="LiveEngine.ptzMove('right')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▶</button>
+
+                            <button onpointerdown="LiveEngine.ptzMove('downleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◣</button>
+                            <button onpointerdown="LiveEngine.ptzMove('down')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▼</button>
+                            <button onpointerdown="LiveEngine.ptzMove('downright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◢</button>
+                        </div>
+                    </div>
+
+                    <!-- Zoom & Speed Controls (5 cols) -->
+                    <div class="col-span-5 flex flex-col gap-2">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-mono text-slate-400 block uppercase font-bold">Zoom Lens:</span>
+                            <div class="flex gap-1.5 select-none">
+                                <button onpointerdown="LiveEngine.ptzZoom('in')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                    ➕ In
+                                </button>
+                                <button onpointerdown="LiveEngine.ptzZoom('out')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                    ➖ Out
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                                <span>SPEED</span>
+                                <span id="ptz-speed-val" class="font-bold text-cyan-400">12</span>
+                            </div>
+                            <input type="range" id="ptz-speed-slider" min="1" max="24" value="12" oninput="LiveEngine.setPtzSpeed(this.value)" class="w-full accent-cyan-400 cursor-pointer h-1.5 bg-slate-800 rounded">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6-Preset Quick Recall Grid -->
+                <div class="pt-2 border-t border-slate-800">
+                    <div class="flex items-center justify-between mb-1.5 text-[10px] font-mono text-slate-400">
+                        <span class="font-bold uppercase tracking-wider text-slate-300">Church Position Presets:</span>
+                        <button onclick="LiveEngine.promptSavePreset()" class="text-[10px] text-cyan-400 hover:underline cursor-pointer">
+                            + Save Current
+                        </button>
+                    </div>
+                    <div id="ptz-presets-container" class="grid grid-cols-3 gap-1.5 font-mono text-[11px]">
+                        <!-- Populated dynamically per active camera -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Grid: Audio Metering + Network + Telemetry + Broadcast -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- LEFT COLUMN: Precision Audio + Device Network Ping -->
+        <div class="flex flex-col gap-5">
+            
+            <!-- 4. REAPER Master VU Meter -->
+            <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between h-[420px]">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-white">REAPER Master Output Metering</h3>
+                            <p class="text-[10px] font-mono text-slate-400">True Peak & RMS dBFS (OSC Port 9000)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="silence-alarm" class="hidden px-2.5 py-1 rounded border text-[11px] font-bold uppercase tracking-wider silence-flashing">
+                            Silence (> 30s)
+                        </div>
+                        <a href="/audio" class="text-xs font-mono text-cyan-400 hover:underline">Dedicated Meters ↗</a>
+                    </div>
+                </div>
+
+                <!-- Vertical Meter Rack -->
+                <div class="flex justify-center items-center gap-6 py-2 flex-grow">
+                    <!-- Left Meter -->
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="text-[11px] font-bold font-mono text-slate-400">CH 1 (L)</div>
+                        <div class="meter-track">
+                            <div id="vu-l-fill" class="meter-bar" style="height: 0%"></div>
+                            <div id="vu-l-peak" class="meter-peak-line" style="bottom: 0%"></div>
+                        </div>
+                        <div class="text-[10px] font-mono bg-black/40 px-2 py-1 rounded border border-slate-800 text-center w-16">
+                            <div class="text-slate-300">PK: <span id="vu-l-pk-val" class="text-white font-bold">-inf</span></div>
+                            <div class="text-slate-500">RM: <span id="vu-l-rm-val">-inf</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Calibration Marks -->
+                    <div class="relative w-10 h-[280px] -mt-10">
+                        <div class="absolute w-full text-right text-[10px] text-red-400 font-mono font-bold" style="bottom: 100%; transform: translateY(50%)">0 dB</div>
+                        <div class="absolute w-full text-right text-[10px] text-red-400 font-mono" style="bottom: 90%; transform: translateY(50%)">-6</div>
+                        <div class="absolute w-full text-right text-[10px] text-amber-400 font-mono" style="bottom: 80%; transform: translateY(50%)">-12</div>
+                        <div class="absolute w-full text-right text-[10px] text-emerald-400 font-mono font-bold" style="bottom: 70%; transform: translateY(50%)">-18</div>
+                        <div class="absolute w-full text-right text-[10px] text-slate-500 font-mono" style="bottom: 60%; transform: translateY(50%)">-24</div>
+                        <div class="absolute w-full text-right text-[10px] text-slate-600 font-mono" style="bottom: 40%; transform: translateY(50%)">-36</div>
+                        <div class="absolute w-full text-right text-[10px] text-slate-600 font-mono" style="bottom: 20%; transform: translateY(50%)">-48</div>
+                        <div class="absolute w-full text-right text-[10px] text-slate-700 font-mono" style="bottom: 0%; transform: translateY(50%)">-60</div>
+                    </div>
+
+                    <!-- Right Meter -->
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="text-[11px] font-bold font-mono text-slate-400">CH 2 (R)</div>
+                        <div class="meter-track">
+                            <div id="vu-r-fill" class="meter-bar" style="height: 0%"></div>
+                            <div id="vu-r-peak" class="meter-peak-line" style="bottom: 0%"></div>
+                        </div>
+                        <div class="text-[10px] font-mono bg-black/40 px-2 py-1 rounded border border-slate-800 text-center w-16">
+                            <div class="text-slate-300">PK: <span id="vu-r-pk-val" class="text-white font-bold">-inf</span></div>
+                            <div class="text-slate-500">RM: <span id="vu-r-rm-val">-inf</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-[11px] text-slate-500 text-center font-mono border-t border-slate-800/80 pt-2.5">
+                    Target Broadcast Sweet Spot: <span class="text-emerald-400 font-bold">-18 dBFS to -12 dBFS</span> (Nominal Dialogue & Music)
+                </div>
+            </section>
+
+            <!-- 5. Network Diagnostics Panel -->
+            <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between flex-grow">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-white">Device & Network Health</h3>
+                            <p class="text-[10px] font-mono text-slate-400">ICMP Ping Round-Trip Latency (2s Poll)</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800">Normal &lt; 20ms</span>
+                </div>
+
+                <div id="ping-list" class="space-y-3 pt-2">
+                    <!-- Dynamic endpoints injected here -->
+                </div>
+            </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN: ATEM Telemetry + YouTube Ingest -->
+        <div class="flex flex-col gap-5">
+            
+            <!-- 6. Broadcast Encoders Telemetry Card -->
+            <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-600/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-white">Broadcast Encoders Telemetry</h3>
+                            <p class="text-[10px] font-mono text-slate-400">ATEM Mini Pro (Primary) & OBS Studio (Secondary)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">1080p30 CBR</span>
+                        <a href="/broadcast" class="text-xs font-mono text-cyan-400 hover:underline">Broadcast Hub ↗</a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3.5 my-3.5">
+                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">On-Air Duration</div>
+                        <div id="stream-duration" class="text-2xl font-mono font-bold text-white">00:00:00</div>
+                    </div>
+
+                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Encoder Bitrate</div>
+                        <div class="text-2xl font-mono font-bold text-white flex items-baseline gap-1.5">
+                            <span id="bitrate-val">0</span>
+                            <span class="text-xs font-normal text-slate-500">kbps</span>
+                        </div>
+                    </div>
+
+                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Dropped Frames</div>
+                        <div class="text-xl font-mono font-bold text-white flex items-baseline gap-2">
+                            <span id="stream-dropped">0</span>
+                            <span id="stream-dropped-pct" class="text-xs text-emerald-400">(0.00%)</span>
+                        </div>
+                    </div>
+
+                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Output Resolution</div>
+                        <div class="text-xl font-mono font-bold text-white">1920×1080 <span class="text-xs text-slate-500 font-normal">@30fps</span></div>
+                    </div>
+                </div>
+
+                <!-- Dual Encoder Controls -->
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <button onclick="LiveEngine.toggleAtemStream()" class="py-2 px-2 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/40 text-xs font-bold font-mono transition-colors cursor-pointer text-center truncate">
+                        🔴 ATEM Stream
+                    </button>
+                    <button onclick="SanctuaryClient.toggleAtemRecord()" class="py-2 px-2 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono transition-colors cursor-pointer text-center truncate">
+                        ⏺️ ATEM Rec
+                    </button>
+                    <button onclick="LiveEngine.toggleObsStream()" class="py-2 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold font-mono transition-colors cursor-pointer text-center truncate">
+                        📡 OBS Stream
+                    </button>
+                </div>
+
+                <div class="text-[11px] font-mono text-slate-400 bg-black/40 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+                    <span>Hardware H.264 High Profile</span>
+                    <span class="text-emerald-400 font-semibold">AAC Stereo 48kHz</span>
+                </div>
+            </section>
+
+            <!-- 7. YouTube Broadcast Health Card -->
+            <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between flex-grow">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 font-bold">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-white">YouTube Ingest & Audio Health</h3>
+                            <p class="text-[10px] font-mono text-slate-400">RTMP Primary Ingest & Audience Analytics</p>
+                        </div>
+                    </div>
+                    <div id="yt-status-pill" class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-bold text-slate-400 flex items-center gap-1.5">
+                        <div class="tally-led tally-off"></div>
+                        <span id="yt-status-text">OFFLINE</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3.5 my-3.5">
+                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Live Viewers</div>
+                        <div id="yt-viewers-val" class="text-2xl font-mono font-bold text-white">0</div>
+                    </div>
+
+                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Chat Frequency</div>
+                        <div class="text-2xl font-mono font-bold text-white flex items-baseline gap-1.5">
+                            <span id="yt-chat-rate">0</span>
+                            <span class="text-xs font-normal text-slate-500">msg/min</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ingest Health Rows -->
+                <div class="space-y-2 text-xs font-mono bg-black/40 p-3.5 rounded-xl border border-slate-800">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-800/80">
+                        <span class="text-slate-400">Stream Ingest Quality</span>
+                        <div class="flex items-center gap-1.5">
+                            <div id="yt-health-dot" class="tally-led tally-off"></div>
+                            <span id="yt-health-text" class="text-slate-400 font-semibold">NO DATA</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="text-slate-400">YouTube Audio Stream</span>
+                        <div class="flex items-center gap-1.5">
+                            <div id="yt-audio-dot" class="tally-led tally-off"></div>
+                            <span id="yt-audio-text" class="text-slate-400 font-semibold">STANDBY</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- 8. Bottom Event Console & Monitoring Thresholds -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Active Thresholds & Quick Actions -->
+        <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between space-y-3.5">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-slate-700/30 border border-slate-600/40 flex items-center justify-center text-slate-300 font-bold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-white">Monitoring Thresholds</h3>
+                        <p class="text-[10px] font-mono text-slate-400">Active Alert Guardrails</p>
+                    </div>
+                </div>
+                <button onclick="LiveEngine.openSettings()" class="text-xs font-mono text-cyan-400 hover:underline cursor-pointer">Configure ⚙️</button>
+            </div>
+            
+            <div class="space-y-2.5 text-xs font-mono bg-black/40 p-3.5 rounded-xl border border-slate-800">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Silence Alert:</span>
+                    <span id="display-setting-sil" class="text-white bg-slate-900 px-2 py-0.5 rounded border border-slate-800">120s (2 min)</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Max Stream Time:</span>
+                    <span id="display-setting-dur" class="text-white bg-slate-900 px-2 py-0.5 rounded border border-slate-800">120 min</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">GroupMe Bot Alert:</span>
+                    <span id="display-setting-groupme" class="text-sky-400 font-bold bg-sky-950/40 px-2 py-0.5 rounded border border-sky-800">Active</span>
+                </div>
+                <div class="flex justify-between items-center pt-1 border-t border-slate-800/80">
+                    <span class="text-slate-400">Alert Schedule:</span>
+                    <span id="display-setting-sched" class="text-amber-300 font-semibold bg-amber-950/40 px-2 py-0.5 rounded border border-amber-800/80">Sundays 9am - 3pm</span>
+                </div>
+            </div>
+
+            <div class="pt-2 grid grid-cols-3 gap-2">
+                <a href="/checklist" class="py-2 text-center rounded-lg bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-300 border border-cyan-800 text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
+                    📋 Checklist
+                </a>
+                <a href="/guide" class="py-2 text-center rounded-lg bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 border border-emerald-800 text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
+                    📖 Training
+                </a>
+                <a href="http://localhost:8085/" target="_blank" rel="noopener" class="py-2 text-center rounded-lg bg-purple-950/40 hover:bg-purple-900/50 text-purple-300 border border-purple-800 text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
+                    🌐 Ops Guide
+                </a>
+            </div>
+        </section>
+
+        <!-- Live Telemetry Event Console -->
+        <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg lg:col-span-2 flex flex-col justify-between space-y-3.5">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-800/80">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-slate-700/30 border border-slate-600/40 flex items-center justify-center text-slate-300 font-bold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-white">Broadcast Incident & Event Log</h3>
+                        <p class="text-[10px] font-mono text-slate-400">Real-Time System Log & Health Telemetry Feed</p>
+                    </div>
+                </div>
+                <span class="text-[10px] font-mono text-slate-500 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Auto-Refreshed</span>
+            </div>
+
+            <div id="event-log" class="h-44 overflow-y-auto pr-2 space-y-1.5 text-xs font-mono console-scroll bg-black/50 p-3 rounded-xl border border-slate-800">
+                <!-- Live logs injected here -->
+            </div>
+        </section>
+
+    </div>
+
+</div>
+
+<!-- Settings & Guide Modal -->
+<div id="settings-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="hardware-panel border border-slate-700 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[92vh] flex flex-col">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+                    ⚙️
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-tight">Sanctuary AV Control Center</h3>
+                    <p class="text-xs text-slate-400">Volunteer guides, device network setup, and GroupMe Bot alerts.</p>
+                </div>
+            </div>
+            <button onclick="LiveEngine.closeSettings()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- 4 Tabs -->
+        <div class="grid grid-cols-4 gap-1 pt-3 border-b border-slate-800">
+            <button id="tab-btn-weekly" onclick="LiveEngine.switchModalTab('weekly')" class="py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-cyan-400 text-cyan-400 bg-slate-800/60">
+                1. Sunday Checklist
+            </button>
+            <button id="tab-btn-hardware" onclick="LiveEngine.switchModalTab('hardware')" class="py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-transparent text-slate-400 hover:text-slate-200">
+                2. Hardware & Modules
+            </button>
+            <button id="tab-btn-alerts" onclick="LiveEngine.switchModalTab('alerts')" class="py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-transparent text-slate-400 hover:text-slate-200">
+                3. Alerts & GroupMe
+            </button>
+            <button id="tab-btn-facility" onclick="LiveEngine.switchModalTab('facility')" class="py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-transparent text-slate-400 hover:text-slate-200">
+                4. Facility & Backup
+            </button>
+        </div>
+
+        <!-- TAB 1: Weekly Sunday Setup & Troubleshooting -->
+        <div id="modal-tab-weekly" class="overflow-y-auto console-scroll flex-grow py-4 pr-1 space-y-5">
+            <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <h4 class="text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                        ✓ Sunday Morning Pre-Flight Routine
+                    </h4>
+                    <span class="text-[10px] text-emerald-400 font-mono">Volunteer Checklist</span>
+                </div>
+                <div class="space-y-2 text-xs text-slate-200">
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                        <span><strong>1. Start Proclaim:</strong> Open today's service presentation. Verify the <strong>Proclaim</strong> node shows <span class="text-emerald-400 font-semibold">On Air</span> or <span class="text-emerald-400 font-semibold">Standby</span>.</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                        <span><strong>2. Start REAPER:</strong> Open today's Sunday broadcast project. Verify the <strong>REAPER DAW</strong> node shows <span class="text-emerald-400 font-semibold">Online</span>.</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                        <span><strong>3. Soundcheck:</strong> Check audio meters bounce in the <span class="text-emerald-400 font-semibold">-18dB to -12dB</span> nominal sweet spot.</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                        <span><strong>4. Check Switcher & OBS:</strong> Ensure the ATEM is in <span class="text-emerald-400 font-semibold">Standby</span> and OBS is on the starting scene.</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                        <span><strong>5. Go Live:</strong> Press <strong>ON AIR</strong> on the ATEM. The <strong>YouTube Live</strong> node will turn <span class="text-red-500 font-bold">● LIVE</span>.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Quick Fixes -->
+            <div class="hardware-card p-4 rounded-xl space-y-3">
+                <h4 class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                    ⚠️ Sunday Morning Quick Fixes
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-red-400 font-bold mb-1">🚨 "Silence Detected" Alarm Flashing</div>
+                        <p class="text-slate-400 text-[11px]">Audio is dead for >2 min. Check: 1) Is REAPER master fader muted? 2) Is the USB interface unplugged? 3) Is the church soundboard master fader down?</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-amber-400 font-bold mb-1">⚠️ REAPER Shows "Offline"</div>
+                        <p class="text-slate-400 text-[11px]">Check if REAPER is open. In REAPER Preferences > Control/OSC/web, ensure Device Port is set to <span class="text-white font-mono">9000</span>.</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-blue-400 font-bold mb-1">⚠️ OBS Shows "Offline"</div>
+                        <p class="text-slate-400 text-[11px]">In OBS: Tools > WebSocket Server Settings > Ensure "Enable WebSocket server" is checked on port 4455.</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-indigo-400 font-bold mb-1">⚠️ Proclaim Shows "Offline"</div>
+                        <p class="text-slate-400 text-[11px]">In Proclaim on presentation PC: Settings > Remote > Enable Remote and verify network password matches Tab 2.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Hardware & Modules Configuration -->
+        <div id="modal-tab-hardware" class="overflow-y-auto console-scroll flex-grow py-4 pr-1 hidden">
+            <form id="settings-form-hardware" onsubmit="LiveEngine.saveSettings(event)" class="space-y-4">
+                
+                <!-- Module Enable / Disable Signal Chain Toggles -->
+                <div class="hardware-card p-4 rounded-xl space-y-3 border border-cyan-500/30">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">
+                            Active Signal Chain Modules
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-mono">Toggle Devices In/Out of Live Rack</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-proclaim" class="rounded bg-slate-900 border-slate-700 text-indigo-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">Proclaim</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-reaper" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">REAPER</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-atem" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">ATEM Mini</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-ptz" class="rounded bg-slate-900 border-slate-700 text-cyan-400 focus:ring-0">
+                            <span class="text-slate-200 font-medium">PTZOptics</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-obs" class="rounded bg-slate-900 border-slate-700 text-blue-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">OBS Studio</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-captioner" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">Captions</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-youtube" class="rounded bg-slate-900 border-slate-700 text-red-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">YouTube</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Station & Navigation Visibility Toggles -->
+                <div class="hardware-card p-4 rounded-xl space-y-3 border border-purple-500/30">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-purple-400 uppercase tracking-wider">
+                            Mobile Navigation & Station Visibility
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-mono">Show / Hide Station Pages</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-checklist" class="rounded bg-slate-900 border-slate-700 text-purple-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">📋 Checklist</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-cameras" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">🎥 Cameras</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-audio" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">🎙️ Audio Mix</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-captions" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">📺 Captions</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-broadcast" class="rounded bg-slate-900 border-slate-700 text-red-500 focus:ring-0">
+                            <span class="text-slate-200 font-medium">📡 Broadcast</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- REAPER DAW -->
+                    <div class="hardware-card p-4 rounded-xl space-y-2">
+                        <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">REAPER DAW (Read-Only OSC)</div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Host IP</label>
+                                <input type="text" id="cfg-reaperHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="127.0.0.1">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">OSC In Port</label>
+                                <input type="number" id="cfg-reaperSendPort" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="9000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ATEM Mini -->
+                    <div class="hardware-card p-4 rounded-xl space-y-2">
+                        <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Blackmagic ATEM Switcher</div>
+                        <div class="text-xs">
+                            <label class="block text-slate-400 mb-1">ATEM Static IP Address on Church LAN</label>
+                            <input type="text" id="cfg-atemIp" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.240">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- OBS Studio Configuration -->
+                    <div class="hardware-card p-4 rounded-xl space-y-2">
+                        <div class="text-xs font-bold text-blue-400 uppercase tracking-wider">OBS Studio (Local Dist)</div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Host IP</label>
+                                <input type="text" id="cfg-obsHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="127.0.0.1">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">Port</label>
+                                <input type="number" id="cfg-obsPort" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="4455">
+                            </div>
+                        </div>
+                        <div class="text-xs">
+                            <label class="block text-slate-400 mb-1">WebSocket Password</label>
+                            <input type="password" id="cfg-obsPassword" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="(Optional)">
+                        </div>
+                    </div>
+
+                    <!-- Proclaim Configuration -->
+                    <div class="hardware-card p-4 rounded-xl space-y-2">
+                        <div class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Proclaim (Remote Presentation PC)</div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Host IP</label>
+                                <input type="text" id="cfg-proclaimHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="192.168.1.X">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">Port</label>
+                                <input type="number" id="cfg-proclaimPort" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="52195">
+                            </div>
+                        </div>
+                        <div class="text-xs">
+                            <label class="block text-slate-400 mb-1">Network Password</label>
+                            <input type="password" id="cfg-proclaimPassword" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="Required for remote">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- YouTube API -->
+                <div class="hardware-card p-4 rounded-xl border border-red-500/40 space-y-2">
+                    <div class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center justify-between">
+                        <span>YouTube Live API Integration</span>
+                        <button type="button" onclick="LiveEngine.authorizeYouTube()" class="px-3 py-1 bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800 rounded text-[10px] font-bold">Authorize / Login</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">OAuth Client ID</label>
+                            <input type="text" id="cfg-youtubeClientId" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-red-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">OAuth Client Secret</label>
+                            <input type="password" id="cfg-youtubeClientSecret" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-red-500 outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VoxStream Live Captioner PRO & Display Restore -->
+                <div class="hardware-card p-4 rounded-xl space-y-3 border border-amber-500/40">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                            <span>📺 VoxStream Live Captioner PRO & Display Restore</span>
+                        </div>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="cfg-captionerEnabled" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                            <span class="text-[11px] text-slate-200 font-bold">Enabled</span>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">VoxStream API URL (Default Port 8765)</label>
+                            <input type="text" id="cfg-captionerApiUrl" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="http://127.0.0.1:8765">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Target Screen / Monitor Index</label>
+                            <input type="number" id="cfg-captionerMonitorIndex" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="1 (LONTIUM Screen)">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Video Mix Type</label>
+                            <select id="cfg-captionerMixType" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none">
+                                <option value="preview">Preview Video Mix</option>
+                                <option value="program">Program Video Mix</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quick Web Interfaces & Links -->
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-slate-800 text-[11px] space-y-1.5">
+                        <div class="font-bold text-slate-300">VoxStream Web Interfaces:</div>
+                        <div class="flex flex-wrap gap-2 text-slate-400 font-mono">
+                            <a href="http://127.0.0.1:8765/" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Stream Overlay (/)</a>
+                            <a href="http://127.0.0.1:8765/display" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Stage Confidence Monitor (/display)</a>
+                            <a href="http://127.0.0.1:8765/dashboard" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Control Panel (/dashboard)</a>
+                            <a href="http://127.0.0.1:8765/dock" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">In-OBS Dock (/dock)</a>
+                            <a href="http://127.0.0.1:8765/bible" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Scripture Overlay (/bible)</a>
+                        </div>
+                    </div>
+
+                    <!-- Action & Diagnostic Buttons -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] pt-1">
+                        <span class="text-slate-400">Restores video to LONTIUM screen (Monitor 1) & auto-resumes captions upon 1-click or API call.</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="LiveEngine.runDiagnostics()" class="px-3 py-1 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-400 border border-cyan-800 rounded text-xs font-bold transition-all shrink-0 cursor-pointer">
+                                🔍 Run Diagnostics / Troubleshoot
+                            </button>
+                            <button type="button" onclick="LiveEngine.triggerReopenScreen()" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded text-xs font-bold transition-all shrink-0 cursor-pointer">
+                                Test Reopen Screen
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Diagnostics Output Container (Hidden by default) -->
+                    <div id="diagnostics-panel" class="hidden p-3 rounded-lg bg-black/60 border border-slate-700 space-y-2 text-xs font-mono">
+                        <div class="flex items-center justify-between font-bold border-b border-slate-700 pb-1">
+                            <span id="diagnostics-title" class="text-cyan-400">Diagnostic Report</span>
+                            <span id="diagnostics-timestamp" class="text-slate-500 text-[10px]"></span>
+                        </div>
+                        <div id="diagnostics-checks" class="space-y-1"></div>
+                        <div id="diagnostics-advice" class="space-y-1 text-amber-300 text-[11px]"></div>
+                    </div>
+                </div>
+
+                <!-- PTZOptics 2-Camera Configuration Card -->
+                <div class="hardware-card p-4 rounded-xl space-y-3 border border-cyan-500/30">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                            <span>🕹️ PTZOptics Cameras (VISCA over IP / UDP 1259)</span>
+                        </div>
+                        <span class="text-[10px] font-mono text-slate-400">2-Camera Church Setup</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="bg-black/30 p-2.5 rounded-lg border border-slate-800 space-y-1.5">
+                            <span class="font-bold text-slate-200">Camera 1 (Pulpit / Stage)</span>
+                            <div>
+                                <label class="block text-slate-400 text-[10px] mb-1">Static IP Address</label>
+                                <input type="text" id="cfg-cam1Ip" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.101">
+                            </div>
+                        </div>
+                        <div class="bg-black/30 p-2.5 rounded-lg border border-slate-800 space-y-1.5">
+                            <span class="font-bold text-slate-200">Camera 2 (Wide Sanctuary)</span>
+                            <div>
+                                <label class="block text-slate-400 text-[10px] mb-1">Static IP Address</label>
+                                <input type="text" id="cfg-cam2Ip" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.102">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network Ping Endpoints -->
+                <div class="hardware-card p-4 rounded-xl space-y-2">
+                    <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">Custom Network ICMP Ping Endpoints</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Gateway IP</label>
+                            <input type="text" id="cfg-gatewayIp" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.1">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">REAPER Host</label>
+                            <input type="text" id="cfg-ping-reaper" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="127.0.0.1">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">ATEM IP</label>
+                            <input type="text" id="cfg-ping-atem" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.240">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">YouTube Ingest Host</label>
+                            <input type="text" id="cfg-youtubeIngestHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="a.rtmp.youtube.com">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="LiveEngine.closeSettings()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold uppercase tracking-wider">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold uppercase tracking-wider">
+                        Save Hardware Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TAB 3: Alerts & GroupMe Routing Configuration -->
+        <div id="modal-tab-alerts" class="overflow-y-auto console-scroll flex-grow py-4 pr-1 hidden">
+            <form id="settings-form-alerts" onsubmit="LiveEngine.saveSettings(event)" class="space-y-4">
+                
+                <!-- Master Alert Toggle -->
+                <div class="hardware-card p-4 rounded-xl flex items-center justify-between border border-purple-500/30">
+                    <div>
+                        <div class="text-xs font-bold text-purple-400 uppercase tracking-wider">Master Alert Engine</div>
+                        <div class="text-[11px] text-slate-400">Enable or disable all incident evaluation and notification dispatching</div>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="cfg-alertsEnabled" class="rounded bg-slate-900 border-slate-700 text-purple-500 focus:ring-0">
+                        <span class="text-xs text-slate-200 font-bold">Alerts Enabled</span>
+                    </label>
+                </div>
+
+                <!-- Individual Alert Rule Toggles & Custom Thresholds -->
+                <div class="hardware-card p-4 rounded-xl space-y-3">
+                    <div class="text-xs font-bold text-amber-400 uppercase tracking-wider">Incident Rules & Sensitivity</div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <!-- Silence Rule -->
+                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="cfg-alertSilenceEnabled" class="rounded bg-slate-900 border-slate-700 text-red-500 focus:ring-0">
+                                    <span class="font-bold text-slate-200">1. Audio Silence Alarm</span>
+                                </label>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                <div>
+                                    <label class="block text-slate-400 text-[10px] mb-1">Silence dBFS Limit</label>
+                                    <input type="number" id="cfg-silenceDbThreshold" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-red-500 outline-none" placeholder="-50">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 text-[10px] mb-1">Timeout (Seconds)</label>
+                                    <input type="number" id="cfg-silenceTimeoutSec" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-red-500 outline-none" placeholder="120">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overtime Rule -->
+                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="cfg-alertOvertimeEnabled" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                                    <span class="font-bold text-slate-200">2. Stream Overtime Alarm</span>
+                                </label>
+                            </div>
+                            <div class="pt-1">
+                                <label class="block text-slate-400 text-[10px] mb-1">Max Duration Limit (Minutes)</label>
+                                <input type="number" id="cfg-maxDurationMin" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="120">
+                            </div>
+                        </div>
+
+                        <!-- Disconnects Rule -->
+                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-slate-200">3. Device Disconnect Alarms</span>
+                                <div class="text-[10px] text-slate-400">Alert if REAPER, ATEM, OBS, or Proclaim drop</div>
+                            </div>
+                            <input type="checkbox" id="cfg-alertDisconnectEnabled" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0">
+                        </div>
+
+                        <!-- Network Outage Rule -->
+                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-slate-200">4. Network Outage Alarms</span>
+                                <div class="text-[10px] text-slate-400">Alert if Gateway or YouTube Ingest fails ping</div>
+                            </div>
+                            <input type="checkbox" id="cfg-alertNetworkEnabled" class="rounded bg-slate-900 border-slate-700 text-blue-500 focus:ring-0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dual-Bot GroupMe Chat Routing -->
+                <div class="hardware-card p-4 rounded-xl border border-sky-500/40 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-sky-400 uppercase tracking-wider">GroupMe Bot Team Chat Alerts (Dual-Bot Routing)</div>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="cfg-groupmeEnabled" class="rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-0">
+                            <span class="text-xs text-slate-300 font-semibold">Enable GroupMe Alerts</span>
+                        </label>
+                    </div>
+
+                    <!-- Bot 1: Main Team Group -->
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                                    <span>📢 Bot #1: Main AV Team Group</span>
+                                </div>
+                                <div class="text-[10px] text-slate-400">Receives: <strong>Audio Silence (>2m)</strong> & <strong>Stream Overtime (>120m)</strong></div>
+                            </div>
+                            <button type="button" id="btn-test-groupme-main" onclick="LiveEngine.testGroupMe('main')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 rounded text-[11px] font-semibold">
+                                Test Main Bot
+                            </button>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 text-[11px] mb-1">Main Team Bot ID</label>
+                            <input type="text" id="cfg-groupmeMainBotId" class="w-full bg-black/60 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="e.g. a1b2c3d4e5f6g7h8">
+                        </div>
+                    </div>
+
+                    <!-- Bot 2: Tech Leads / Admins Group -->
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                                    <span>🛠️ Bot #2: Tech Leads / Admins Group</span>
+                                </div>
+                                <div class="text-[10px] text-slate-400">Receives: <strong>Device Disconnects (REAPER/ATEM/OBS)</strong> & <strong>Network Issues</strong></div>
+                            </div>
+                            <button type="button" id="btn-test-groupme-tech" onclick="LiveEngine.testGroupMe('tech')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 rounded text-[11px] font-semibold">
+                                Test Tech Bot
+                            </button>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 text-[11px] mb-1">Tech Leads Bot ID <span class="text-slate-500 font-normal">(Optional — falls back to Bot #1 if empty)</span></label>
+                            <input type="text" id="cfg-groupmeTechBotId" class="w-full bg-black/60 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="e.g. z9y8x7w6v5u4t3s2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Broadcast Schedule & Alert Window -->
+                <div class="hardware-card p-4 rounded-xl space-y-3 border border-amber-500/30">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                            Broadcast Schedule & Alert Window
+                        </div>
+                        <span class="text-[10px] font-mono text-slate-400">Stream Overtime Alert Exempt (24/7)</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-0.5">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="cfg-scheduleEnabled" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                            <span class="text-xs text-slate-200 font-medium">Only send silence & disconnect alerts during scheduled broadcast hours</span>
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Active Day</label>
+                            <select id="cfg-scheduleDays" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none">
+                                <option value="0">Sundays Only</option>
+                                <option value="0,3">Sundays & Wednesdays</option>
+                                <option value="0,6">Weekends (Sat & Sun)</option>
+                                <option value="all">Everyday (Mon-Sun)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Window Start Time</label>
+                            <input type="time" id="cfg-scheduleStart" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" value="09:00">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Window End Time</label>
+                            <input type="time" id="cfg-scheduleEnd" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" value="15:00">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="LiveEngine.closeSettings()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold uppercase tracking-wider">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold uppercase tracking-wider">
+                        Save Alert Rules
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TAB 4: Facility Branding & Backup / Setup Guides -->
+        <div id="modal-tab-facility" class="overflow-y-auto console-scroll flex-grow py-4 pr-1 hidden space-y-4">
+            <form id="settings-form-facility" onsubmit="LiveEngine.saveSettings(event)" class="space-y-4">
+                
+                <!-- Facility Customization -->
+                <div class="hardware-card p-4 rounded-xl space-y-3">
+                    <div class="text-xs font-bold text-white uppercase tracking-wider">Facility Branding & Appearance</div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Facility / Church Name</label>
+                            <input type="text" id="cfg-facilityName" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs focus:border-cyan-500 outline-none" placeholder="SANCTUARY AV">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Subtitle / Room</label>
+                            <input type="text" id="cfg-facilitySubtitle" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs focus:border-cyan-500 outline-none" placeholder="LIVE RACK">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Master Clock Format</label>
+                            <select id="cfg-clockFormat" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none">
+                                <option value="24h">24-Hour (14:30:00)</option>
+                                <option value="12h">12-Hour AM/PM (2:30:00 PM)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-xs">
+                        <label class="block text-slate-400 mb-1">Header Description</label>
+                        <input type="text" id="cfg-facilityDescription" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs focus:border-cyan-500 outline-none" placeholder="Telemetry & Broadcast Health Monitor">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold uppercase tracking-wider">
+                        Save Facility Appearance
+                    </button>
+                </div>
+            </form>
+
+            <!-- Backup, Restore, & Factory Reset -->
+            <div class="hardware-card p-4 rounded-xl space-y-3 border border-slate-700">
+                <div class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                    <span>Configuration Backup & Reset</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                    <button type="button" onclick="LiveEngine.exportConfig()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center gap-1.5 font-semibold">
+                        <span>📥 Export Config (JSON)</span>
+                    </button>
+                    <label class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center gap-1.5 font-semibold cursor-pointer text-center">
+                        <span>📤 Import Config</span>
+                        <input type="file" accept=".json" onchange="LiveEngine.importConfig(event)" class="hidden">
+                    </label>
+                    <button type="button" onclick="LiveEngine.resetConfig()" class="p-2.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800 flex items-center justify-center gap-1.5 font-semibold">
+                        <span>🔄 Reset to Defaults</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Setup Guides & References -->
+            <div class="space-y-3 pt-2">
+                <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Quick First-Time Connection Steps</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-emerald-400 font-bold mb-1">REAPER OSC</div>
+                        <p class="text-slate-400 text-[11px]">In REAPER: Preferences > Control/OSC/web > Add OSC with Mode = OSC, IP = 127.0.0.1, Port = 9000.</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-cyan-400 font-bold mb-1">ATEM Mini LAN</div>
+                        <p class="text-slate-400 text-[11px]">Connect Ethernet to church router. Paste its static IP (e.g. 192.168.1.240) in Tab 2.</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-blue-400 font-bold mb-1">OBS WebSocket</div>
+                        <p class="text-slate-400 text-[11px]">In OBS: Tools > WebSocket Server Settings > Check "Enable WebSocket server" (port 4455).</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                        <div class="text-indigo-400 font-bold mb-1">Proclaim Remote</div>
+                        <p class="text-slate-400 text-[11px]">In Proclaim: Settings > Remote > Enable and note password. Enter IP & password in Tab 2.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 text-xs transition-all transform translate-y-20 opacity-0 pointer-events-none">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <span id="toast-msg">Settings saved successfully!</span>
+</div>
+
+<script>
+/**
+ * LiveEngine — Broadcast Telemetry & WebSocket Engine
+ */
+const LiveEngine = {
+    ws: null,
+    connected: false,
+    reconnectAttempts: 0,
+    maxReconnectDelay: 10000,
+    lastState: null,
+    currentConfig: null,
+    previousBitrate: 0,
+    previousEvents: [],
+    pingPanelInitialized: false,
+
+    dom: {},
+
+    init() {
+        this.cacheDOM();
+        this.bindEvents();
+        this.updateClock();
+        setInterval(() => this.updateClock(), 1000);
+        this.connect();
+    },
+
+    cacheDOM() {
+        this.dom = {
+            brandFacilityName: document.getElementById('brand-facility-name'),
+            brandFacilitySubtitle: document.getElementById('brand-facility-subtitle'),
+            brandFacilityDesc: document.getElementById('brand-facility-desc'),
+            clockTime: document.getElementById('clock-time'),
+            clockDate: document.getElementById('clock-date'),
+            globalStatus: document.getElementById('global-status'),
+            globalStatusText: document.getElementById('global-status-text'),
+
+            // Audio (Read-Only)
+            vuLFill: document.getElementById('vu-l-fill'),
+            vuLPeak: document.getElementById('vu-l-peak'),
+            vuLPkVal: document.getElementById('vu-l-pk-val'),
+            vuLRmVal: document.getElementById('vu-l-rm-val'),
+            vuRFill: document.getElementById('vu-r-fill'),
+            vuRPeak: document.getElementById('vu-r-peak'),
+            vuRPkVal: document.getElementById('vu-r-pk-val'),
+            vuRRmVal: document.getElementById('vu-r-rm-val'),
+            silenceAlarm: document.getElementById('silence-alarm'),
+
+            // Stream
+            strDur: document.getElementById('stream-duration'),
+            strBit: document.getElementById('bitrate-val'),
+            strDrop: document.getElementById('stream-dropped'),
+            strDropPct: document.getElementById('stream-dropped-pct'),
+
+            // YouTube
+            ytPill: document.getElementById('yt-status-pill'),
+            ytText: document.getElementById('yt-status-text'),
+            ytViewers: document.getElementById('yt-viewers-val'),
+            ytHealthDot: document.getElementById('yt-health-dot'),
+            ytHealthText: document.getElementById('yt-health-text'),
+            ytAudioDot: document.getElementById('yt-audio-dot'),
+            ytAudioText: document.getElementById('yt-audio-text'),
+            ytChatRate: document.getElementById('yt-chat-rate'),
+
+            // Dynamic Signal Chain Container
+            signalChainContainer: document.getElementById('signal-chain-container'),
+
+            // Log
+            log: document.getElementById('event-log'),
+
+            // Modal & Settings
+            btnSettings: document.getElementById('btn-settings'),
+            settingsModal: document.getElementById('settings-modal'),
+            dispDur: document.getElementById('display-setting-dur'),
+            dispSil: document.getElementById('display-setting-sil'),
+            dispGroupMe: document.getElementById('display-setting-groupme'),
+            dispSched: document.getElementById('display-setting-sched'),
+        };
+    },
+
+    bindEvents() {
+        this.dom.btnSettings.addEventListener('click', () => this.openWeeklyGuide());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.closeSettings();
+        });
+    },
+
+    switchModalTab(tab) {
+        const tabs = ['weekly', 'hardware', 'alerts', 'facility'];
+        tabs.forEach(t => {
+            const content = document.getElementById(`modal-tab-${t}`);
+            const btn = document.getElementById(`tab-btn-${t}`);
+            if (!content || !btn) return;
+            if (t === tab) {
+                content.classList.remove('hidden');
+                btn.className = 'py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-cyan-400 text-cyan-400 bg-slate-800/60';
+            } else {
+                content.classList.add('hidden');
+                btn.className = 'py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-transparent text-slate-400 hover:text-slate-200';
+            }
+        });
+    },
+
+    openSettings(tab = 'hardware') {
+        this.switchModalTab(tab);
+        if (this.currentConfig) {
+            this.updateSettingsForm(this.currentConfig);
+        }
+        this.dom.settingsModal.classList.remove('hidden');
+    },
+
+    openWeeklyGuide() {
+        this.switchModalTab('weekly');
+        if (this.currentConfig) {
+            this.updateSettingsForm(this.currentConfig);
+        }
+        this.dom.settingsModal.classList.remove('hidden');
+    },
+
+    closeSettings() {
+        this.dom.settingsModal.classList.add('hidden');
+    },
+
+    updateSettingsForm(cfg) {
+        if (!cfg) return;
+        
+        // Facility Branding
+        if (document.getElementById('cfg-facilityName')) document.getElementById('cfg-facilityName').value = cfg.facilityName || 'SANCTUARY AV';
+        if (document.getElementById('cfg-clockFormat')) document.getElementById('cfg-clockFormat').value = cfg.clockFormat || '24h';
+
+        // Modules Enabled
+        const mods = cfg.modulesEnabled || {};
+        if (document.getElementById('cfg-mod-proclaim')) document.getElementById('cfg-mod-proclaim').checked = mods.proclaim !== false;
+        if (document.getElementById('cfg-mod-reaper')) document.getElementById('cfg-mod-reaper').checked = mods.reaper !== false;
+        if (document.getElementById('cfg-mod-atem')) document.getElementById('cfg-mod-atem').checked = mods.atem !== false;
+        if (document.getElementById('cfg-mod-ptz')) document.getElementById('cfg-mod-ptz').checked = mods.ptz !== false;
+        if (document.getElementById('cfg-mod-obs')) document.getElementById('cfg-mod-obs').checked = mods.obs !== false;
+        if (document.getElementById('cfg-mod-captioner')) document.getElementById('cfg-mod-captioner').checked = mods.captioner !== false && cfg.captionerEnabled !== false;
+        if (document.getElementById('cfg-mod-youtube')) document.getElementById('cfg-mod-youtube').checked = mods.youtube !== false;
+
+        // Station Visibility
+        const stas = mods.stations || {};
+        if (document.getElementById('cfg-sta-checklist')) document.getElementById('cfg-sta-checklist').checked = stas.checklist !== false;
+        if (document.getElementById('cfg-sta-cameras')) document.getElementById('cfg-sta-cameras').checked = stas.cameras !== false;
+        if (document.getElementById('cfg-sta-audio')) document.getElementById('cfg-sta-audio').checked = stas.audio !== false;
+        if (document.getElementById('cfg-sta-captions')) document.getElementById('cfg-sta-captions').checked = stas.captions !== false;
+        if (document.getElementById('cfg-sta-broadcast')) document.getElementById('cfg-sta-broadcast').checked = stas.broadcast !== false;
+
+        // Hardware details
+        if (document.getElementById('cfg-reaperHost')) document.getElementById('cfg-reaperHost').value = cfg.reaperHost || '127.0.0.1';
+        if (document.getElementById('cfg-reaperSendPort')) document.getElementById('cfg-reaperSendPort').value = cfg.reaperSendPort || 9000;
+        if (document.getElementById('cfg-atemIp')) document.getElementById('cfg-atemIp').value = cfg.atemIp || '192.168.1.240';
+        if (document.getElementById('cfg-obsHost')) document.getElementById('cfg-obsHost').value = cfg.obsHost || '127.0.0.1';
+        if (document.getElementById('cfg-obsPort')) document.getElementById('cfg-obsPort').value = cfg.obsPort || 4455;
+        if (document.getElementById('cfg-obsPassword')) document.getElementById('cfg-obsPassword').value = cfg.obsPassword || '';
+        if (document.getElementById('cfg-proclaimHost')) document.getElementById('cfg-proclaimHost').value = cfg.proclaimHost || '';
+        if (document.getElementById('cfg-proclaimPort')) document.getElementById('cfg-proclaimPort').value = cfg.proclaimPort || 52195;
+        if (document.getElementById('cfg-proclaimPassword')) document.getElementById('cfg-proclaimPassword').value = cfg.proclaimPassword || '';
+        if (document.getElementById('cfg-youtubeClientId')) document.getElementById('cfg-youtubeClientId').value = cfg.youtubeClientId || '';
+        if (document.getElementById('cfg-youtubeClientSecret')) document.getElementById('cfg-youtubeClientSecret').value = cfg.youtubeClientSecret || '';
+        
+        // Live Captioner PRO & Screen Restore
+        if (document.getElementById('cfg-captionerEnabled')) document.getElementById('cfg-captionerEnabled').checked = cfg.captionerEnabled !== false;
+        if (document.getElementById('cfg-captionerApiUrl')) document.getElementById('cfg-captionerApiUrl').value = cfg.captionerApiUrl || 'http://127.0.0.1:8080';
+        if (document.getElementById('cfg-captionerMonitorIndex')) document.getElementById('cfg-captionerMonitorIndex').value = cfg.captionerMonitorIndex ?? 1;
+        if (document.getElementById('cfg-captionerMixType')) document.getElementById('cfg-captionerMixType').value = cfg.captionerMixType || 'preview';
+
+        // Ping Targets
+        if (document.getElementById('cfg-gatewayIp')) document.getElementById('cfg-gatewayIp').value = cfg.gatewayIp || '192.168.1.1';
+        if (document.getElementById('cfg-ping-reaper')) document.getElementById('cfg-ping-reaper').value = cfg.reaperHost || '127.0.0.1';
+        if (document.getElementById('cfg-ping-atem')) document.getElementById('cfg-ping-atem').value = cfg.atemIp || '192.168.1.240';
+        if (document.getElementById('cfg-youtubeIngestHost')) document.getElementById('cfg-youtubeIngestHost').value = cfg.youtubeIngestHost || 'a.rtmp.youtube.com';
+
+        // PTZOptics Cameras
+        if (document.getElementById('cfg-cam1Ip')) document.getElementById('cfg-cam1Ip').value = cfg.cam1Ip || cfg.ptzCameras?.[0]?.ip || '192.168.1.101';
+        if (document.getElementById('cfg-cam2Ip')) document.getElementById('cfg-cam2Ip').value = cfg.cam2Ip || cfg.ptzCameras?.[1]?.ip || '192.168.1.102';
+
+        // Alerts & Rules
+        if (document.getElementById('cfg-alertsEnabled')) document.getElementById('cfg-alertsEnabled').checked = cfg.alertsEnabled !== false;
+        if (document.getElementById('cfg-alertSilenceEnabled')) document.getElementById('cfg-alertSilenceEnabled').checked = cfg.alertSilenceEnabled !== false;
+        if (document.getElementById('cfg-alertOvertimeEnabled')) document.getElementById('cfg-alertOvertimeEnabled').checked = cfg.alertOvertimeEnabled !== false;
+        if (document.getElementById('cfg-alertDisconnectEnabled')) document.getElementById('cfg-alertDisconnectEnabled').checked = cfg.alertDisconnectEnabled !== false;
+        if (document.getElementById('cfg-alertNetworkEnabled')) document.getElementById('cfg-alertNetworkEnabled').checked = cfg.alertNetworkEnabled !== false;
+        if (document.getElementById('cfg-silenceDbThreshold')) document.getElementById('cfg-silenceDbThreshold').value = cfg.silenceDbThreshold ?? -50;
+        if (document.getElementById('cfg-maxDurationMin')) document.getElementById('cfg-maxDurationMin').value = cfg.maxDurationMin ?? 120;
+        if (document.getElementById('cfg-silenceTimeoutSec')) document.getElementById('cfg-silenceTimeoutSec').value = cfg.silenceTimeoutSec ?? 120;
+        if (document.getElementById('cfg-minBitrateKbps')) document.getElementById('cfg-minBitrateKbps').value = cfg.minBitrateKbps ?? 2000;
+
+        // GroupMe
+        if (document.getElementById('cfg-groupmeEnabled')) document.getElementById('cfg-groupmeEnabled').checked = Boolean(cfg.groupmeEnabled);
+        if (document.getElementById('cfg-groupmeMainBotId')) document.getElementById('cfg-groupmeMainBotId').value = cfg.groupmeMainBotId || cfg.groupmeBotId || '';
+        if (document.getElementById('cfg-groupmeTechBotId')) document.getElementById('cfg-groupmeTechBotId').value = cfg.groupmeTechBotId || '';
+
+        // Schedule
+        if (document.getElementById('cfg-scheduleEnabled')) document.getElementById('cfg-scheduleEnabled').checked = cfg.scheduleEnabled !== false;
+        const daysVal = Array.isArray(cfg.scheduleDays) ? cfg.scheduleDays.join(',') : (cfg.scheduleDays || '0');
+        if (document.getElementById('cfg-scheduleDays')) document.getElementById('cfg-scheduleDays').value = daysVal === '0,1,2,3,4,5,6' ? 'all' : daysVal;
+        if (document.getElementById('cfg-scheduleStart')) document.getElementById('cfg-scheduleStart').value = cfg.scheduleStart || '09:00';
+        if (document.getElementById('cfg-scheduleEnd')) document.getElementById('cfg-scheduleEnd').value = cfg.scheduleEnd || '15:00';
+    },
+
+    saveSettings(event) {
+        if (event) event.preventDefault();
+        
+        const daysInput = document.getElementById('cfg-scheduleDays')?.value || '0';
+        let scheduleDays = [0];
+        if (daysInput === 'all') scheduleDays = [0, 1, 2, 3, 4, 5, 6];
+        else scheduleDays = daysInput.split(',').map(Number);
+
+        const captionerToggle = document.getElementById('cfg-mod-captioner') ? document.getElementById('cfg-mod-captioner').checked : true;
+
+        const updatedConfig = {
+            ...(this.currentConfig || {}),
+            // Facility Branding
+            facilityName: document.getElementById('cfg-facilityName')?.value.trim() || 'SANCTUARY AV',
+            facilitySubtitle: document.getElementById('cfg-facilitySubtitle')?.value.trim() || 'LIVE RACK',
+            facilityDescription: document.getElementById('cfg-facilityDescription')?.value.trim() || 'Telemetry & Broadcast Health Monitor',
+            clockFormat: document.getElementById('cfg-clockFormat')?.value || '24h',
+            // Modules
+            modulesEnabled: {
+                proclaim: document.getElementById('cfg-mod-proclaim') ? document.getElementById('cfg-mod-proclaim').checked : true,
+                reaper: document.getElementById('cfg-mod-reaper') ? document.getElementById('cfg-mod-reaper').checked : true,
+                atem: document.getElementById('cfg-mod-atem') ? document.getElementById('cfg-mod-atem').checked : true,
+                ptz: document.getElementById('cfg-mod-ptz') ? document.getElementById('cfg-mod-ptz').checked : true,
+                obs: document.getElementById('cfg-mod-obs') ? document.getElementById('cfg-mod-obs').checked : true,
+                captioner: captionerToggle,
+                youtube: document.getElementById('cfg-mod-youtube') ? document.getElementById('cfg-mod-youtube').checked : true,
+                stations: {
+                    checklist: document.getElementById('cfg-sta-checklist') ? document.getElementById('cfg-sta-checklist').checked : true,
+                    cameras: document.getElementById('cfg-sta-cameras') ? document.getElementById('cfg-sta-cameras').checked : true,
+                    audio: document.getElementById('cfg-sta-audio') ? document.getElementById('cfg-sta-audio').checked : true,
+                    captions: document.getElementById('cfg-sta-captions') ? document.getElementById('cfg-sta-captions').checked : true,
+                    broadcast: document.getElementById('cfg-sta-broadcast') ? document.getElementById('cfg-sta-broadcast').checked : true,
+                },
+            },
+            // Hardware
+            reaperHost: document.getElementById('cfg-reaperHost')?.value.trim() || '127.0.0.1',
+            reaperSendPort: parseInt(document.getElementById('cfg-reaperSendPort')?.value || 9000, 10),
+            atemIp: document.getElementById('cfg-atemIp')?.value.trim() || '192.168.1.240',
+            obsHost: document.getElementById('cfg-obsHost')?.value.trim() || '127.0.0.1',
+            obsPort: parseInt(document.getElementById('cfg-obsPort')?.value || 4455, 10),
+            obsPassword: document.getElementById('cfg-obsPassword')?.value || '',
+            proclaimHost: document.getElementById('cfg-proclaimHost')?.value.trim() || '',
+            proclaimPort: parseInt(document.getElementById('cfg-proclaimPort')?.value || 52195, 10),
+            proclaimPassword: document.getElementById('cfg-proclaimPassword')?.value || '',
+            youtubeClientId: document.getElementById('cfg-youtubeClientId')?.value.trim() || '',
+            youtubeClientSecret: document.getElementById('cfg-youtubeClientSecret')?.value.trim() || '',
+            // Live Captioner PRO & Display Restore
+            captionerEnabled: document.getElementById('cfg-captionerEnabled') ? document.getElementById('cfg-captionerEnabled').checked : true,
+            captionerApiUrl: document.getElementById('cfg-captionerApiUrl')?.value.trim() || 'http://127.0.0.1:8080',
+            captionerMonitorIndex: parseInt(document.getElementById('cfg-captionerMonitorIndex')?.value || 1, 10),
+            captionerMixType: document.getElementById('cfg-captionerMixType')?.value || 'preview',
+            // Ping Targets
+            gatewayIp: document.getElementById('cfg-gatewayIp')?.value.trim() || '192.168.1.1',
+            youtubeIngestHost: document.getElementById('cfg-youtubeIngestHost')?.value.trim() || 'a.rtmp.youtube.com',
+            // PTZOptics Cameras
+            cam1Ip: document.getElementById('cfg-cam1Ip')?.value.trim() || '192.168.1.101',
+            cam2Ip: document.getElementById('cfg-cam2Ip')?.value.trim() || '192.168.1.102',
+            // Alerts
+            alertsEnabled: document.getElementById('cfg-alertsEnabled') ? document.getElementById('cfg-alertsEnabled').checked : true,
+            alertSilenceEnabled: document.getElementById('cfg-alertSilenceEnabled') ? document.getElementById('cfg-alertSilenceEnabled').checked : true,
+            alertOvertimeEnabled: document.getElementById('cfg-alertOvertimeEnabled') ? document.getElementById('cfg-alertOvertimeEnabled').checked : true,
+            alertDisconnectEnabled: document.getElementById('cfg-alertDisconnectEnabled') ? document.getElementById('cfg-alertDisconnectEnabled').checked : true,
+            alertNetworkEnabled: document.getElementById('cfg-alertNetworkEnabled') ? document.getElementById('cfg-alertNetworkEnabled').checked : true,
+            silenceDbThreshold: parseFloat(document.getElementById('cfg-silenceDbThreshold')?.value || -50),
+            maxDurationMin: parseInt(document.getElementById('cfg-maxDurationMin')?.value || 120, 10),
+            silenceTimeoutSec: parseInt(document.getElementById('cfg-silenceTimeoutSec')?.value || 120, 10),
+            minBitrateKbps: parseInt(document.getElementById('cfg-minBitrateKbps')?.value || 2000, 10),
+            groupmeEnabled: document.getElementById('cfg-groupmeEnabled') ? document.getElementById('cfg-groupmeEnabled').checked : false,
+            groupmeMainBotId: document.getElementById('cfg-groupmeMainBotId')?.value.trim() || '',
+            groupmeTechBotId: document.getElementById('cfg-groupmeTechBotId')?.value.trim() || '',
+            groupmeBotId: document.getElementById('cfg-groupmeMainBotId')?.value.trim() || '',
+            scheduleEnabled: document.getElementById('cfg-scheduleEnabled') ? document.getElementById('cfg-scheduleEnabled').checked : true,
+            scheduleDays: scheduleDays,
+            scheduleStart: document.getElementById('cfg-scheduleStart')?.value || '09:00',
+            scheduleEnd: document.getElementById('cfg-scheduleEnd')?.value || '15:00',
+        };
+
+        this.currentConfig = updatedConfig;
+        this.updateSettingsDisplays(updatedConfig);
+
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({ type: 'SAVE_CONFIG', data: updatedConfig }));
+        }
+
+        this.closeSettings();
+        this.showToast('All settings and module changes saved!');
+    },
+
+    async triggerReopenScreen() {
+        const btn = document.getElementById('btn-reopen-screen');
+        const origHtml = btn ? btn.innerHTML : null;
+        if (btn) {
+            btn.innerHTML = '<svg class="w-3.5 h-3.5 animate-spin text-amber-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>Restoring...</span>';
+            btn.disabled = true;
+        }
+
+        try {
+            const res = await fetch('/api/control/reopen-screen', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    monitor_index: this.currentConfig?.captionerMonitorIndex || 1,
+                    mix_type: this.currentConfig?.captionerMixType || 'preview'
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                this.showToast('✅ LONTIUM Screen (Monitor 1) & Captions Active!');
+            } else {
+                this.showToast(`⚠️ Screen Restore: ${data.message || data.error || 'Requested'}`);
+            }
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({
+                    type: 'REOPEN_SCREEN',
+                    data: {
+                        monitor_index: this.currentConfig?.captionerMonitorIndex || 1,
+                        mix_type: this.currentConfig?.captionerMixType || 'preview'
+                    }
+                }));
+                this.showToast('✅ LONTIUM Screen (Monitor 1) & Captions Active!');
+            } else {
+                alert('Error connecting to AV Controller server: ' + err.message);
+            }
+        } finally {
+            if (btn) {
+                setTimeout(() => {
+                    btn.innerHTML = origHtml;
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+    },
+
+    async triggerPanic() {
+        if (!confirm('🚨 EMERGENCY PANIC:\nAre you sure you want to instantly blank all screen captions and mute output?')) {
+            return;
+        }
+        try {
+            const res = await fetch('/api/control/panic', { method: 'POST' });
+            const data = await res.json();
+            this.showToast('🚨 Captions Panic Triggered: Screens Blanked & Muted');
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'PANIC_CAPTIONS' }));
+                this.showToast('🚨 Captions Panic Triggered');
+            }
+        }
+    },
+
+    async toggleCaptions() {
+        try {
+            const res = await fetch('/api/control/toggle', { method: 'POST' });
+            const data = await res.json();
+            this.showToast(data.isCapturing ? '▶️ Live Captions Started' : '⏸️ Live Captions Paused');
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'TOGGLE_CAPTIONS' }));
+            }
+        }
+    },
+
+    async runDiagnostics() {
+        this.openSettings('hardware');
+        const panel = document.getElementById('diagnostics-panel');
+        const title = document.getElementById('diagnostics-title');
+        const timeEl = document.getElementById('diagnostics-timestamp');
+        const checksEl = document.getElementById('diagnostics-checks');
+        const adviceEl = document.getElementById('diagnostics-advice');
+
+        if (panel) panel.classList.remove('hidden');
+        if (title) title.innerHTML = '<span class="animate-pulse text-cyan-400">⏳ Running VoxStream & Display Diagnostics...</span>';
+        if (checksEl) checksEl.innerHTML = '';
+        if (adviceEl) adviceEl.innerHTML = '';
+
+        try {
+            const res = await fetch('/api/captioner/diagnose');
+            const data = await res.json();
+            
+            if (timeEl) timeEl.textContent = new Date(data.timestamp).toLocaleTimeString();
+            if (title) {
+                if (data.overallStatus === 'healthy') {
+                    title.innerHTML = '<span class="text-emerald-400">✓ All Systems Operational</span>';
+                } else if (data.overallStatus === 'warning') {
+                    title.innerHTML = '<span class="text-amber-400">⚠️ Warnings Detected</span>';
+                } else {
+                    title.innerHTML = '<span class="text-red-400">✗ Connection Issues Detected</span>';
+                }
+            }
+
+            if (checksEl && Array.isArray(data.checks)) {
+                checksEl.innerHTML = data.checks.map(c => {
+                    const icon = c.status === 'pass' ? '✅' : (c.status === 'warn' ? '⚠️' : '❌');
+                    const color = c.status === 'pass' ? 'text-emerald-400' : (c.status === 'warn' ? 'text-amber-400' : 'text-red-400');
+                    return `<div class="flex items-start gap-1.5"><span class="shrink-0">${icon}</span><div><span class="font-bold ${color}">${c.name}:</span> <span class="text-slate-300">${c.detail}</span></div></div>`;
+                }).join('');
+            }
+
+            if (adviceEl && Array.isArray(data.troubleshootingAdvice) && data.troubleshootingAdvice.length > 0) {
+                adviceEl.innerHTML = '<div class="font-bold text-amber-400 pt-1 border-t border-slate-800">💡 Troubleshooting Steps:</div>' +
+                    data.troubleshootingAdvice.map(a => `<div>• ${a}</div>`).join('');
+            }
+        } catch (err) {
+            if (title) title.innerHTML = `<span class="text-red-400">✗ Diagnostic Failed: ${err.message}</span>`;
+        }
+    },
+
+    exportConfig() {
+        if (!this.currentConfig) return;
+        const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.currentConfig, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute('href', dataStr);
+        dlAnchor.setAttribute('download', `sanctuary-av-config-${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+        this.showToast('Config exported to JSON file!');
+    },
+
+    importConfig(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                if (typeof parsed === 'object') {
+                    this.currentConfig = { ...this.currentConfig, ...parsed };
+                    this.updateSettingsForm(this.currentConfig);
+                    this.saveSettings();
+                    this.showToast('Config imported successfully!');
+                }
+            } catch (err) {
+                alert('Invalid JSON configuration file: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    },
+
+    // ── ATEM Video Switching Controls ──────────────
+    async setAtemProgram(input) {
+        try {
+            await fetch('/api/atem/program', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input })
+            });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'ATEM_SET_PROGRAM', data: { input } }));
+            }
+        }
+    },
+
+    async setAtemPreview(input) {
+        try {
+            await fetch('/api/atem/preview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input })
+            });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'ATEM_SET_PREVIEW', data: { input } }));
+            }
+        }
+    },
+
+    async atemCut() {
+        try {
+            await fetch('/api/atem/cut', { method: 'POST' });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'ATEM_CUT' }));
+            }
+        }
+    },
+
+    async atemAuto() {
+        try {
+            await fetch('/api/atem/auto', { method: 'POST' });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'ATEM_AUTO' }));
+            }
+        }
+    },
+
+    async atemFtb() {
+        try {
+            await fetch('/api/atem/ftb', { method: 'POST' });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'ATEM_FTB' }));
+            }
+        }
+    },
+
+    // ── PTZOptics Camera Controls ──────────────────
+    activePtzCamera: 'cam1',
+    ptzSpeed: 12,
+
+    selectPtzCamera(camId) {
+        this.activePtzCamera = camId;
+        const tab1 = document.getElementById('ptz-tab-cam1');
+        const tab2 = document.getElementById('ptz-tab-cam2');
+        if (tab1 && tab2) {
+            if (camId === 'cam1') {
+                tab1.className = 'px-2.5 py-1 rounded bg-cyan-500 text-slate-950 font-bold transition-all cursor-pointer';
+                tab2.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-bold transition-all cursor-pointer';
+            } else {
+                tab1.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-bold transition-all cursor-pointer';
+                tab2.className = 'px-2.5 py-1 rounded bg-cyan-500 text-slate-950 font-bold transition-all cursor-pointer';
+            }
+        }
+        if (this.lastState && this.lastState.ptz) {
+            this.renderPtzPresets(this.lastState.ptz);
+        }
+        fetch('/api/ptz/active-camera', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ camera: camId })
+        }).catch(() => {});
+    },
+
+    setPtzSpeed(speed) {
+        this.ptzSpeed = parseInt(speed, 10) || 12;
+        const disp = document.getElementById('ptz-speed-val');
+        if (disp) disp.textContent = this.ptzSpeed;
+    },
+
+    async ptzMove(direction) {
+        try {
+            await fetch('/api/ptz/control', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    camera: this.activePtzCamera,
+                    direction,
+                    speed: this.ptzSpeed
+                })
+            });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({
+                    type: 'PTZ_PAN_TILT',
+                    data: { camera: this.activePtzCamera, direction, speed: this.ptzSpeed }
+                }));
+            }
+        }
+    },
+
+    async ptzStop() {
+        try {
+            await fetch('/api/ptz/control', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    camera: this.activePtzCamera,
+                    direction: 'stop'
+                })
+            });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({
+                    type: 'PTZ_PAN_TILT',
+                    data: { camera: this.activePtzCamera, direction: 'stop' }
+                }));
+            }
+        }
+    },
+
+    async ptzZoom(action) {
+        try {
+            await fetch('/api/ptz/control', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    camera: this.activePtzCamera,
+                    action: 'zoom',
+                    zoomAction: action,
+                    speed: Math.round(this.ptzSpeed / 4) || 3
+                })
+            });
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({
+                    type: 'PTZ_ZOOM',
+                    data: {
+                        camera: this.activePtzCamera,
+                        action,
+                        speed: Math.round(this.ptzSpeed / 4) || 3
+                    }
+                }));
+            }
+        }
+    },
+
+    async recallPtzPreset(presetNum) {
+        try {
+            const res = await fetch('/api/ptz/preset/recall', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ camera: this.activePtzCamera, preset: presetNum })
+            });
+            const data = await res.json();
+            this.showToast(`🎯 ${data.message || `Recalled Preset ${presetNum}`}`);
+        } catch (err) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({
+                    type: 'PTZ_RECALL_PRESET',
+                    data: { camera: this.activePtzCamera, preset: presetNum }
+                }));
+            }
+        }
+    },
+
+    async promptSavePreset() {
+        const num = prompt(`Enter preset number to save (1 to 8) for ${this.activePtzCamera === 'cam1' ? 'Camera 1 (Pulpit)' : 'Camera 2 (Wide)'}:`, '1');
+        if (!num) return;
+        const name = prompt(`Enter friendly label for Preset ${num} (e.g. Pulpit, Piano, Wide Stage):`, 'Pulpit');
+        try {
+            const res = await fetch('/api/ptz/preset/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ camera: this.activePtzCamera, preset: parseInt(num, 10), name })
+            });
+            const data = await res.json();
+            this.showToast(`💾 ${data.message || `Preset ${num} Saved`}`);
+        } catch (err) {
+            alert('Failed to save preset: ' + err.message);
+        }
+    },
+
+    renderPtzPresets(ptzState) {
+        const container = document.getElementById('ptz-presets-container');
+        if (!container || !ptzState || !ptzState.cameras) return;
+        const cam = ptzState.cameras.find(c => c.id === this.activePtzCamera) || ptzState.cameras[0];
+        if (!cam || !cam.presets) return;
+
+        container.innerHTML = cam.presets.slice(0, 6).map(p => `
+            <button onclick="LiveEngine.recallPtzPreset(${p.id})" class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 active:bg-cyan-600 active:text-white border border-slate-700/80 text-left transition-all truncate cursor-pointer shadow-sm">
+                <div class="text-[9px] text-cyan-400 font-bold">P${p.id}</div>
+                <div class="truncate text-slate-200 text-xs font-semibold">${p.name}</div>
+            </button>
+        `).join('');
+    },
+
+    applyAtemTally(atem) {
+        if (!atem) return;
+        const pgm = atem.programInput || 0;
+        const pvw = atem.previewInput || 0;
+
+        [1, 2, 3, 3010, 0].forEach(id => {
+            const btnPgm = document.getElementById(`btn-pgm-${id}`);
+            if (btnPgm) {
+                if (pgm === id) {
+                    btnPgm.className = 'atem-btn p-2 rounded-lg bg-red-600 border border-red-400 text-white font-black transition-all text-center shadow-lg shadow-red-900/60 scale-[1.02] cursor-pointer';
+                } else {
+                    btnPgm.className = 'atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 font-bold transition-all text-center hover:border-red-500 cursor-pointer';
+                }
+            }
+
+            const btnPvw = document.getElementById(`btn-pvw-${id}`);
+            if (btnPvw) {
+                if (pvw === id) {
+                    btnPvw.className = 'atem-btn p-2 rounded-lg bg-emerald-600 border border-emerald-400 text-white font-black transition-all text-center shadow-lg shadow-emerald-900/60 scale-[1.02] cursor-pointer';
+                } else {
+                    btnPvw.className = 'atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer';
+                }
+            }
+        });
+    },
+
+    applyPtzState(ptz) {
+        if (!ptz) return;
+        const dot = document.getElementById('ptz-conn-dot');
+        const statusText = document.getElementById('ptz-cam-status');
+        const cam = ptz.cameras?.find(c => c.id === this.activePtzCamera) || ptz.cameras?.[0];
+
+        if (dot && cam) {
+            dot.className = `tally-led ${cam.connected ? 'tally-green' : 'tally-amber'}`;
+        }
+        if (statusText && cam) {
+            statusText.textContent = `${cam.name} (${cam.ip})`;
+        }
+        this.renderPtzPresets(ptz);
+    },
+
+    async resetConfig() {
+        if (!confirm('Are you sure you want to reset all settings to factory defaults? This will erase custom IPs and bot IDs.')) {
+            return;
+        }
+        try {
+            const res = await fetch('/api/config/reset', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                this.currentConfig = data.config;
+                this.updateSettingsForm(data.config);
+                this.updateSettingsDisplays(data.config);
+                this.closeSettings();
+                this.showToast('Settings reset to factory defaults!');
+            }
+        } catch (err) {
+            alert('Failed to reset config: ' + err.message);
+        }
+    },
+
+    testGroupMe(botType = 'main') {
+        const btnId = botType === 'tech' ? 'btn-test-groupme-tech' : 'btn-test-groupme-main';
+        const inputId = botType === 'tech' ? 'cfg-groupmeTechBotId' : 'cfg-groupmeMainBotId';
+        const btn = document.getElementById(btnId);
+        const origText = btn.innerHTML;
+        btn.innerHTML = 'Sending...';
+        btn.disabled = true;
+
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'TEST_GROUPME',
+                data: {
+                    groupmeEnabled: true,
+                    groupmeMainBotId: document.getElementById('cfg-groupmeMainBotId').value.trim(),
+                    groupmeTechBotId: document.getElementById('cfg-groupmeTechBotId').value.trim(),
+                    botType: botType,
+                },
+            }));
+        }
+
+        setTimeout(() => {
+            btn.innerHTML = origText;
+            btn.disabled = false;
+        }, 3000);
+    },
+
+    async authorizeYouTube() {
+        try {
+            const clientId = document.getElementById('cfg-youtubeClientId').value.trim();
+            const clientSecret = document.getElementById('cfg-youtubeClientSecret').value.trim();
+            if (!clientId || !clientSecret) {
+                alert('Please enter your OAuth Client ID and Secret first.');
+                return;
+            }
+            
+            await fetch('/api/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ youtubeClientId: clientId, youtubeClientSecret: clientSecret })
+            });
+
+            const res = await fetch('/api/youtube-auth-url');
+            const data = await res.json();
+            if (data.success && data.url) {
+                window.open(data.url, 'YouTubeAuth', 'width=600,height=800,top=100,left=100');
+            } else {
+                alert('Failed to get authorization URL: ' + (data.error || 'Unknown error'));
+            }
+        } catch (err) {
+            alert('Error connecting to server: ' + err.message);
+        }
+    },
+
+    showToast(msg) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').textContent = msg;
+        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none'), 3500);
+    },
+
+    connect() {
+        const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${location.host}`;
+
+        this.ws = new WebSocket(wsUrl);
+
+        this.ws.onopen = () => {
+            this.connected = true;
+            this.reconnectAttempts = 0;
+            console.log('[WS] Connected to live telemetry feed');
+        };
+
+        this.ws.onmessage = (event) => {
+            try {
+                const msg = JSON.parse(event.data);
+                if (msg.type === 'STATE_UPDATE') {
+                    this.applyState(msg.data);
+                } else if (msg.type === 'CONFIG_UPDATE') {
+                    this.currentConfig = msg.data;
+                    this.updateSettingsDisplays(msg.data);
+                } else if (msg.type === 'TEST_GROUPME_RESULT') {
+                    if (msg.success) {
+                        this.showToast(`✓ Test alert posted to ${msg.botLabel || 'GroupMe'}!`);
+                    } else {
+                        alert(`GroupMe Error: ${msg.error || 'Invalid Bot ID'}`);
+                    }
+                } else if (msg.type === 'EMERGENCY_REOPEN_SCREEN_TRIGGERED') {
+                    this.showToast('✅ ' + (msg.data?.message || 'LONTIUM Screen (Monitor 1) & Captions Active!'));
+                } else if (msg.type === 'REOPEN_SCREEN_RESULT') {
+                    if (msg.success) {
+                        this.showToast('✅ LONTIUM Screen (Monitor 1) & Captions Active!');
+                    }
+                }
+            } catch (err) {
+                console.warn('[WS] Parse error:', err);
+            }
+        };
+
+        this.ws.onclose = () => {
+            this.connected = false;
+            this.scheduleReconnect();
+        };
+    },
+
+    scheduleReconnect() {
+        this.reconnectAttempts++;
+        const delay = Math.min(1000 * Math.pow(1.5, this.reconnectAttempts), this.maxReconnectDelay);
+        setTimeout(() => this.connect(), delay);
+    },
+
+    updateSettingsDisplays(cfg) {
+        if (!cfg) return;
+
+        // Branding
+        if (this.dom.brandFacilityName) this.dom.brandFacilityName.textContent = cfg.facilityName || 'SANCTUARY AV';
+        if (this.dom.brandFacilitySubtitle) this.dom.brandFacilitySubtitle.textContent = cfg.facilitySubtitle || 'LIVE RACK';
+        if (this.dom.brandFacilityDesc) this.dom.brandFacilityDesc.textContent = cfg.facilityDescription || 'Telemetry & Broadcast Health Monitor';
+
+        // Bottom summary pills
+        if (this.dom.dispDur) this.dom.dispDur.textContent = `${cfg.maxDurationMin} min`;
+        if (this.dom.dispSil) this.dom.dispSil.textContent = `${cfg.silenceTimeoutSec}s (${Math.round(cfg.silenceTimeoutSec / 60)} min)`;
+        if (this.dom.dispGroupMe) {
+            this.dom.dispGroupMe.textContent = cfg.groupmeEnabled ? 'Active' : 'Off';
+            this.dom.dispGroupMe.className = `px-2 py-0.5 rounded border text-xs font-bold ${cfg.groupmeEnabled ? 'bg-sky-950/40 border-sky-800 text-sky-300' : 'bg-slate-900 border-slate-800 text-slate-500'}`;
+        }
+        if (this.dom.dispSched) {
+            if (cfg.scheduleEnabled === false) {
+                this.dom.dispSched.textContent = 'All Days / 24h';
+                this.dom.dispSched.className = 'text-slate-300 font-semibold bg-slate-900 px-2 py-0.5 rounded border border-slate-800';
+            } else {
+                const s = cfg.scheduleStart || '09:00';
+                const e = cfg.scheduleEnd || '15:00';
+                this.dom.dispSched.textContent = `Sundays ${s}-${e}`;
+                this.dom.dispSched.className = 'text-amber-300 font-semibold bg-amber-950/40 px-2 py-0.5 rounded border border-amber-800/80';
+            }
+        }
+    },
+
+    applyState(state) {
+        this.lastState = state;
+
+        if (state.config && !this.currentConfig) {
+            this.currentConfig = state.config;
+            this.updateSettingsDisplays(state.config);
+        }
+
+        this.applyGlobalStatus(state.global);
+        this.applyNodes(state.nodes);
+        this.applyAtemTally(state.atem);
+        this.applyPtzState(state.ptz);
+        this.applyCaptioner(state.captioner);
+        this.applyAudio(state.reaper);
+        this.applyStreamTelemetry(state.atem, state.obs);
+        this.applyYouTube(state.youtube, state.reaper, state.atem);
+        this.applyNetwork(state.network);
+        this.applyAlerts(state.alerts);
+    },
+
+    clearCaptionsPreview() {
+        fetch('/api/captioner/clear', { method: 'POST' }).catch(() => {});
+        const text = document.getElementById('voxstream-live-text');
+        if (text) text.textContent = '"Preview cleared."';
+    },
+
+    async toggleAtemStream() {
+        try {
+            const res = await fetch('/api/atem/stream/toggle', { method: 'POST' }).then(r => r.json());
+            if (res && res.error) alert(`ATEM: ${res.error}`);
+        } catch (e) {
+            console.error(e);
+        }
+    },
+
+    async toggleObsStream() {
+        try {
+            const res = await fetch('/api/obs/stream/toggle', { method: 'POST' }).then(r => r.json());
+            if (res && res.error) alert(`OBS: ${res.error}`);
+        } catch (e) {
+            console.error(e);
+        }
+    },
+
+    applyCaptioner(captioner) {
+        if (!captioner) return;
+        const dot = document.getElementById('voxstream-dot');
+        const badge = document.getElementById('voxstream-status-badge');
+        const wpmBadge = document.getElementById('voxstream-wpm-badge');
+        const text = document.getElementById('voxstream-live-text');
+
+        if (dot) {
+            dot.className = `tally-led ${captioner.connected ? (captioner.isCapturing ? 'tally-green' : 'tally-amber') : 'tally-off'}`;
+        }
+        if (badge) {
+            badge.textContent = captioner.connected ? (captioner.isCapturing ? 'Capturing' : 'Standby') : 'Offline';
+            badge.className = `px-2 py-0.5 rounded text-[10px] font-bold border ${captioner.connected ? (captioner.isCapturing ? 'bg-emerald-950/40 border-emerald-800 text-emerald-400' : 'bg-amber-950/40 border-amber-800 text-amber-400') : 'bg-slate-900 border-slate-800 text-slate-500'}`;
+        }
+        if (wpmBadge) {
+            if (captioner.connected && captioner.currentWpm > 0) {
+                wpmBadge.classList.remove('hidden');
+                wpmBadge.textContent = `⚡ ${captioner.currentWpm} WPM (${captioner.paceRating || 'Normal'})`;
+                wpmBadge.style.color = captioner.paceColor || '#38bdf8';
+            } else {
+                wpmBadge.classList.add('hidden');
+            }
+        }
+        if (text) {
+            if (captioner.interimTranscript) {
+                text.innerHTML = `<span class="text-white font-medium">"${captioner.lastTranscript || ''}"</span> <span class="text-cyan-400 italic font-semibold">${captioner.interimTranscript}...</span>`;
+            } else if (captioner.lastTranscript) {
+                text.textContent = `"${captioner.lastTranscript}"`;
+            } else {
+                text.textContent = captioner.connected ? '"Listening for speech..."' : '"Standing by (VoxStream offline)..."';
+            }
+        }
+    },
+
+    applyGlobalStatus(global) {
+        const div = this.dom.globalStatus;
+        const text = this.dom.globalStatusText;
+        const led = div.querySelector('.tally-led');
+
+        div.className = 'px-3.5 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-2 transition-colors';
+        if (global.status === 'normal') {
+            div.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+            if (led) led.className = 'tally-led tally-green';
+        } else if (global.status === 'warning') {
+            div.classList.add('bg-amber-500/10', 'border-amber-500/30', 'text-amber-400');
+            if (led) led.className = 'tally-led tally-amber';
+        } else {
+            div.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
+            if (led) led.className = 'tally-led tally-red';
+        }
+        text.textContent = global.message;
+    },
+
+    applyNodes(nodes) {
+        if (!nodes || !this.dom.signalChainContainer) return;
+        
+        // Get SVG icon based on node id
+        const getIcon = (id) => {
+            if (id === 'proclaim') return '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>';
+            if (id === 'reaper') return '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>';
+            if (id === 'atem') return '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>';
+            if (id === 'obs') return '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>';
+            return '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+        };
+
+        // Render dynamically
+        this.dom.signalChainContainer.innerHTML = nodes.map(node => {
+            const isOk = node.status === 'ok';
+            const isWarn = node.status === 'warn';
+            const borderCol = isOk ? 'border-emerald-500/40' : (isWarn ? 'border-amber-500/40' : 'border-slate-800');
+            const tallyClass = isOk ? 'tally-green' : (isWarn ? 'tally-amber' : 'tally-off');
+            const textCol = isOk ? 'text-emerald-400' : (isWarn ? 'text-amber-400' : 'text-slate-400');
+
+            return `
+                <div class="hardware-card p-3 rounded-lg flex items-center justify-between border ${borderCol} relative transition-all">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded bg-slate-900 flex items-center justify-center text-slate-400 border border-slate-800 shrink-0">
+                            ${getIcon(node.id)}
+                        </div>
+                        <div>
+                            <div class="text-[11px] font-bold text-white whitespace-nowrap">${node.name}</div>
+                            <div class="text-[9px] text-slate-400 font-mono">${node.subtitle}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-[10px] font-semibold">
+                        <div class="tally-led ${tallyClass}"></div>
+                        <span class="${textCol}">${node.statusText}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    applyAudio(reaper) {
+        if (!reaper) return;
+
+        const getPct = db => Math.max(0, Math.min(100, ((db + 60) / 60) * 100));
+
+        this.dom.vuLFill.style.height = `${getPct(reaper.leftDb)}%`;
+        this.dom.vuLPeak.style.bottom = `${getPct(reaper.leftHold)}%`;
+        this.dom.vuRFill.style.height = `${getPct(reaper.rightDb)}%`;
+        this.dom.vuRPeak.style.bottom = `${getPct(reaper.rightHold)}%`;
+
+        this.dom.vuLPkVal.textContent = reaper.leftDb <= -59 ? '-inf' : `${reaper.leftDb.toFixed(1)}`;
+        this.dom.vuLRmVal.textContent = reaper.leftRms <= -59 ? '-inf' : `${reaper.leftRms.toFixed(1)}`;
+        this.dom.vuRPkVal.textContent = reaper.rightDb <= -59 ? '-inf' : `${reaper.rightDb.toFixed(1)}`;
+        this.dom.vuRRmVal.textContent = reaper.rightRms <= -59 ? '-inf' : `${reaper.rightRms.toFixed(1)}`;
+
+        if (this.lastState?.alerts?.isSilent) {
+            this.dom.silenceAlarm.classList.remove('hidden');
+        } else {
+            this.dom.silenceAlarm.classList.add('hidden');
+        }
+    },
+
+    applyStreamTelemetry(atem, obs) {
+        if (!atem) return;
+        
+        // Check both ATEM and OBS
+        const atemSec = atem?.isStreaming ? (atem.streamDuration || 0) : 0;
+        const obsSec = obs?.isStreaming ? (obs.streamDuration || 0) : 0;
+        const isStreaming = Boolean(atem?.isStreaming || obs?.isStreaming);
+        const durationSec = Math.max(atemSec, obsSec);
+        const bitrate = obs?.isStreaming ? (obs.outputBitrate || 0) : (atem?.isStreaming ? 4500 : 0);
+        const drops = obs?.isStreaming ? (obs.droppedFrames || 0) : 0;
+        const dropPct = obs?.isStreaming ? (obs.dropPercentage || 0) : 0;
+
+        if (isStreaming && durationSec > 0) {
+            const h = Math.floor(durationSec / 3600).toString().padStart(2, '0');
+            const m = Math.floor((durationSec % 3600) / 60).toString().padStart(2, '0');
+            const s = (durationSec % 60).toString().padStart(2, '0');
+            this.dom.strDur.textContent = `${h}:${m}:${s}`;
+            this.dom.strDur.className = 'text-xl font-mono font-bold text-white tracking-wider';
+        } else {
+            this.dom.strDur.textContent = '00:00:00';
+            this.dom.strDur.className = 'text-xl font-mono font-bold text-slate-500 tracking-wider';
+        }
+
+        if (isStreaming) {
+            this.dom.strBit.textContent = `${bitrate} kbps`;
+            this.dom.strDrop.textContent = drops;
+            this.dom.strDropPct.textContent = `(${dropPct.toFixed(1)}%)`;
+
+            if (dropPct > 0.1) {
+                this.dom.strDrop.classList.add('text-red-400');
+                this.dom.strDropPct.classList.add('text-red-400');
+            } else {
+                this.dom.strDrop.classList.remove('text-red-400');
+                this.dom.strDropPct.classList.remove('text-red-400');
+            }
+        } else {
+            this.dom.strBit.textContent = '0 kbps';
+            this.dom.strDrop.textContent = '0';
+            this.dom.strDropPct.textContent = '(0.0%)';
+            this.dom.strDrop.classList.remove('text-red-400');
+            this.dom.strDropPct.classList.remove('text-red-400');
+        }
+    },
+
+    applyYouTube(yt, reaper, atem) {
+        if (!yt) return;
+
+        const pill = this.dom.ytPill;
+        const led = pill.querySelector('.tally-led');
+
+        if (yt.broadcastState === 'live') {
+            pill.className = 'px-2.5 py-1 rounded bg-red-950/40 border border-red-800 text-xs font-bold text-red-400 flex items-center gap-1.5';
+            if (led) led.className = 'tally-led tally-red';
+            this.dom.ytText.textContent = 'LIVE';
+        } else {
+            pill.className = 'px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-bold text-slate-400 flex items-center gap-1.5';
+            if (led) led.className = 'tally-led tally-off';
+            this.dom.ytText.textContent = 'OFFLINE';
+        }
+
+        // Ingest Health
+        const isHealthy = yt.streamHealth === 'good' || yt.streamHealth === 'ok';
+        this.dom.ytHealthDot.className = `tally-led ${isHealthy ? 'tally-green' : 'tally-off'}`;
+        this.dom.ytHealthText.textContent = yt.streamHealth === 'good' ? 'EXCELLENT' : (yt.streamHealth === 'ok' ? 'GOOD' : 'NO DATA');
+        this.dom.ytHealthText.className = `font-semibold ${isHealthy ? 'text-emerald-400' : 'text-slate-400'}`;
+
+        // Audio Stream
+        const audioConnected = reaper?.connected;
+        const leftDb = reaper?.leftDb ?? -60;
+        const isSilent = leftDb <= -50;
+
+        if (audioConnected && !isSilent && (atem?.isStreaming || yt.broadcastState === 'live')) {
+            this.dom.ytAudioDot.className = 'tally-led tally-green';
+            this.dom.ytAudioText.textContent = 'RECEIVING AAC';
+            this.dom.ytAudioText.className = 'text-emerald-400 font-semibold';
+        } else if (isSilent && atem?.isStreaming) {
+            this.dom.ytAudioDot.className = 'tally-led tally-amber';
+            this.dom.ytAudioText.textContent = 'SILENT (MUTED)';
+            this.dom.ytAudioText.className = 'text-amber-400 font-semibold';
+        } else {
+            this.dom.ytAudioDot.className = 'tally-led tally-off';
+            this.dom.ytAudioText.textContent = 'STANDBY';
+            this.dom.ytAudioText.className = 'text-slate-500 font-semibold';
+        }
+
+        this.dom.ytViewers.textContent = yt.viewerCount || 0;
+        this.dom.ytChatRate.textContent = yt.chatRate || 0;
+    },
+
+    applyNetwork(network) {
+        if (!network?.endpoints) return;
+
+        const container = document.getElementById('ping-list');
+
+        if (!this.pingPanelInitialized) {
+            container.innerHTML = '';
+            for (const [key, ep] of Object.entries(network.endpoints)) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between text-xs font-mono bg-black/40 px-3 py-2 rounded-lg border border-slate-800';
+                div.id = `ping-row-${key}`;
+                div.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <div id="ping-dot-${key}" class="tally-led tally-off"></div>
+                        <span class="text-slate-300 font-medium">${ep.name}</span>
+                    </div>
+                    <span class="text-slate-400 font-bold" id="ping-val-${key}">-</span>
+                `;
+                container.appendChild(div);
+            }
+            this.pingPanelInitialized = true;
+        }
+
+        for (const [key, ep] of Object.entries(network.endpoints)) {
+            const valEl = document.getElementById(`ping-val-${key}`);
+            const dotEl = document.getElementById(`ping-dot-${key}`);
+
+            if (!valEl) continue;
+
+            if (!ep.alive) {
+                valEl.textContent = 'OFFLINE';
+                valEl.className = 'text-red-400 font-bold';
+                if (dotEl) dotEl.className = 'tally-led tally-off';
+            } else {
+                valEl.textContent = `${ep.latency} ms`;
+                valEl.className = 'text-emerald-400 font-bold';
+                if (dotEl) dotEl.className = 'tally-led tally-green';
+            }
+        }
+    },
+
+    applyAlerts(alerts) {
+        if (!alerts) return;
+
+        const overtimeBanner = document.getElementById('overtime-alert-banner');
+        if (overtimeBanner) {
+            if (alerts.isOvertime) {
+                overtimeBanner.classList.remove('hidden');
+            } else {
+                overtimeBanner.classList.add('hidden');
+            }
+        }
+
+        if (alerts.events && alerts.events.length > 0) {
+            const newEvents = alerts.events.filter(e =>
+                !this.previousEvents.some(pe => pe.timestamp === e.timestamp && pe.message === e.message)
+            );
+
+            newEvents.reverse().forEach(event => {
+                this.addLogEntry(event.severity, event.message, event.timestamp);
+            });
+
+            this.previousEvents = alerts.events.slice(0, 50);
+        }
+    },
+
+    updateClock() {
+        const now = new Date();
+        const is12h = this.currentConfig?.clockFormat === '12h';
+        this.dom.clockTime.textContent = now.toLocaleTimeString('en-US', { hour12: is12h });
+        this.dom.clockDate.textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' });
+    },
+
+    addLogEntry(severity, message, timestamp) {
+        const entry = document.createElement('div');
+        entry.className = 'flex items-baseline gap-2 py-0.5 border-b border-white/[0.03]';
+
+        let badge = 'INFO';
+        let badgeColor = 'text-cyan-400';
+
+        if (severity === 'warn') {
+            badge = 'WARN';
+            badgeColor = 'text-amber-400 font-bold';
+        } else if (severity === 'error') {
+            badge = 'CRIT';
+            badgeColor = 'text-red-400 font-bold';
+        }
+
+        const time = timestamp
+            ? new Date(timestamp).toLocaleTimeString('en-US', { hour12: false })
+            : new Date().toLocaleTimeString('en-US', { hour12: false });
+
+        entry.innerHTML = `
+            <span class="text-slate-600 shrink-0">[${time}]</span>
+            <span class="${badgeColor} shrink-0">${badge}</span>
+            <span class="text-slate-300 flex-grow">${message}</span>
+        `;
+
+        this.dom.log.prepend(entry);
+        if (this.dom.log.children.length > 50) {
+            this.dom.log.removeChild(this.dom.log.lastChild);
+        }
+    },
+};
+
+document.addEventListener('DOMContentLoaded', () => LiveEngine.init());
+</script>
+<script src="/js/nav.js"></script>
+
+</body>
+</html>

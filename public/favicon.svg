@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="avBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#08202d"/>
+      <stop offset="100%" stop-color="#050d14"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Squircle with Cyan Accent Border -->
+  <rect width="64" height="64" rx="14" fill="url(#avBg)"/>
+  <rect x="1" y="1" width="62" height="62" rx="13" stroke="#06b6d4" stroke-width="2" stroke-opacity="0.6"/>
+  
+  <!-- Outer Cyan Radio Waves -->
+  <path d="M14 44C9.5 37.5 9.5 26.5 14 20" stroke="#06b6d4" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.6"/>
+  <path d="M50 44C54.5 37.5 54.5 26.5 50 20" stroke="#06b6d4" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.6"/>
+  
+  <!-- Mid Sky Blue Radio Waves -->
+  <path d="M21 39C18 34.5 18 29.5 21 25" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.9"/>
+  <path d="M43 39C46 34.5 46 29.5 43 25" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.9"/>
+  
+  <!-- Center Broadcast Tower & Core LED -->
+  <circle cx="32" cy="32" r="5" fill="#10b981"/>
+  <circle cx="32" cy="32" r="8" stroke="#34d399" stroke-width="1.5" stroke-opacity="0.5"/>
+  <path d="M32 37V49" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+  <path d="M26 49H38" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+</svg>

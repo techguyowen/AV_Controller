@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#090c10">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/icon.svg">
+    <title>Broadcast Telemetry & Diagnostics — Sanctuary AV</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #090c10;
+            color: #f1f5f9;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 sm:pb-6 flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-cyan-600/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a10 10 0 0114.142 0M1.394 9.393a15 15 0 0121.213 0"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    <span>BROADCAST TELEMETRY</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-800 text-cyan-400 font-mono">DIAGNOSTICS</span>
+                </h1>
+                <p class="text-[10px] font-mono text-slate-400">Network Latency & YouTube Ingest Monitor</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <div id="global-conn-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">
+                🪟 HUD
+            </a>
+        </div>
+    </header>
+
+    <!-- Simple Direct Station Navigation Bar -->
+    <div class="max-w-5xl mx-auto w-full px-3 pt-3">
+        <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+            <div class="flex items-center gap-1.5 min-w-max">
+                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
+                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
+                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">💬 Captions</a>
+                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">📡 OBS / Stream</a>
+            </div>
+            <div class="flex items-center gap-2 min-w-max">
+                <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
+                    <span>📖 Booth Ops</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-3 sm:p-5 max-w-5xl mx-auto w-full space-y-4">
+
+        <!-- 🚨 2-Hour Stream Overtime Warning Banner (Hidden unless duration >= 120 min) -->
+        <div id="overtime-alert-banner" class="hidden p-4 rounded-2xl bg-red-950/90 border-2 border-red-500 shadow-2xl flex items-center justify-between gap-4 animate-pulse">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🚨</span>
+                <div>
+                    <h3 class="text-sm font-black text-red-100 uppercase tracking-wider">MAX STREAM DURATION EXCEEDED (> 2 HOURS)</h3>
+                    <p class="text-xs text-red-300">The live broadcast has been streaming for over 120 minutes. Please verify if the service has finished and stop the stream.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="SanctuaryClient.toggleAtemStream()" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-black uppercase tracking-wider cursor-pointer shadow-lg">
+                    Stop ATEM Stream
+                </button>
+            </div>
+        </div>
+
+        <!-- 1. Key Metrics 4-Card Grid -->
+        <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase font-bold">STREAM DURATION</span>
+                <div id="metric-duration" class="text-lg sm:text-xl font-black text-white">00:00:00</div>
+                <div id="metric-duration-sub" class="text-[10px] text-slate-400">Standby</div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase font-bold">PRIMARY (ATEM)</span>
+                <div id="metric-atem-state" class="text-lg sm:text-xl font-black text-slate-400">OFFLINE</div>
+                <div id="metric-atem-sub" class="text-[10px] text-slate-500">192.168.1.240</div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase font-bold">LOCAL / REC (OBS)</span>
+                <div id="metric-obs-state" class="text-lg sm:text-xl font-black text-slate-400">STANDBY</div>
+                <div id="metric-obs-sub" class="text-[10px] text-slate-500">Localhost:4455</div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase font-bold">YOUTUBE INGEST</span>
+                <div id="metric-ping-yt" class="text-lg sm:text-xl font-black text-emerald-400">-- ms</div>
+                <div class="text-[10px] text-slate-400">RTMP Connection</div>
+            </div>
+        </section>
+
+        <!-- 2. Primary Encoder: Blackmagic ATEM Mini Pro -->
+        <section class="bg-slate-900/80 border-2 border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-extrabold uppercase tracking-wider text-white">🔴 Primary Broadcast Encoder: ATEM Mini Pro</span>
+                    <span id="atem-status-pill" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">OFFLINE</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Hardware YouTube Streaming via Ethernet</div>
+            </div>
+
+            <!-- Master Action Buttons for ATEM -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button id="btn-atem-stream" onclick="SanctuaryClient.toggleAtemStream()" class="p-3.5 rounded-xl bg-red-950/60 hover:bg-red-900/80 border border-red-800 text-red-300 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-lg">
+                    <span class="text-lg" id="icon-atem-stream">🔴</span>
+                    <span id="label-atem-stream" class="text-xs uppercase">Start ATEM Stream</span>
+                </button>
+
+                <button id="btn-atem-record" onclick="SanctuaryClient.toggleAtemRecord()" class="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer">
+                    <span class="text-lg" id="icon-atem-record">📼</span>
+                    <span id="label-atem-record" class="text-xs uppercase">Start USB Record</span>
+                </button>
+
+                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between px-4">
+                    <span class="text-slate-400 font-bold">PROGRAM:</span>
+                    <span id="atem-pgm-tally" class="px-2.5 py-1 rounded bg-red-950 border border-red-800 text-red-300 font-black">INPUT 1</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Secondary Encoder & Local Distribution: OBS Studio -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-extrabold uppercase tracking-wider text-slate-200">🎥 Secondary / Local Distribution: OBS Studio</span>
+                    <span id="obs-status-pill" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">STANDBY</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Overflow Rooms, Local Recording & Captions</div>
+            </div>
+
+            <!-- Master Stream / Record Action Bar for OBS -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button id="btn-obs-stream" onclick="SanctuaryClient.toggleObsStream()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                    <span class="text-base" id="icon-obs-stream">🔴</span>
+                    <span id="label-obs-stream" class="text-xs uppercase">Start OBS Stream</span>
+                </button>
+
+                <button id="btn-obs-record" onclick="SanctuaryClient.toggleObsRecord()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                    <span class="text-base" id="icon-obs-record">📼</span>
+                    <span id="label-obs-record" class="text-xs uppercase">Start Record</span>
+                </button>
+
+                <button id="btn-obs-studio" onclick="SanctuaryClient.toggleObsStudioMode()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                    <span class="text-base">🎬</span>
+                    <span id="label-obs-studio" class="text-xs uppercase">Studio Mode</span>
+                </button>
+
+                <button id="btn-obs-vcam" onclick="SanctuaryClient.toggleObsVirtualCam()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                    <span class="text-base">📹</span>
+                    <span id="label-obs-vcam" class="text-xs uppercase">Virtual Cam</span>
+                </button>
+            </div>
+
+            <!-- Active Scene & Quick Scene Switcher Grid -->
+            <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between text-[11px]">
+                    <span class="text-slate-400">ACTIVE OBS PROGRAM SCENE: <strong id="obs-current-scene" class="text-white">None</strong></span>
+                    <span class="text-[10px] text-slate-500">Tap to switch scene</span>
+                </div>
+                <div id="obs-scenes-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div class="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 text-center text-slate-500 text-[11px]">Loading scenes...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Network Latency Ping Table -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">Signal Nodes & Network Latency</span>
+                <button onclick="SanctuaryClient.refreshAll()" class="text-[10px] text-cyan-400 hover:underline font-bold cursor-pointer">
+                    🔄 Refresh Status
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <div class="text-white font-bold">Internet Gateway Router</div>
+                        <div class="text-[10px] text-slate-500">192.168.1.1</div>
+                    </div>
+                    <span id="ping-gateway" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <div class="text-white font-bold">YouTube RTMP Ingest</div>
+                        <div class="text-[10px] text-slate-500">a.rtmp.youtube.com</div>
+                    </div>
+                    <span id="ping-youtube" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <div class="text-white font-bold">ATEM Mini Video Switcher</div>
+                        <div class="text-[10px] text-slate-500">192.168.1.240</div>
+                    </div>
+                    <span id="ping-atem" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <div class="text-white font-bold">REAPER Livestream DAW</div>
+                        <div class="text-[10px] text-slate-500">127.0.0.1:9000</div>
+                    </div>
+                    <span id="ping-reaper" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. System Event Log Feed -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">Live Incident & Broadcast Log</span>
+                <span class="text-[10px] text-slate-500">Real-Time Event Stream</span>
+            </div>
+
+            <div id="event-log-feed" class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 space-y-2 max-h-48 overflow-y-auto">
+                <div class="text-slate-500 text-[11px]">System initialized and monitoring all church broadcast systems.</div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/js/client.js"></script>
+    <script src="/js/nav.js"></script>
+    <script>
+        function formatDuration(sec) {
+            const h = Math.floor(sec / 3600);
+            const m = Math.floor((sec % 3600) / 60);
+            const s = sec % 60;
+            return [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
+        }
+
+        // Live WebSocket Telemetry Listener
+        SanctuaryClient.subscribe((state) => {
+            const atem = state.atem || {};
+            const obs = state.obs || {};
+            const alerts = state.alerts || {};
+            const net = state.network || {};
+
+            // 1. Overtime Alert Banner (> 2 hours / 120 mins)
+            const atemSec = atem.isStreaming ? (atem.streamDuration || 0) : 0;
+            const obsSec = obs.isStreaming ? (obs.streamDuration || 0) : 0;
+            const activeSec = Math.max(atemSec, obsSec);
+            const isOvertime = alerts.isOvertime || (activeSec >= 7200);
+
+            const banner = document.getElementById('overtime-alert-banner');
+            if (banner) {
+                if (isOvertime) {
+                    banner.classList.remove('hidden');
+                } else {
+                    banner.classList.add('hidden');
+                }
+            }
+
+            // 2. Duration readout
+            const durEl = document.getElementById('metric-duration');
+            const durSub = document.getElementById('metric-duration-sub');
+            if (durEl) {
+                durEl.textContent = activeSec > 0 ? formatDuration(activeSec) : '00:00:00';
+            }
+            if (durSub) {
+                if (activeSec > 0) {
+                    const enc = atemSec >= obsSec && atemSec > 0 ? 'ATEM Mini Pro' : 'OBS Studio';
+                    durSub.textContent = `● Live via ${enc}`;
+                    durSub.className = 'text-[10px] text-emerald-400 font-bold';
+                } else {
+                    durSub.textContent = 'Standby (Offline)';
+                    durSub.className = 'text-[10px] text-slate-500';
+                }
+            }
+
+            // 3. ATEM Section & Status
+            const atemPill = document.getElementById('atem-status-pill');
+            const atemMetricState = document.getElementById('metric-atem-state');
+            const atemStreamBtn = document.getElementById('btn-atem-stream');
+            const atemStreamLbl = document.getElementById('label-atem-stream');
+            const atemRecBtn = document.getElementById('btn-atem-record');
+            const atemRecLbl = document.getElementById('label-atem-record');
+            const atemPgmTally = document.getElementById('atem-pgm-tally');
+
+            if (atemPill) {
+                if (!atem.connected) {
+                    atemPill.textContent = 'OFFLINE';
+                    atemPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-500';
+                } else if (atem.isStreaming) {
+                    atemPill.textContent = '● LIVE BROADCAST';
+                    atemPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-red-950/80 border border-red-800 text-red-400 animate-pulse';
+                } else {
+                    atemPill.textContent = 'ONLINE / IDLE';
+                    atemPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950/80 border border-emerald-800 text-emerald-400';
+                }
+            }
+
+            if (atemMetricState) {
+                atemMetricState.textContent = atem.connected ? (atem.isStreaming ? 'STREAMING' : 'IDLE') : 'OFFLINE';
+                atemMetricState.className = `text-lg sm:text-xl font-black ${atem.isStreaming ? 'text-red-400 animate-pulse' : (atem.connected ? 'text-emerald-400' : 'text-slate-500')}`;
+            }
+
+            if (atemStreamBtn && atemStreamLbl) {
+                if (atem.isStreaming) {
+                    atemStreamLbl.textContent = 'Stop ATEM Stream';
+                    atemStreamBtn.className = 'p-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-lg animate-pulse';
+                } else {
+                    atemStreamLbl.textContent = 'Start ATEM Stream';
+                    atemStreamBtn.className = 'p-3.5 rounded-xl bg-red-950/60 hover:bg-red-900/80 border border-red-800 text-red-300 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer';
+                }
+            }
+
+            if (atemRecBtn && atemRecLbl) {
+                if (atem.isRecording) {
+                    atemRecLbl.textContent = 'Stop USB Record';
+                    atemRecBtn.className = 'p-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-black flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-lg animate-pulse';
+                } else {
+                    atemRecLbl.textContent = 'Start USB Record';
+                    atemRecBtn.className = 'p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer';
+                }
+            }
+
+            if (atemPgmTally) {
+                atemPgmTally.textContent = atem.programInput ? `INPUT ${atem.programInput}` : 'UNKNOWN';
+            }
+
+            // 4. OBS Section & Status
+            const obsPill = document.getElementById('obs-status-pill');
+            const obsMetricState = document.getElementById('metric-obs-state');
+            const obsStreamBtn = document.getElementById('btn-obs-stream');
+            const obsStreamLbl = document.getElementById('label-obs-stream');
+            const obsRecBtn = document.getElementById('btn-obs-record');
+            const obsRecLbl = document.getElementById('label-obs-record');
+            const obsCurrentScene = document.getElementById('obs-current-scene');
+
+            if (obsPill) {
+                if (!obs.connected) {
+                    obsPill.textContent = 'OFFLINE';
+                    obsPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-500';
+                } else if (obs.isStreaming) {
+                    obsPill.textContent = '● STREAMING';
+                    obsPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-red-950/80 border border-red-800 text-red-400 animate-pulse';
+                } else if (obs.isRecording) {
+                    obsPill.textContent = '● RECORDING';
+                    obsPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950/80 border border-amber-800 text-amber-400';
+                } else {
+                    obsPill.textContent = 'ONLINE';
+                    obsPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950/80 border border-emerald-800 text-emerald-400';
+                }
+            }
+
+            if (obsMetricState) {
+                obsMetricState.textContent = obs.connected ? (obs.isStreaming ? 'STREAMING' : (obs.isRecording ? 'RECORDING' : 'READY')) : 'OFFLINE';
+                obsMetricState.className = `text-lg sm:text-xl font-black ${obs.isStreaming ? 'text-red-400' : (obs.connected ? 'text-emerald-400' : 'text-slate-500')}`;
+            }
+
+            if (obsStreamBtn && obsStreamLbl) {
+                if (obs.isStreaming) {
+                    obsStreamLbl.textContent = 'Stop OBS Stream';
+                    obsStreamBtn.className = 'p-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer shadow-lg animate-pulse';
+                } else {
+                    obsStreamLbl.textContent = 'Start OBS Stream';
+                    obsStreamBtn.className = 'p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer';
+                }
+            }
+
+            if (obsRecBtn && obsRecLbl) {
+                if (obs.isRecording) {
+                    obsRecLbl.textContent = 'Stop Record';
+                    obsRecBtn.className = 'p-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-black flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer shadow-lg animate-pulse';
+                } else {
+                    obsRecLbl.textContent = 'Start Record';
+                    obsRecBtn.className = 'p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer';
+                }
+            }
+
+            if (obsCurrentScene) {
+                obsCurrentScene.textContent = obs.currentScene || 'None';
+            }
+
+            // OBS Scenes Grid
+            if (obs.scenes && obs.scenes.length > 0) {
+                const grid = document.getElementById('obs-scenes-grid');
+                if (grid && (!grid.dataset.loaded || grid.dataset.sceneCount != obs.scenes.length || grid.dataset.activeScene != obs.currentScene)) {
+                    grid.dataset.loaded = 'true';
+                    grid.dataset.sceneCount = obs.scenes.length;
+                    grid.dataset.activeScene = obs.currentScene;
+                    grid.innerHTML = obs.scenes.map(s => `
+                        <button onclick="SanctuaryClient.setObsScene('${s.replace(/'/g, "\\'")}')" class="p-2.5 rounded-lg text-center transition-all cursor-pointer truncate ${s === obs.currentScene ? 'bg-red-600 text-white font-black border border-red-400 shadow-md' : 'bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300'}">
+                            ${s}
+                        </button>
+                    `).join('');
+                }
+            }
+
+            // 5. Network Pings
+            if (net.endpoints) {
+                const yt = net.endpoints.rtmp;
+                const gw = net.endpoints.gateway;
+                const at = net.endpoints.atem;
+                const rp = net.endpoints.reaper;
+
+                const ytPingEl = document.getElementById('metric-ping-yt');
+                const pingYtEl = document.getElementById('ping-youtube');
+                const pingGwEl = document.getElementById('ping-gateway');
+                const pingAtEl = document.getElementById('ping-atem');
+                const pingRpEl = document.getElementById('ping-reaper');
+
+                if (yt && yt.latency !== null) {
+                    if (ytPingEl) ytPingEl.textContent = `${yt.latency} ms`;
+                    if (pingYtEl) {
+                        pingYtEl.textContent = `${yt.latency} ms`;
+                        pingYtEl.className = `px-2 py-0.5 rounded font-bold ${yt.latency < 50 ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400' : 'bg-amber-950/60 border border-amber-800 text-amber-400'}`;
+                    }
+                }
+                if (gw && gw.latency !== null && pingGwEl) {
+                    pingGwEl.textContent = `${gw.latency} ms`;
+                    pingGwEl.className = 'px-2 py-0.5 rounded font-bold bg-emerald-950/60 border border-emerald-800 text-emerald-400';
+                }
+                if (at && pingAtEl) {
+                    pingAtEl.textContent = at.alive ? `${at.latency || 1} ms` : 'Offline';
+                    pingAtEl.className = `px-2 py-0.5 rounded font-bold ${at.alive ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400' : 'bg-slate-900 text-slate-500'}`;
+                }
+                if (rp && pingRpEl) {
+                    pingRpEl.textContent = rp.alive ? `${rp.latency || 0} ms` : 'Offline';
+                    pingRpEl.className = `px-2 py-0.5 rounded font-bold ${rp.alive ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400' : 'bg-slate-900 text-slate-500'}`;
+                }
+            }
+
+            // 6. Events Log Feed
+            if (alerts.events && alerts.events.length > 0) {
+                const feed = document.getElementById('event-log-feed');
+                if (feed) {
+                    feed.innerHTML = alerts.events.slice(0, 8).map(ev => `
+                        <div class="flex items-start justify-between gap-2 text-[11px] ${ev.severity === 'error' ? 'text-red-400' : (ev.severity === 'warn' ? 'text-amber-300' : 'text-slate-400')}">
+                            <span>${ev.message}</span>
+                            <span class="text-[10px] text-slate-500 font-mono">${new Date(ev.timestamp).toLocaleTimeString()}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

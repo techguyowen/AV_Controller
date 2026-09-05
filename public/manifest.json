@@ -1,0 +1,54 @@
+{
+  "name": "Sanctuary AV Controller",
+  "short_name": "SanctuaryAV",
+  "description": "Church Live Production Telemetry, Video Switcher & PTZ Camera Controller",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090c10",
+  "theme_color": "#090c10",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Camera & Switcher",
+      "short_name": "Cameras",
+      "url": "/cameras",
+      "description": "ATEM Video Switching & PTZ Camera Controller"
+    },
+    {
+      "name": "Audio Mix & VU",
+      "short_name": "Audio",
+      "url": "/audio",
+      "description": "Precision VU Metering & Silence Watchdog"
+    },
+    {
+      "name": "Live Transcription",
+      "short_name": "Captions",
+      "url": "/captions",
+      "description": "Real-Time Spoken Word Teleprompter"
+    },
+    {
+      "name": "Sunday Checklist",
+      "short_name": "Checklist",
+      "url": "/checklist",
+      "description": "Pre-Flight Diagnostics & Sign-Off"
+    }
+  ]
+}

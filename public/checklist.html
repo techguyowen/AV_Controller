@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#090c10">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/icon.svg">
+    <title>Sunday Checklist & Broadcast Reports — Sanctuary AV</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #090c10;
+            color: #f1f5f9;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 sm:pb-6 flex flex-col justify-between">
+
+    <!-- Top Header -->
+    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    <span>SUNDAY PRE-FLIGHT</span>
+                    <span id="readiness-pill" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-800 text-amber-400 font-mono">0% READY</span>
+                </h1>
+                <p class="text-[10px] font-mono text-slate-400">Volunteer Verification & Service Reports</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <div id="global-conn-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">
+                🪟 HUD
+            </a>
+        </div>
+    </header>
+
+    <!-- Simple Direct Station Navigation Bar -->
+    <div class="max-w-4xl mx-auto w-full px-3 pt-3">
+        <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+            <div class="flex items-center gap-1.5 min-w-max">
+                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
+                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">📋 Checklist</a>
+                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">💬 Captions</a>
+                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
+                <a href="/guide" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 hover:text-white border border-emerald-800 transition-colors flex items-center gap-1.5">📖 Training & Setup</a>
+            </div>
+            <div class="flex items-center gap-2 min-w-max">
+                <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
+                    <span>📖 Booth Ops</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Workspace -->
+    <main class="flex-grow p-3 sm:p-5 max-w-4xl mx-auto w-full space-y-4">
+
+        <!-- Progress & Quick Actions Card -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">Sunday Readiness Status</span>
+                    <div class="text-xs font-mono text-slate-400 mt-0.5">
+                        <span id="completed-count" class="text-white font-bold">0</span> of <span id="total-count">10</span> pre-flight items verified
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button onclick="runAutoDiagnostics()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-900/40">
+                        <span>⚡ Run Auto-Check</span>
+                    </button>
+                    <button onclick="resetChecklist()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-bold cursor-pointer">
+                        🔄 Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800 p-0.5">
+                <div id="progress-fill" class="h-full rounded-full bg-amber-500 transition-all duration-500" style="width: 0%;"></div>
+            </div>
+        </section>
+
+        <!-- Checklist Tabs: 1. Pre-Flight Verification | 2. Past Broadcast Reports -->
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-1 text-xs font-mono font-bold">
+            <button id="tab-btn-checklist" onclick="showTab('checklist')" class="px-4 py-2 rounded-t-lg bg-slate-800 text-white border-b-2 border-cyan-400 cursor-pointer">
+                📋 Pre-Flight Checklist
+            </button>
+            <button id="tab-btn-reports" onclick="showTab('reports')" class="px-4 py-2 rounded-t-lg text-slate-400 hover:text-white cursor-pointer">
+                📄 Broadcast Reports
+            </button>
+        </div>
+
+        <!-- TAB 1: Pre-Flight Checklist -->
+        <section id="tab-checklist" class="space-y-3">
+            <div id="checklist-container" class="space-y-2">
+                <!-- Dynamically Rendered Checklist Items -->
+            </div>
+
+            <!-- Volunteer Sign-Off Card -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-slate-200">Volunteer Sign-Off & Lock-In</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                    <div class="sm:col-span-8">
+                        <label class="block text-[10px] font-mono text-slate-400 mb-1">YOUR NAME / TECH ROLE</label>
+                        <input type="text" id="volunteer-name-input" placeholder="e.g. John Doe (Video Lead)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white text-xs font-mono focus:border-purple-500 outline-none">
+                    </div>
+                    <div class="sm:col-span-4 sm:pt-4">
+                        <button onclick="submitSignOff()" class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black text-xs font-mono uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-purple-900/40">
+                            🔒 Sign Off & Notify
+                        </button>
+                    </div>
+                </div>
+                <div id="signoff-status-text" class="text-[11px] font-mono text-slate-400">
+                    Not yet signed off for today's service.
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: Past Broadcast Reports -->
+        <section id="tab-reports" class="space-y-3 hidden">
+            <div class="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-slate-200">Sunday Service Reports</span>
+                    <p class="text-[11px] font-mono text-slate-400">Archived broadcast telemetry and incident logs</p>
+                </div>
+                <button onclick="generateManualReport()" class="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono uppercase cursor-pointer">
+                    + Generate Report Now
+                </button>
+            </div>
+
+            <div id="reports-container" class="space-y-2">
+                <!-- Dynamically populated past reports -->
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/js/client.js"></script>
+    <script src="/js/nav.js"></script>
+    <script>
+        let currentItems = [];
+
+        function showTab(tab) {
+            const checkTab = document.getElementById('tab-checklist');
+            const repTab = document.getElementById('tab-reports');
+            const checkBtn = document.getElementById('tab-btn-checklist');
+            const repBtn = document.getElementById('tab-btn-reports');
+
+            if (tab === 'checklist') {
+                checkTab.classList.remove('hidden');
+                repTab.classList.add('hidden');
+                checkBtn.className = 'px-4 py-2 rounded-t-lg bg-slate-800 text-white border-b-2 border-cyan-400 cursor-pointer';
+                repBtn.className = 'px-4 py-2 rounded-t-lg text-slate-400 hover:text-white cursor-pointer';
+            } else {
+                checkTab.classList.add('hidden');
+                repTab.classList.remove('hidden');
+                checkBtn.className = 'px-4 py-2 rounded-t-lg text-slate-400 hover:text-white cursor-pointer';
+                repBtn.className = 'px-4 py-2 rounded-t-lg bg-slate-800 text-white border-b-2 border-purple-400 cursor-pointer';
+                loadReports();
+            }
+        }
+
+        async function loadChecklist() {
+            try {
+                const res = await fetch('/api/checklist');
+                const data = await res.json();
+                renderChecklist(data);
+            } catch (err) {
+                console.error('Failed to load checklist:', err);
+            }
+        }
+
+        function renderChecklist(data) {
+            if (!data || !data.items) return;
+            currentItems = data.items;
+
+            document.getElementById('completed-count').textContent = data.completed;
+            document.getElementById('total-count').textContent = data.total;
+
+            const pill = document.getElementById('readiness-pill');
+            const fill = document.getElementById('progress-fill');
+            fill.style.width = `${data.percent}%`;
+
+            if (data.percent === 100) {
+                pill.textContent = '100% READY';
+                pill.className = 'text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-400 font-mono font-bold animate-pulse';
+                fill.className = 'h-full rounded-full bg-emerald-500 transition-all duration-500';
+            } else {
+                pill.textContent = `${data.percent}% READY`;
+                pill.className = 'text-[10px] px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-800 text-amber-400 font-mono font-bold';
+                fill.className = 'h-full rounded-full bg-amber-500 transition-all duration-500';
+            }
+
+            if (data.volunteerName && data.completedAt) {
+                document.getElementById('signoff-status-text').innerHTML = `
+                    <span class="text-emerald-400 font-bold">✅ Signed off by ${data.volunteerName}</span> at ${new Date(data.completedAt).toLocaleTimeString()}
+                `;
+            }
+
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = data.items.map(item => {
+                const isEnabled = item.enabled !== false;
+                const isDone = item.checked || item.passed;
+                
+                let statusBadge = '';
+                if (!isEnabled) {
+                    statusBadge = '<span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-500 font-bold text-[10px]">SKIPPED</span>';
+                } else if (isDone) {
+                    statusBadge = '<span class="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-400 font-bold text-[10px]">PASSED</span>';
+                } else {
+                    statusBadge = '<span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-500 font-bold text-[10px]">PENDING</span>';
+                }
+
+                return `
+                    <div class="p-3.5 rounded-xl ${!isEnabled ? 'opacity-40 bg-slate-950/40 border-slate-900' : (isDone ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800 bg-slate-950/80')} border flex items-start justify-between gap-3 transition-all">
+                        <label class="flex items-start gap-3 cursor-pointer flex-grow ${!isEnabled ? 'pointer-events-none' : ''}">
+                            <input type="checkbox" onchange="toggleItem('${item.id}', this.checked)" ${isDone ? 'checked' : ''} ${!isEnabled ? 'disabled' : ''} class="mt-1 w-4 h-4 rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                            <div>
+                                <div class="text-xs font-bold ${!isEnabled ? 'text-slate-500 line-through' : 'text-white'} flex items-center gap-2">
+                                    <span>${item.title}</span>
+                                    <span class="text-[9px] font-mono text-slate-500 uppercase">${item.category}</span>
+                                </div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">${item.description}</div>
+                            </div>
+                        </label>
+                        <div class="flex items-center gap-2 shrink-0 font-mono">
+                            ${statusBadge}
+                            <button onclick="toggleItemEnabled('${item.id}', ${!isEnabled})" title="${isEnabled ? 'Disable / Exclude this item' : 'Enable / Include this item'}" class="p-1 rounded hover:bg-slate-800 text-slate-500 hover:text-slate-200 text-xs transition-colors cursor-pointer">
+                                ${isEnabled ? '👁️' : '👁️‍🗨️'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function toggleItem(id, checked) {
+            try {
+                const res = await fetch('/api/checklist/toggle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, checked })
+                });
+                const data = await res.json();
+                renderChecklist(data);
+            } catch (err) {
+                alert('Toggle error: ' + err.message);
+            }
+        }
+
+        async function toggleItemEnabled(id, enabled) {
+            try {
+                const res = await fetch('/api/checklist/enable-item', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, enabled })
+                });
+                const data = await res.json();
+                renderChecklist(data);
+                SanctuaryClient.showToast(enabled ? '✓ Checklist item enabled' : 'ℹ️ Checklist item skipped/disabled', 'info');
+            } catch (err) {
+                alert('Enable/disable error: ' + err.message);
+            }
+        }
+
+        async function runAutoDiagnostics() {
+            SanctuaryClient.showToast('⚡ Running Pre-Flight Diagnostics...', 'info');
+            try {
+                const res = await fetch('/api/checklist/verify-all', { method: 'POST' });
+                const data = await res.json();
+                renderChecklist(data);
+                SanctuaryClient.showToast(`✓ Auto-check complete: ${data.completed}/${data.total} passed!`, 'success');
+            } catch (err) {
+                alert('Auto-check error: ' + err.message);
+            }
+        }
+
+        async function submitSignOff() {
+            const name = document.getElementById('volunteer-name-input').value.trim();
+            if (!name) {
+                alert('Please enter your name before signing off.');
+                return;
+            }
+            try {
+                const res = await fetch('/api/checklist/sign-off', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ volunteerName: name })
+                });
+                const data = await res.json();
+                renderChecklist(data);
+                SanctuaryClient.showToast(`✅ Pre-Flight Signed Off by ${name}!`, 'success');
+            } catch (err) {
+                alert('Sign-off error: ' + err.message);
+            }
+        }
+
+        async function resetChecklist() {
+            if (!confirm('Reset all checklist items for a new service?')) return;
+            try {
+                const res = await fetch('/api/checklist/reset', { method: 'POST' });
+                const data = await res.json();
+                renderChecklist(data);
+                SanctuaryClient.showToast('Checklist reset!', 'info');
+            } catch (err) {
+                alert('Reset error: ' + err.message);
+            }
+        }
+
+        async function loadReports() {
+            const container = document.getElementById('reports-container');
+            container.innerHTML = '<div class="text-slate-500 font-mono text-xs p-4">Loading reports...</div>';
+
+            try {
+                const res = await fetch('/api/reports');
+                const reports = await res.json();
+
+                if (!reports || reports.length === 0) {
+                    container.innerHTML = '<div class="text-slate-500 font-mono text-xs p-4 bg-slate-900/60 rounded-xl border border-slate-800">No service reports recorded yet. Reports are automatically generated at the end of each live broadcast.</div>';
+                    return;
+                }
+
+                container.innerHTML = reports.map(r => `
+                    <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 font-mono">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-white">${r.date}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.healthStatus === 'CLEAN_BROADCAST' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-400 border border-amber-800'}">${r.healthStatus}</span>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-300 pt-1">
+                            <div><span class="text-slate-500">Duration:</span> ${r.duration}</div>
+                            <div><span class="text-slate-500">Peak Viewers:</span> ${r.peakViewers}</div>
+                            <div><span class="text-slate-500">Avg Bitrate:</span> ${r.avgBitrateKbps} kbps</div>
+                            <div><span class="text-slate-500">Sign-Off:</span> ${r.volunteerSignOff}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = '<div class="text-red-400 font-mono text-xs p-4">Failed to load reports: ' + err.message + '</div>';
+            }
+        }
+
+        async function generateManualReport() {
+            try {
+                SanctuaryClient.showToast('Generating broadcast report...', 'info');
+                const res = await fetch('/api/reports/generate', { method: 'POST' });
+                const report = await res.json();
+                SanctuaryClient.showToast('✓ Report generated and dispatched to GroupMe!', 'success');
+                loadReports();
+            } catch (err) {
+                alert('Report generation error: ' + err.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => loadChecklist());
+    </script>
+</body>
+</html>

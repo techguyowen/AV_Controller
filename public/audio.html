@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#090c10">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/icon.svg">
+    <title>Audio & Livestream Metering Station — Sanctuary AV</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #090c10;
+            color: #f1f5f9;
+            touch-action: manipulation;
+        }
+        .vu-track {
+            background-color: #0d1117;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+        }
+        .vu-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transition: height 80ms ease-out;
+            background: linear-gradient(to top, 
+                #10b981 0%, 
+                #10b981 70%, 
+                #f59e0b 70%, 
+                #f59e0b 90%, 
+                #ef4444 90%, 
+                #ef4444 100%
+            );
+        }
+        .vu-peak {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #ffffff;
+            box-shadow: 0 0 6px rgba(255,255,255,0.8);
+            transition: bottom 200ms ease-out;
+        }
+        @keyframes pulse-alarm {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.98); }
+        }
+        .alarm-pulsing {
+            animation: pulse-alarm 1.2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 sm:pb-6 flex flex-col justify-between">
+
+    <!-- Header Bar -->
+    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    <span>PRECISION AUDIO METER</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-400 font-mono">REAPER USB</span>
+                </h1>
+                <p class="text-[10px] font-mono text-slate-400">Soundcraft Si USB Livestream Bus</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <div id="global-conn-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">
+                🪟 HUD
+            </a>
+        </div>
+    </header>
+
+    <!-- Simple Direct Station Navigation Bar -->
+    <div class="max-w-4xl mx-auto w-full px-3 pt-3">
+        <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+            <div class="flex items-center gap-1.5 min-w-max">
+                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
+                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
+                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">🎙️ Audio</a>
+                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">💬 Captions</a>
+                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
+            </div>
+            <div class="flex items-center gap-2 min-w-max">
+                <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
+                    <span>📖 Booth Ops</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Workspace -->
+    <main class="flex-grow p-3 sm:p-5 max-w-4xl mx-auto w-full space-y-4">
+
+        <!-- 1. Silence Alarm Banner (Hidden when audio healthy) -->
+        <div id="silence-alarm-box" class="hidden p-4 rounded-2xl bg-red-950/80 border-2 border-red-500 text-white shadow-2xl alarm-pulsing flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl">🔇</div>
+                <div>
+                    <div class="text-sm font-black tracking-wide uppercase text-red-300">AUDIO SILENCE DETECTED</div>
+                    <div class="text-xs text-red-200 font-mono">Livestream audio below -50 dBFS!</div>
+                </div>
+            </div>
+            <span id="silence-timer" class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-red-900 border border-red-700">0s</span>
+        </div>
+
+        <!-- 2. Dual Precision VU Meters Section -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    Master Bus Levels (dBFS)
+                </span>
+                <div class="flex items-center gap-2 font-mono text-xs">
+                    <span id="reaper-status-badge" class="px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-400 font-bold">OSC Active</span>
+                </div>
+            </div>
+
+            <!-- Dual Tall Meters -->
+            <div class="flex items-stretch justify-center gap-6 sm:gap-10 py-2 h-72 sm:h-96">
+                
+                <!-- Left Channel Meter -->
+                <div class="flex flex-col items-center gap-2 flex-1 max-w-28">
+                    <div class="text-xs font-bold font-mono text-slate-400">CH 1 (LEFT)</div>
+                    <div class="vu-track w-full flex-grow">
+                        <div id="vu-l-bar" class="vu-bar" style="height: 0%;"></div>
+                        <div id="vu-l-peak" class="vu-peak" style="bottom: 0%;"></div>
+                    </div>
+                    <div class="text-center font-mono">
+                        <div id="db-l-text" class="text-sm sm:text-base font-black text-white">-inf</div>
+                        <div class="text-[10px] text-slate-500">dBFS Peak</div>
+                    </div>
+                </div>
+
+                <!-- Center dB Scale Markings -->
+                <div class="flex flex-col justify-between items-center py-6 text-[10px] font-mono text-slate-500 select-none">
+                    <span class="text-red-400 font-bold">0 dB</span>
+                    <span class="text-red-400">-6 dB</span>
+                    <span class="text-amber-400 font-bold">-12 dB</span>
+                    <span class="text-amber-400">-18 dB</span>
+                    <span class="text-emerald-400 font-bold">-24 dB</span>
+                    <span class="text-emerald-400">-36 dB</span>
+                    <span class="text-slate-600">-48 dB</span>
+                    <span class="text-slate-600 font-bold">-60 dB</span>
+                </div>
+
+                <!-- Right Channel Meter -->
+                <div class="flex flex-col items-center gap-2 flex-1 max-w-28">
+                    <div class="text-xs font-bold font-mono text-slate-400">CH 2 (RIGHT)</div>
+                    <div class="vu-track w-full flex-grow">
+                        <div id="vu-r-bar" class="vu-bar" style="height: 0%;"></div>
+                        <div id="vu-r-peak" class="vu-peak" style="bottom: 0%;"></div>
+                    </div>
+                    <div class="text-center font-mono">
+                        <div id="db-r-text" class="text-sm sm:text-base font-black text-white">-inf</div>
+                        <div class="text-[10px] text-slate-500">dBFS Peak</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. Telemetry & Routing Health Cards -->
+        <section class="grid grid-cols-2 gap-3 font-mono text-xs">
+            <div class="bg-slate-900/80 border border-slate-800 p-3.5 rounded-xl space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase font-bold">YouTube AAC Stream</span>
+                <div id="yt-audio-status" class="text-emerald-400 font-bold flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>128k AAC Healthy</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 p-3.5 rounded-xl space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase font-bold">Soundcraft Si Bus</span>
+                <div id="si-usb-status" class="text-cyan-400 font-bold flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                    <span>USB Ch 1-2 Stream</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Emergency Action Controls -->
+        <section class="grid grid-cols-2 gap-3 pt-1">
+            <button onclick="SanctuaryClient.triggerReopenScreen()" class="py-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 font-bold font-mono text-xs uppercase flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+                <span>📺 Reopen Screen</span>
+            </button>
+            <button onclick="SanctuaryClient.triggerPanic()" class="py-3 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/50 font-bold font-mono text-xs uppercase flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+                <span>🚨 Panic Mute</span>
+            </button>
+        </section>
+
+    </main>
+
+    <script src="/js/client.js"></script>
+    <script src="/js/nav.js"></script>
+    <script>
+        const getPct = db => Math.max(0, Math.min(100, ((db + 60) / 60) * 100));
+
+        SanctuaryClient.subscribe((state) => {
+            if (state.reaper) {
+                const lDb = state.reaper.leftDb ?? -60;
+                const rDb = state.reaper.rightDb ?? -60;
+                const lPeak = state.reaper.peakLeftDb ?? lDb;
+                const rPeak = state.reaper.peakRightDb ?? rDb;
+
+                document.getElementById('vu-l-bar').style.height = `${getPct(lDb)}%`;
+                document.getElementById('vu-l-peak').style.bottom = `${getPct(lPeak)}%`;
+                document.getElementById('db-l-text').textContent = lDb <= -59 ? '-inf' : lDb.toFixed(1);
+
+                document.getElementById('vu-r-bar').style.height = `${getPct(rDb)}%`;
+                document.getElementById('vu-r-peak').style.bottom = `${getPct(rPeak)}%`;
+                document.getElementById('db-r-text').textContent = rDb <= -59 ? '-inf' : rDb.toFixed(1);
+            }
+
+            if (state.alerts) {
+                const alarmBox = document.getElementById('silence-alarm-box');
+                const timer = document.getElementById('silence-timer');
+                if (state.alerts.isSilent) {
+                    alarmBox.classList.remove('hidden');
+                    timer.textContent = `${state.alerts.silenceDuration || 0}s`;
+                } else {
+                    alarmBox.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

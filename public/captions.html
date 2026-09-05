@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#05080c">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/icon.svg">
+    <title>Captions Preview & Links — Sanctuary AV</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #05080c;
+            color: #f8fafc;
+            touch-action: manipulation;
+        }
+        .interim-glow {
+            color: #38bdf8;
+            text-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12 flex flex-col justify-between select-none">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-600/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    <span>CAPTIONS PREVIEW</span>
+                    <span id="caption-live-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-400 font-mono animate-pulse">● LIVE</span>
+                </h1>
+                <p class="text-[10px] font-mono text-slate-400">Live Speech Output & External VoxStream Links</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="clearOutput()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🧹 Clear Preview</span>
+            </button>
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">
+                🪟 HUD
+            </a>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <div class="max-w-5xl mx-auto w-full px-3 pt-3">
+        <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+            <div class="flex items-center gap-1.5 min-w-max">
+                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
+                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
+                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">💬 Captions</a>
+                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
+            </div>
+            <div class="flex items-center gap-2 min-w-max">
+                <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
+                    <span>📖 Booth Ops</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Workspace -->
+    <main class="flex-grow p-3 sm:p-5 max-w-5xl mx-auto w-full space-y-5">
+
+        <!-- 1. Live Recent Sentences Preview Box -->
+        <section class="bg-slate-950/95 border-2 border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+            
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 text-xs font-mono">
+                <div class="flex items-center gap-2">
+                    <span id="speech-indicator" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-slate-400 font-bold uppercase tracking-wider">LIVE SPEECH OUTPUT (MOST RECENT)</span>
+                </div>
+                <div class="flex items-center gap-3 text-slate-500">
+                    <span id="speaker-wpm" class="text-emerald-400 font-bold">0 WPM</span>
+                    <span id="clock-display" class="font-bold text-slate-400">--:--:--</span>
+                </div>
+            </div>
+
+            <!-- Recent Sentences Output Stream (Fixed 3-line rolling view) -->
+            <div id="recent-lines-container" class="space-y-4 py-4 min-h-[220px] flex flex-col justify-end select-text">
+                <!-- 2 Previous Sentences -->
+                <p id="line-prev-2" class="text-slate-600 text-base sm:text-lg font-normal transition-all"></p>
+                <p id="line-prev-1" class="text-slate-400 text-lg sm:text-xl font-normal transition-all"></p>
+                
+                <!-- Latest / Active Sentence -->
+                <p id="line-active" class="text-white text-2xl sm:text-4xl font-bold leading-snug tracking-tight transition-all">
+                    "Standing by for speech..."
+                </p>
+
+                <!-- In-Flight Words -->
+                <p id="line-interim" class="interim-glow text-lg sm:text-2xl font-semibold italic min-h-[1.5em]">
+                    ...
+                </p>
+            </div>
+
+        </section>
+
+        <!-- 2. External VoxStream Links Cards Grid -->
+        <section class="space-y-3">
+            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <span>🔗 EXTERNAL VOXSTREAM PAGES & DISPLAYS</span>
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                
+                <!-- Link 1: Stage Read-Along Display -->
+                <a href="http://127.0.0.1:8765/display" target="_blank" class="group p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg">
+                            📖
+                        </div>
+                        <span class="text-[10px] font-mono font-bold text-cyan-400 group-hover:underline flex items-center gap-1">
+                            <span>Open</span> ↗
+                        </span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">Live Read-Along Display</div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Stage confidence monitor view for pastors and speakers.</p>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-500">http://127.0.0.1:8765/display</div>
+                </a>
+
+                <!-- Link 2: Dashboard & In-OBS Dock -->
+                <a href="http://127.0.0.1:8765/dashboard" target="_blank" class="group p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg">
+                            🎛️
+                        </div>
+                        <span class="text-[10px] font-mono font-bold text-amber-400 group-hover:underline flex items-center gap-1">
+                            <span>Open</span> ↗
+                        </span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">Dashboard & In-OBS Dock</div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Full VoxStream control panel, audio routing & engine settings.</p>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-500">http://127.0.0.1:8765/dashboard</div>
+                </a>
+
+                <!-- Link 3: Stream Overlay (OBS Browser Source) -->
+                <a href="http://127.0.0.1:8765/" target="_blank" class="group p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg">
+                            📺
+                        </div>
+                        <span class="text-[10px] font-mono font-bold text-emerald-400 group-hover:underline flex items-center gap-1">
+                            <span>Open</span> ↗
+                        </span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Stream Overlay (OBS Source)</div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Transparent browser source layer for OBS livestream video.</p>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-500">http://127.0.0.1:8765/</div>
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/js/client.js"></script>
+    <script src="/js/nav.js"></script>
+    <script>
+        const linePrev2 = document.getElementById('line-prev-2');
+        const linePrev1 = document.getElementById('line-prev-1');
+        const lineActive = document.getElementById('line-active');
+        const lineInterim = document.getElementById('line-interim');
+        const wpmEl = document.getElementById('speaker-wpm');
+
+        let recentSentences = []; // last 3 sentences
+
+        async function clearOutput() {
+            recentSentences = [];
+            linePrev2.textContent = '';
+            linePrev1.textContent = '';
+            lineActive.textContent = '"Standing by for speech..."';
+            lineInterim.textContent = '...';
+            try {
+                await SanctuaryClient.clearCaptions();
+            } catch (e) {
+                console.error('Error clearing captions on VoxStream:', e);
+            }
+        }
+
+        // Live WebSocket Telemetry Listener
+        SanctuaryClient.subscribe((state) => {
+            if (state.captioner) {
+                const c = state.captioner;
+                
+                const badge = document.getElementById('caption-live-badge');
+                const dot = document.getElementById('speech-indicator');
+
+                if (badge) {
+                    badge.className = `text-[10px] px-1.5 py-0.5 rounded font-mono ${c.isCapturing ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400 animate-pulse' : 'bg-amber-950/60 border border-amber-800 text-amber-400'}`;
+                    badge.textContent = c.isCapturing ? '● LIVE' : '⏸️ STANDBY';
+                }
+
+                if (dot) {
+                    dot.className = `w-2.5 h-2.5 rounded-full ${c.isCapturing ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`;
+                }
+
+                if (wpmEl && c.currentWpm !== undefined) {
+                    wpmEl.textContent = `${c.currentWpm} WPM`;
+                    if (c.paceColor) wpmEl.style.color = c.paceColor;
+                }
+
+                // In-Flight interim words
+                if (c.interimTranscript) {
+                    lineInterim.textContent = `${c.interimTranscript}...`;
+                } else {
+                    lineInterim.textContent = '...';
+                }
+
+                // Final Committed Sentence (Shift into recent history)
+                if (c.lastTranscript) {
+                    if (recentSentences.length === 0 || recentSentences[recentSentences.length - 1] !== c.lastTranscript) {
+                        recentSentences.push(c.lastTranscript);
+                        if (recentSentences.length > 3) recentSentences.shift();
+
+                        if (recentSentences.length === 1) {
+                            lineActive.textContent = `"${recentSentences[0]}"`;
+                            linePrev1.textContent = '';
+                            linePrev2.textContent = '';
+                        } else if (recentSentences.length === 2) {
+                            linePrev1.textContent = recentSentences[0];
+                            lineActive.textContent = `"${recentSentences[1]}"`;
+                            linePrev2.textContent = '';
+                        } else if (recentSentences.length === 3) {
+                            linePrev2.textContent = recentSentences[0];
+                            linePrev1.textContent = recentSentences[1];
+                            lineActive.textContent = `"${recentSentences[2]}"`;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Service Clock
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock-display').textContent = now.toLocaleTimeString();
+        }, 1000);
+    </script>
+</body>
+</html>
+
+
