@@ -30,6 +30,7 @@ const AlertEngine = require('./modules/alerts');
 const AlertNotifier = require('./modules/notifier');
 const ServiceReportManager = require('./modules/reports');
 const ChecklistManager = require('./modules/checklist');
+const AutoUpdater = require('./modules/updater');
 
 const PORT = parseInt(process.env.PORT, 10) || 3050;
 const CONFIG_FILE = path.join(__dirname, 'config.json');
@@ -193,6 +194,12 @@ alerts.updateThresholds({
 
 const reports = new ServiceReportManager(notifier, alerts);
 const checklist = new ChecklistManager(notifier, reports);
+const updater = new AutoUpdater({
+  rootDir: __dirname,
+  onStateChange: () => {
+    broadcastState();
+  },
+});
 
 function saveConfig(newConfig) {
   activeConfig = { ...activeConfig, ...newConfig };
@@ -388,6 +395,29 @@ app.get('/api/reports', (req, res) => {
 app.post('/api/reports/generate', async (req, res) => {
   const report = await reports.stopSessionAndGenerateReport(true);
   res.json(report);
+});
+
+// ── GitHub AutoUpdater REST Routes ─────────────────────────
+app.get('/api/updater/status', (req, res) => {
+  res.json(updater.getState());
+});
+
+app.post('/api/updater/check', async (req, res) => {
+  try {
+    const status = await updater.checkForUpdates();
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/updater/update', async (req, res) => {
+  try {
+    const result = await updater.performUpdate();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // REST APIs
@@ -1104,7 +1134,21 @@ function getAggregatedState() {
     network: netState,
     alerts: alertState,
     config: activeConfig,
+    updater: updater.getState(),
   };
+}
+
+function broadcastState() {
+  const state = getAggregatedState();
+  const message = JSON.stringify({
+    type: 'STATE_UPDATE',
+    data: state,
+  });
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
 }
 
 function broadcastConfig() {
@@ -1464,17 +1508,7 @@ const broadcastInterval = setInterval(() => {
     }
   }
 
-  const state = getAggregatedState();
-  const message = JSON.stringify({
-    type: 'STATE_UPDATE',
-    data: state,
-  });
-
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
-    }
-  });
+  broadcastState();
 }, 200);
 
 // ── Startup ─────────────────────────────────────

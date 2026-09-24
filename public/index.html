@@ -178,6 +178,12 @@
 
         <!-- Global Status & Quick Settings -->
         <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+            <!-- Version Pill & Update Trigger -->
+            <button id="btn-version-pill" onclick="LiveEngine.openUpdateModal()" class="px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-all bg-slate-900/80 hover:bg-slate-800 border-slate-700 text-slate-300 shadow-sm cursor-pointer" title="Check for updates / View software version">
+                <span id="version-pill-icon">📦</span>
+                <span id="version-pill-text">v1.0.0</span>
+            </button>
+
             <div id="global-status" class="px-3.5 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-2 transition-colors bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
                 <div class="tally-led tally-green"></div>
                 <span id="global-status-text">All Systems Online</span>
@@ -778,6 +784,91 @@
 
     </div>
 
+</div>
+
+<!-- Software Update Modal -->
+<div id="update-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="hardware-panel border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col space-y-4">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg font-bold">
+                    🚀
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-tight">Software Updates & Version</h3>
+                    <p class="text-xs text-slate-400">Sanctuary AV Controller GitHub Synchronization</p>
+                </div>
+            </div>
+            <button onclick="LiveEngine.closeUpdateModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Version Status Card -->
+        <div class="hardware-card p-4 rounded-xl border border-slate-700/80 space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Installed Version</span>
+                <span id="update-modal-current-version" class="text-xs font-mono font-bold text-white bg-slate-800 px-2 py-0.5 rounded border border-slate-700">v1.0.0</span>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Latest GitHub Version</span>
+                <span id="update-modal-latest-version" class="text-xs font-mono font-bold text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">v1.0.0</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">Commit Status:</span>
+                <span id="update-modal-commit-diff" class="font-mono text-slate-300">Up to date</span>
+            </div>
+            <div id="update-modal-commit-info" class="bg-black/40 p-2.5 rounded-lg border border-slate-800/80 text-xs font-mono space-y-1">
+                <div class="flex items-center justify-between text-slate-400 text-[11px]">
+                    <span id="update-modal-commit-hash">Commit: -</span>
+                    <span id="update-modal-commit-date">Date: -</span>
+                </div>
+                <div id="update-modal-commit-msg" class="text-slate-200 truncate font-sans text-xs">Checking repository...</div>
+            </div>
+        </div>
+
+        <!-- Safe Config Preservation Notice -->
+        <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-3 flex items-start gap-2.5">
+            <span class="text-emerald-400 text-base">🛡️</span>
+            <div class="text-xs">
+                <div class="font-bold text-emerald-300">Church Configuration Protected</div>
+                <div class="text-emerald-400/80 text-[11px] mt-0.5">Your IP addresses, YouTube keys, and custom alert thresholds in <code class="bg-black/40 px-1 py-0.5 rounded text-emerald-200">config.json</code> are strictly preserved during updates.</div>
+            </div>
+        </div>
+
+        <!-- Progress / Status Area -->
+        <div id="update-progress-container" class="hidden space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold">
+                <span id="update-progress-text" class="text-cyan-400 animate-pulse">Updating controller...</span>
+                <span id="update-progress-spinner" class="animate-spin text-cyan-400">⚙️</span>
+            </div>
+            <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-700">
+                <div id="update-progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-500 h-2 rounded-full w-full animate-pulse"></div>
+            </div>
+        </div>
+
+        <!-- Error Banner -->
+        <div id="update-modal-error" class="hidden bg-red-950/40 border border-red-500/50 rounded-xl p-3 text-xs text-red-300">
+            <div class="font-bold">Update Notice:</div>
+            <div id="update-modal-error-msg" class="text-[11px] text-red-200 mt-0.5"></div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="flex items-center justify-between gap-3 pt-2">
+            <button id="btn-check-updates" onclick="LiveEngine.checkForUpdates()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>⚡ Check for Updates</span>
+            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="LiveEngine.closeUpdateModal()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold cursor-pointer">
+                    Close
+                </button>
+                <button id="btn-apply-update" onclick="LiveEngine.performUpdate()" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span>🚀 Update & Restart Now</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Settings & Guide Modal -->
@@ -1501,7 +1592,10 @@ const LiveEngine = {
     bindEvents() {
         this.dom.btnSettings.addEventListener('click', () => this.openWeeklyGuide());
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') this.closeSettings();
+            if (e.key === 'Escape') {
+                this.closeSettings();
+                this.closeUpdateModal();
+            }
         });
     },
 
@@ -1539,6 +1633,154 @@ const LiveEngine = {
 
     closeSettings() {
         this.dom.settingsModal.classList.add('hidden');
+    },
+
+    openUpdateModal() {
+        const modal = document.getElementById('update-modal');
+        if (modal) modal.classList.remove('hidden');
+        this.checkForUpdates();
+    },
+
+    closeUpdateModal() {
+        const modal = document.getElementById('update-modal');
+        if (modal) modal.classList.add('hidden');
+    },
+
+    async checkForUpdates() {
+        const btnCheck = document.getElementById('btn-check-updates');
+        if (btnCheck) {
+            btnCheck.disabled = true;
+            btnCheck.innerHTML = '<span>⏳ Checking...</span>';
+        }
+        try {
+            const res = await fetch('/api/updater/check', { method: 'POST' });
+            const data = await res.json();
+            this.applyUpdaterState(data);
+        } catch (err) {
+            console.error('[Updater] Check failed:', err);
+        } finally {
+            if (btnCheck) {
+                btnCheck.disabled = false;
+                btnCheck.innerHTML = '<span>⚡ Check for Updates</span>';
+            }
+        }
+    },
+
+    async performUpdate() {
+        if (!confirm('Download latest update and restart Sanctuary AV Controller now? Custom settings in config.json will be preserved.')) {
+            return;
+        }
+
+        const btnUpdate = document.getElementById('btn-apply-update');
+        const btnCheck = document.getElementById('btn-check-updates');
+        const progContainer = document.getElementById('update-progress-container');
+        const progText = document.getElementById('update-progress-text');
+
+        if (btnUpdate) btnUpdate.disabled = true;
+        if (btnCheck) btnCheck.disabled = true;
+        if (progContainer) progContainer.classList.remove('hidden');
+        if (progText) progText.textContent = '1/3 Downloading updates from GitHub...';
+
+        try {
+            const res = await fetch('/api/updater/update', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                if (progText) progText.textContent = '2/3 Installed. Restarting Sanctuary AV Controller...';
+                this.showToast('🚀 Update installed! Server is restarting...');
+                this.pollForRestart();
+            } else {
+                alert('Update failed: ' + (data.error || data.message));
+                if (progContainer) progContainer.classList.add('hidden');
+                if (btnUpdate) btnUpdate.disabled = false;
+                if (btnCheck) btnCheck.disabled = false;
+            }
+        } catch (err) {
+            if (progText) progText.textContent = '3/3 Restarting controller... Waiting for server...';
+            this.pollForRestart();
+        }
+    },
+
+    pollForRestart() {
+        const progText = document.getElementById('update-progress-text');
+        let attempts = 0;
+        const interval = setInterval(async () => {
+            attempts++;
+            if (progText) progText.textContent = `Restarting controller... Reconnecting (${attempts})...`;
+            try {
+                const res = await fetch('/api/updater/status?t=' + Date.now());
+                if (res.ok) {
+                    clearInterval(interval);
+                    if (progText) progText.textContent = 'Restart complete! Reloading...';
+                    setTimeout(() => window.location.reload(), 1000);
+                }
+            } catch (e) {
+                // Still rebooting
+            }
+            if (attempts > 30) {
+                clearInterval(interval);
+                if (progText) progText.textContent = 'Please refresh the page manually.';
+            }
+        }, 2000);
+    },
+
+    applyUpdaterState(updater) {
+        if (!updater) return;
+
+        // Header Pill
+        const pill = document.getElementById('btn-version-pill');
+        const pillIcon = document.getElementById('version-pill-icon');
+        const pillText = document.getElementById('version-pill-text');
+
+        if (pill && pillText) {
+            if (updater.updateAvailable) {
+                pill.className = 'px-3 py-1.5 rounded-lg border text-xs font-mono font-bold flex items-center gap-1.5 transition-all bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/50 text-amber-300 shadow-sm animate-pulse cursor-pointer';
+                if (pillIcon) pillIcon.textContent = '⚡';
+                pillText.textContent = `Update: ${updater.latestVersion || 'New'}`;
+            } else {
+                pill.className = 'px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-all bg-slate-900/80 hover:bg-slate-800 border-slate-700 text-slate-300 shadow-sm cursor-pointer';
+                if (pillIcon) pillIcon.textContent = '📦';
+                pillText.textContent = `v${updater.currentVersion || '1.0.0'}`;
+            }
+        }
+
+        // Modal elements
+        const curVer = document.getElementById('update-modal-current-version');
+        const latVer = document.getElementById('update-modal-latest-version');
+        const diff = document.getElementById('update-modal-commit-diff');
+        const hash = document.getElementById('update-modal-commit-hash');
+        const date = document.getElementById('update-modal-commit-date');
+        const msg = document.getElementById('update-modal-commit-msg');
+        const btnUpdate = document.getElementById('btn-apply-update');
+        const errBox = document.getElementById('update-modal-error');
+        const errMsg = document.getElementById('update-modal-error-msg');
+
+        if (curVer) curVer.textContent = `v${updater.currentVersion || '1.0.0'}`;
+        if (latVer) latVer.textContent = `v${updater.latestVersion || updater.currentVersion || '1.0.0'}`;
+
+        if (diff) {
+            if (updater.updateAvailable) {
+                diff.innerHTML = `<span class="text-amber-400 font-bold">⚡ ${updater.commitsBehind || 1} update(s) available</span>`;
+            } else {
+                diff.innerHTML = '<span class="text-emerald-400 font-semibold">✓ Up to date</span>';
+            }
+        }
+
+        if (hash) hash.textContent = `Commit: ${updater.latestCommit || updater.currentCommit || '-'}`;
+        if (date) date.textContent = `Date: ${updater.commitDate || '-'}`;
+        if (msg) msg.textContent = updater.commitMessage || (updater.updateAvailable ? 'New updates available on GitHub' : 'Running the latest version');
+
+        if (btnUpdate) {
+            btnUpdate.disabled = !updater.updateAvailable || updater.updating;
+        }
+
+        if (errBox && errMsg) {
+            if (updater.error) {
+                errBox.classList.remove('hidden');
+                errMsg.textContent = updater.error;
+            } else {
+                errBox.classList.add('hidden');
+            }
+        }
     },
 
     updateSettingsForm(cfg) {
@@ -2283,6 +2525,9 @@ const LiveEngine = {
         this.applyYouTube(state.youtube, state.reaper, state.atem);
         this.applyNetwork(state.network);
         this.applyAlerts(state.alerts);
+        if (state.updater) {
+            this.applyUpdaterState(state.updater);
+        }
     },
 
     clearCaptionsPreview() {
