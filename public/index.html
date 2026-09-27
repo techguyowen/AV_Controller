@@ -2194,7 +2194,7 @@ const LiveEngine = {
 
     async ptzMove(direction) {
         try {
-            await fetch('/api/ptz/control', {
+            const resp = await fetch('/api/ptz/control', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2203,7 +2203,12 @@ const LiveEngine = {
                     speed: this.ptzSpeed
                 })
             });
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                console.warn('[PTZ] Move failed:', err);
+            }
         } catch (err) {
+            console.warn('[PTZ] Fetch failed, trying WS:', err.message);
             if (this.ws && this.ws.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({
                     type: 'PTZ_PAN_TILT',
@@ -2215,7 +2220,7 @@ const LiveEngine = {
 
     async ptzStop() {
         try {
-            await fetch('/api/ptz/control', {
+            const resp = await fetch('/api/ptz/control', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2223,7 +2228,12 @@ const LiveEngine = {
                     direction: 'stop'
                 })
             });
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                console.warn('[PTZ] Stop failed:', err);
+            }
         } catch (err) {
+            console.warn('[PTZ] Fetch failed, trying WS:', err.message);
             if (this.ws && this.ws.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({
                     type: 'PTZ_PAN_TILT',
@@ -2235,7 +2245,7 @@ const LiveEngine = {
 
     async ptzZoom(action) {
         try {
-            await fetch('/api/ptz/control', {
+            const resp = await fetch('/api/ptz/control', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2245,7 +2255,12 @@ const LiveEngine = {
                     speed: Math.round(this.ptzSpeed / 4) || 3
                 })
             });
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                console.warn('[PTZ] Zoom failed:', err);
+            }
         } catch (err) {
+            console.warn('[PTZ] Fetch failed, trying WS:', err.message);
             if (this.ws && this.ws.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({
                     type: 'PTZ_ZOOM',

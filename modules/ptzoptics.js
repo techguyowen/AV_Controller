@@ -35,9 +35,14 @@ class PTZCamera {
     this.lastAction = 'idle';
     this.lastPreset = null;
     this.sequenceNumber = 1;
+    this._consecutiveFailures = 0;
+    this._lastAckAt = 0;
 
     this._socket = null;
+    this._healthTimer = null;
+    this._ackTimer = null;
     this._initSocket();
+    this._startHealthCheck();
   }
 
   _defaultPresets() {
@@ -60,7 +65,65 @@ class PTZCamera {
     this._socket = dgram.createSocket('udp4');
     this._socket.on('error', (err) => {
       console.warn(`[PTZ:${this.id}] UDP Socket error: ${err.message}`);
+      this.connected = false;
     });
+    // Any inbound VISCA datagram (ACK/completion) proves the camera is alive.
+    this._socket.on('message', () => {
+      this._lastAckAt = Date.now();
+      this._consecutiveFailures = 0;
+      if (!this.connected) {
+        this.connected = true;
+        console.log(`[PTZ:${this.id}] ✓ Camera reachable (${this.ip})`);
+      }
+    });
+  }
+
+  /**
+   * Periodic VISCA health-check ping (every 5s).
+   * Sends the VISCA Address Set command (88 30 01 FF) to the camera on UDP 1259.
+   * If no ACK/response datagram arrives within 2s of the ping, the camera is
+   * marked disconnected. Any inbound datagram marks it connected.
+   */
+  _startHealthCheck() {
+    this._stopHealthCheck();
+    const ping = () => {
+      if (!this._socket) return;
+      const payloadBuf = Buffer.from([0x88, 0x30, 0x01, 0xFF]);
+      const header = Buffer.alloc(8);
+      header.writeUInt16BE(0x0100, 0);
+      header.writeUInt16BE(payloadBuf.length, 2);
+      header.writeUInt32BE(this.sequenceNumber++, 4);
+      const packet = Buffer.concat([header, payloadBuf]);
+      const pingAt = Date.now();
+      try {
+        this._socket.send(packet, 0, packet.length, this.port, this.ip, (err) => {
+          if (err) {
+            this.connected = false;
+            this._consecutiveFailures++;
+          }
+        });
+      } catch (e) {
+        this.connected = false;
+      }
+      if (this._ackTimer) clearTimeout(this._ackTimer);
+      this._ackTimer = setTimeout(() => {
+        if (this._lastAckAt < pingAt) this.connected = false;
+      }, 2000);
+      if (this._ackTimer.unref) this._ackTimer.unref();
+    };
+    this._healthTimer = setInterval(ping, 5000);
+    if (this._healthTimer.unref) this._healthTimer.unref();
+  }
+
+  _stopHealthCheck() {
+    if (this._healthTimer) {
+      clearInterval(this._healthTimer);
+      this._healthTimer = null;
+    }
+    if (this._ackTimer) {
+      clearTimeout(this._ackTimer);
+      this._ackTimer = null;
+    }
   }
 
   updateConfig(options = {}) {
@@ -103,10 +166,13 @@ class PTZCamera {
       this._socket.send(packet, 0, packet.length, this.port, this.ip, (err) => {
         if (err) {
           console.warn(`[PTZ:${this.id}] UDP send error to ${this.ip}:${this.port}: ${err.message}`);
+          this.connected = false;
+          this._consecutiveFailures++;
           // Attempt HTTP fallback
           resolve({ success: false, error: err.message });
         } else {
           this.connected = true;
+          this._consecutiveFailures = 0;
           resolve({ success: true });
         }
       });
@@ -130,12 +196,20 @@ class PTZCamera {
         }, (res) => {
           let data = '';
           res.on('data', chunk => data += chunk);
-          res.on('end', () => resolve({ success: res.statusCode === 200, response: data }));
+          res.on('end', () => {
+            const ok = res.statusCode === 200;
+            this._noteHttpResult(ok);
+            resolve({ success: ok, response: data });
+          });
         });
 
-        req.on('error', (err) => resolve({ success: false, error: err.message }));
+        req.on('error', (err) => {
+          this._noteHttpResult(false);
+          resolve({ success: false, error: err.message });
+        });
         req.on('timeout', () => {
           req.destroy();
+          this._noteHttpResult(false);
           resolve({ success: false, error: 'Timeout' });
         });
         req.end();
@@ -145,12 +219,29 @@ class PTZCamera {
     });
   }
 
+  _noteHttpResult(ok) {
+    if (ok) {
+      this._consecutiveFailures = 0;
+    } else if (++this._consecutiveFailures >= 3) {
+      this.connected = false;
+    }
+  }
+
   /**
    * Pan / Tilt Movement
    * @param {string} direction - 'left'|'right'|'up'|'down'|'upleft'|'upright'|'downleft'|'downright'|'stop'
    * @param {number} [customSpeed] - 1 (slowest) to 24 (fastest)
    */
   async panTilt(direction = 'stop', customSpeed = null) {
+    // Dedicated stop: PTZOptics expects zeroed speed bytes with stop dirs.
+    // VISCA: 81 01 06 01 00 00 03 03 FF
+    if ((direction || 'stop').toLowerCase() === 'stop') {
+      this.lastAction = 'idle';
+      const res = await this.sendVisca([0x81, 0x01, 0x06, 0x01, 0x00, 0x00, 0x03, 0x03, 0xFF]);
+      if (!res.success) this.sendHttpCgi('ptzstop').catch(() => {});
+      return { success: true, camera: this.id, action: 'pan_tilt', direction: 'stop', speed: 0 };
+    }
+
     const speed = Math.max(1, Math.min(24, customSpeed || this.speed));
     const pSpeed = speed; // Pan speed 1-24
     const tSpeed = Math.max(1, Math.min(20, Math.round(speed * 0.85))); // Tilt speed 1-20
@@ -372,6 +463,7 @@ class PTZCamera {
   }
 
   stop() {
+    this._stopHealthCheck();
     if (this._socket) {
       try { this._socket.close(); } catch (e) {}
       this._socket = null;

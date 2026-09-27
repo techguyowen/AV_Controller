@@ -171,24 +171,33 @@ window.SanctuaryClient = {
     // ── PTZOptics Camera API Helpers ──────────────────
     async ptzMove(camera, direction, speed = 12) {
         try {
-            await this.post('/api/ptz/control', { camera, direction, speed });
+            const res = await this.post('/api/ptz/control', { camera, direction, speed });
+            if (res && res.success === false) console.warn('[PTZ] Move failed:', res);
+            return res;
         } catch (e) {
+            console.warn('[PTZ] Fetch failed, trying WS:', e.message);
             this.send('PTZ_PAN_TILT', { camera, direction, speed });
         }
     },
 
     async ptzStop(camera) {
         try {
-            await this.post('/api/ptz/control', { camera, direction: 'stop' });
+            const res = await this.post('/api/ptz/control', { camera, direction: 'stop' });
+            if (res && res.success === false) console.warn('[PTZ] Stop failed:', res);
+            return res;
         } catch (e) {
+            console.warn('[PTZ] Fetch failed, trying WS:', e.message);
             this.send('PTZ_PAN_TILT', { camera, direction: 'stop' });
         }
     },
 
     async ptzZoom(camera, action, speed = 4) {
         try {
-            await this.post('/api/ptz/control', { camera, action: 'zoom', zoomAction: action, speed });
+            const res = await this.post('/api/ptz/control', { camera, action: 'zoom', zoomAction: action, speed });
+            if (res && res.success === false) console.warn('[PTZ] Zoom failed:', res);
+            return res;
         } catch (e) {
+            console.warn('[PTZ] Fetch failed, trying WS:', e.message);
             this.send('PTZ_ZOOM', { camera, action, speed });
         }
     },

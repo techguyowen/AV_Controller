@@ -906,19 +906,19 @@ app.post('/api/ptz/control', async (req, res) => {
   try {
     const { camera, action, direction, speed, zoomAction, focusAction } = { ...req.query, ...req.body };
     const camId = camera || ptz.activeCameraId || 'cam1';
-
+    const parsedSpeed = speed !== undefined && speed !== null && speed !== '' ? parseInt(speed, 10) : undefined;
+    let result;
     if (action === 'zoom') {
-      const result = await ptz.zoom(camId, zoomAction || direction || 'stop', speed);
-      return res.json(result);
+      result = await ptz.zoom(camId, zoomAction || direction || 'stop', Number.isNaN(parsedSpeed) ? undefined : parsedSpeed);
     } else if (action === 'focus') {
-      const result = await ptz.focus(camId, focusAction || direction || 'auto');
-      return res.json(result);
+      result = await ptz.focus(camId, focusAction || direction || 'auto');
     } else {
-      // Pan / Tilt
-      const result = await ptz.panTilt(camId, direction || 'stop', speed);
-      return res.json(result);
+      // Pan / Tilt: action === 'pan_tilt' OR action missing/undefined
+      result = await ptz.panTilt(camId, direction || 'stop', Number.isNaN(parsedSpeed) ? undefined : parsedSpeed);
     }
+    res.json({ success: true, ...result });
   } catch (err) {
+    console.error('[PTZ] Control error:', err.message);
     res.status(500).json({ success: false, error: err.message });
   }
 });
