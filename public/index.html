@@ -1735,7 +1735,9 @@ const LiveEngine = {
             if (updater.updateAvailable) {
                 pill.className = 'px-3 py-1.5 rounded-lg border text-xs font-mono font-bold flex items-center gap-1.5 transition-all bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/50 text-amber-300 shadow-sm animate-pulse cursor-pointer';
                 if (pillIcon) pillIcon.textContent = '⚡';
-                pillText.textContent = `Update: ${updater.latestVersion || 'New'}`;
+                const cur = updater.currentVersion || updater.installedVersion || '1.0.0';
+                const lat = updater.latestVersion || 'New';
+                pillText.textContent = `⚡ v${cur} → v${lat}`;
             } else {
                 pill.className = 'px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-all bg-slate-900/80 hover:bg-slate-800 border-slate-700 text-slate-300 shadow-sm cursor-pointer';
                 if (pillIcon) pillIcon.textContent = '📦';

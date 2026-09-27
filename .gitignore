@@ -11,6 +11,9 @@ node_modules/
 reports/*.json
 !reports/.gitkeep
 
+# Machine-local updater state (last installed version sentinel — never commit)
+.version
+
 # Logs
 logs/
 *.log

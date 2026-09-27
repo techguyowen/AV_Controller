@@ -34,11 +34,30 @@ class AutoUpdater {
       console.warn('[Updater] Failed to read package.json version:', e.message);
     }
 
+    // Machine-local sentinel: last version actually installed by performUpdate().
+    // This file is gitignored and NEVER committed — it lets the updater detect
+    // a newer remote version even on a dev machine where local package.json
+    // already matches remote (because the bump was committed here).
+    this.versionFile = path.join(this.rootDir, '.version');
+    this.lastInstalledVersion = this.currentVersion;
+    try {
+      if (fs.existsSync(this.versionFile)) {
+        const v = fs.readFileSync(this.versionFile, 'utf8').trim();
+        if (v) this.lastInstalledVersion = v;
+      } else {
+        // First-run initialization: record what's currently on disk.
+        fs.writeFileSync(this.versionFile, this.currentVersion + '\n', 'utf8');
+      }
+    } catch (e) {
+      console.warn('[Updater] Failed to read/write .version sentinel:', e.message);
+    }
+
     this.state = {
       checking: false,
       updating: false,
       updateAvailable: false,
       currentVersion: this.currentVersion,
+      installedVersion: this.lastInstalledVersion,
       latestVersion: this.currentVersion,
       currentCommit: '',
       latestCommit: '',
@@ -59,7 +78,7 @@ class AutoUpdater {
   }
 
   initSchedule() {
-    setTimeout(() => {
+    this._initTimer = setTimeout(() => {
       this.checkForUpdates().catch(err => {
         console.warn('[Updater] Initial update check failed:', err.message);
       });
@@ -84,6 +103,67 @@ class AutoUpdater {
       } catch (err) {
         console.error('[Updater] onStateChange error:', err);
       }
+    }
+  }
+
+  /**
+   * Simple semver compare: split on '.', compare each part as integer.
+   * Returns 1 if a > b, -1 if a < b, 0 if equal. Non-numeric suffixes ignored.
+   */
+  static compareSemver(a, b) {
+    const norm = (v) => String(v || '0').trim().replace(/^v/i, '').split('.').map(p => {
+      const n = parseInt(p, 10);
+      return Number.isNaN(n) ? 0 : n;
+    });
+    const pa = norm(a);
+    const pb = norm(b);
+    const len = Math.max(pa.length, pb.length);
+    for (let i = 0; i < len; i++) {
+      const x = pa[i] || 0;
+      const y = pb[i] || 0;
+      if (x > y) return 1;
+      if (x < y) return -1;
+    }
+    return 0;
+  }
+
+  /**
+   * Re-read package.json version + .version sentinel from disk.
+   * Used after performUpdate() so detection state reflects the install.
+   */
+  refreshLocalVersion() {
+    try {
+      const pkgPath = path.join(this.rootDir, 'package.json');
+      if (fs.existsSync(pkgPath)) {
+        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+        if (pkg.version) this.currentVersion = pkg.version;
+      }
+    } catch (e) {
+      console.warn('[Updater] Failed to re-read package.json version:', e.message);
+    }
+    try {
+      if (fs.existsSync(this.versionFile)) {
+        const v = fs.readFileSync(this.versionFile, 'utf8').trim();
+        if (v) this.lastInstalledVersion = v;
+      }
+    } catch (e) {
+      console.warn('[Updater] Failed to re-read .version sentinel:', e.message);
+    }
+    this.state.currentVersion = this.currentVersion;
+    this.state.installedVersion = this.lastInstalledVersion;
+  }
+
+  /**
+   * Record a successful install in the machine-local .version sentinel.
+   */
+  recordInstalledVersion(version) {
+    const v = version || this.currentVersion;
+    try {
+      fs.writeFileSync(this.versionFile, v + '\n', 'utf8');
+      this.lastInstalledVersion = v;
+      this.state.installedVersion = v;
+    } catch (e) {
+      console.warn('[Updater] Failed to write .version sentinel:', e.message);
     }
   }
 
@@ -140,6 +220,10 @@ class AutoUpdater {
     try {
       this.state.isGitRepo = fs.existsSync(path.join(this.rootDir, '.git'));
 
+      // Re-sync machine-local sentinel + package.json version in case either
+      // changed on disk outside the updater (e.g. manual git pull).
+      this.refreshLocalVersion();
+
       if (this.state.isGitRepo) {
         await this._checkViaGit();
       } else {
@@ -195,12 +279,19 @@ class AutoUpdater {
     const { stdout: commitDate } = await execAsync(`git log -1 --format="%cd" --date=short origin/${this.branch}`, { cwd });
     this.state.commitDate = commitDate.trim();
 
-    // 6. Check package.json version on origin/main if possible
+    // 6. Check package.json version on origin/main if possible.
+    // Commit-hash comparison (commitsBehind) is primary; a newer remote
+    // semver vs the machine-local .version sentinel also flags an update.
+    // This covers ZIP installs layered on a git checkout and dev machines
+    // where local package.json already matches remote.
     try {
       const { stdout: remotePkgJson } = await execAsync(`git show origin/${this.branch}:package.json`, { cwd });
       const remotePkg = JSON.parse(remotePkgJson);
       if (remotePkg.version) {
         this.state.latestVersion = remotePkg.version;
+        if (AutoUpdater.compareSemver(remotePkg.version, this.lastInstalledVersion) > 0) {
+          this.state.updateAvailable = true;
+        }
       }
     } catch (e) {
       // Non-fatal, version stays as current
@@ -218,14 +309,17 @@ class AutoUpdater {
         this.state.commitDate = data.commit.committer?.date ? data.commit.committer.date.split('T')[0] : '';
       }
 
-      // Check remote package.json
+      // Check remote package.json — proper semver compare against the
+      // machine-local installed version, plus commit-SHA comparison.
       try {
         const rawPkgUrl = `https://raw.githubusercontent.com/${this.repo}/${this.branch}/package.json`;
         const pkgData = await this.fetchJson(rawPkgUrl);
         if (pkgData && pkgData.version) {
           this.state.latestVersion = pkgData.version;
-          this.state.updateAvailable = (pkgData.version !== this.state.currentVersion) ||
-            (this.state.currentCommit && this.state.currentCommit !== this.state.latestCommit);
+          const versionNewer =
+            AutoUpdater.compareSemver(pkgData.version, this.lastInstalledVersion) > 0;
+          this.state.updateAvailable = versionNewer ||
+            (Boolean(this.state.currentCommit) && this.state.currentCommit !== this.state.latestCommit);
         }
       } catch (pkgErr) {
         if (this.state.currentCommit) {
@@ -254,6 +348,15 @@ class AutoUpdater {
       } else {
         await this._updateViaZip();
       }
+
+      // Re-read the freshly installed package.json version and record it in
+      // the machine-local .version sentinel so future checks compare remote
+      // against what was actually installed (not what was committed here).
+      this.refreshLocalVersion();
+      this.recordInstalledVersion(this.currentVersion);
+      this.state.latestVersion = this.currentVersion;
+      this.state.updateAvailable = false;
+      this.state.commitsBehind = 0;
 
       this.state.progressMessage = 'Update complete. Restarting server in 2 seconds...';
       this.notifyStateChange();
@@ -329,7 +432,7 @@ class AutoUpdater {
 
     const extractedFolder = path.join(backupDir, 'extracted', `AV_Controller-${this.branch}`);
     if (fs.existsSync(extractedFolder)) {
-      this._copyDirFiltered(extractedFolder, cwd, ['config.json', '.env', '.git']);
+      this._copyDirFiltered(extractedFolder, cwd, ['config.json', '.env', '.git', '.version']);
     }
 
     // Restore preserved config.json and .env
