@@ -1,0 +1,11 @@
+# Auto detect text files and perform LF normalization for repo
+* text=auto
+
+# Force CRLF for Windows batch files and PowerShell scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Force LF for Unix shell scripts
+*.sh text eol=lf
+*.command text eol=lf

@@ -1,12 +1,12 @@
 # ==============================================================================
-# ⛪ Sanctuary AV Controller — Automated Windows Setup Script
+# ⛪ Sanctuary AV Controller — Automated Windows Setup Script (PowerShell)
 # Installs Node.js LTS, Git, NPM dependencies, Firewall rules, and Shortcuts
 # ==============================================================================
 
 [CmdletBinding()]
 param()
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 function Write-Header {
     param([string]$text)
@@ -37,13 +37,19 @@ function Write-Err {
     Write-Host "  [ERROR] $text" -ForegroundColor Red
 }
 
+$scriptDir = Split-Path -Parent $PSCommandPath
+if (-not $scriptDir) {
+    $scriptDir = (Get-Location).Path
+}
+Set-Location $scriptDir
+
 # 1. Elevate to Administrator if not already running as Admin
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
     Write-Warn "Administrative privileges required for Windows Firewall & Package Installation."
     Write-Info "Requesting elevation via UAC..."
-    Start-Process powershell.exe -ArgumentList ("-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"") -Verb RunAs
-    exit
+    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -Command `"cd -LiteralPath '$scriptDir'; & '$PSCommandPath'`"" -Verb RunAs
+    exit 0
 }
 
 Clear-Host
@@ -51,62 +57,51 @@ Write-Host "╔═════════════════════�
 Write-Host "║     ⛪ SANCTUARY AV CONTROLLER — AUTOMATED WINDOWS SETUP     ║" -ForegroundColor White
 Write-Host "║     Waypoint Church Broadcast System Installer               ║" -ForegroundColor Cyan
 Write-Host "╚══════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
-
-$scriptDir = Split-Path -Parent $PSCommandPath
-Set-Location $scriptDir
+Write-Host "  Working Directory: $scriptDir" -ForegroundColor Gray
+Write-Host ""
 
 # Function to refresh PATH in the current PowerShell session
 function Refresh-EnvPath {
     $machinePath = [System.Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::Machine)
     $userPath    = [System.Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::User)
     $env:Path    = "$machinePath;$userPath"
+    
+    # Also add standard Program Files paths if not present
+    $standardNode = "C:\Program Files\nodejs"
+    if ((Test-Path $standardNode) -and ($env:Path -notlike "*$standardNode*")) {
+        $env:Path = "$standardNode;$env:Path"
+    }
 }
 
-# 2. Check and Install Dependencies via Winget
+# 2. Check and Install Dependencies
 Write-Header "STEP 1: Checking System Dependencies (Node.js & Git)"
 
-$hasWinget = $false
-try {
-    $wingetVer = (& winget --version) 2>$null
-    if ($wingetVer) {
-        $hasWinget = $true
+$hasWinget = $null -ne (Get-Command winget -ErrorAction SilentlyContinue)
+if ($hasWinget) {
+    try {
+        $wingetVer = (winget --version 2>&1)
         Write-Success "Windows Package Manager (winget $wingetVer) detected."
+    } catch {
+        $hasWinget = $false
     }
-} catch {
-    $hasWinget = $false
 }
 
 # Check Node.js
 Refresh-EnvPath
-$hasNode = $false
-try {
-    $nodeVer = (& node -v) 2>$null
-    if ($nodeVer) {
-        $hasNode = $true
-        Write-Success "Node.js is already installed ($nodeVer)."
-    }
-} catch {
-    $hasNode = $false
-}
-
-if (-not $hasNode) {
+$hasNode = $null -ne (Get-Command node -ErrorAction SilentlyContinue)
+if ($hasNode) {
+    $nodeVer = (node -v 2>&1)
+    Write-Success "Node.js is already installed ($nodeVer)."
+} else {
     Write-Info "Node.js not detected. Installing Node.js LTS..."
     if ($hasWinget) {
-        try {
-            Write-Info "Running: winget install -e --id OpenJS.NodeJS.LTS..."
-            & winget install -e --id OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements --silent
-            Refresh-EnvPath
-            $nodeVer = (& node -v) 2>$null
-            if ($nodeVer) {
-                Write-Success "Node.js successfully installed ($nodeVer)!"
-                $hasNode = $true
-            }
-        } catch {
-            Write-Warn "Winget installation encountered an error: $_"
-        }
+        Write-Info "Running: winget install -e --id OpenJS.NodeJS.LTS..."
+        winget install -e --id OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements --silent
+        Refresh-EnvPath
+        $hasNode = $null -ne (Get-Command node -ErrorAction SilentlyContinue)
     }
 
-    # Fallback to direct MSI download if winget failed or unavailable
+    # Fallback to direct MSI download
     if (-not $hasNode) {
         Write-Info "Downloading Node.js LTS MSI installer directly from nodejs.org..."
         $msiUrl = "https://nodejs.org/dist/v20.18.0/node-v20.18.0-x64.msi"
@@ -114,47 +109,45 @@ if (-not $hasNode) {
         try {
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Invoke-WebRequest -Uri $msiUrl -OutFile $msiPath -UseBasicParsing
-            Write-Info "Installing Node.js silently..."
+            Write-Info "Installing Node.js silently (this takes ~30 seconds)..."
             Start-Process msiexec.exe -ArgumentList "/i `"$msiPath`" /qn /norestart" -Wait
             Refresh-EnvPath
             Remove-Item $msiPath -Force -ErrorAction SilentlyContinue
-            $nodeVer = (& node -v) 2>$null
-            if ($nodeVer) {
-                Write-Success "Node.js successfully installed ($nodeVer)!"
-                $hasNode = $true
-            }
+            $hasNode = $null -ne (Get-Command node -ErrorAction SilentlyContinue)
         } catch {
-            Write-Err "Failed to download/install Node.js automatically: $_"
-            Write-Warn "Please manually install Node.js LTS from https://nodejs.org"
+            Write-Err "Automated Node.js download failed: $_"
         }
+    }
+
+    if ($hasNode) {
+        $nodeVer = (node -v 2>&1)
+        Write-Success "Node.js successfully installed ($nodeVer)!"
+    } else {
+        Write-Err "Could not automatically install Node.js."
+        Write-Warn "Please download and install Node.js LTS from https://nodejs.org, then re-run this installer."
+        Write-Host ""
+        Read-Host "Press Enter to exit"
+        exit 1
     }
 }
 
 # Check Git
 Refresh-EnvPath
-$hasGit = $false
-try {
-    $gitVer = (& git --version) 2>$null
-    if ($gitVer) {
-        $hasGit = $true
-        Write-Success "Git is installed ($gitVer)."
-    }
-} catch {
-    $hasGit = $false
-}
-
-if (-not $hasGit -and $hasWinget) {
+$hasGit = $null -ne (Get-Command git -ErrorAction SilentlyContinue)
+if ($hasGit) {
+    $gitVer = (git --version 2>&1)
+    Write-Success "Git is installed ($gitVer)."
+} elseif ($hasWinget) {
     Write-Info "Installing Git for Windows via winget..."
-    try {
-        & winget install -e --id Git.Git --accept-package-agreements --accept-source-agreements --silent
-        Refresh-EnvPath
-        $gitVer = (& git --version) 2>$null
-        if ($gitVer) {
-            Write-Success "Git successfully installed ($gitVer)!"
-        }
-    } catch {
-        Write-Warn "Git installation skipped: $_ (Node.js is sufficient to run the app)."
+    winget install -e --id Git.Git --accept-package-agreements --accept-source-agreements --silent
+    Refresh-EnvPath
+    if ($null -ne (Get-Command git -ErrorAction SilentlyContinue)) {
+        Write-Success "Git successfully installed!"
+    } else {
+        Write-Info "Git install skipped. Node.js is sufficient to run the app."
     }
+} else {
+    Write-Info "Git is not installed (optional). Node.js is sufficient to run the app."
 }
 
 # 3. Install NPM Packages
@@ -168,42 +161,35 @@ if (Test-Path "$scriptDir\node_modules") {
     Write-Info "Running npm install (this takes about 45-60 seconds)..."
 }
 
-try {
-    & npm install
-    if ($LASTEXITCODE -eq 0) {
-        Write-Success "All NPM packages installed successfully!"
-    } else {
-        Write-Warn "npm install exited with code $LASTEXITCODE. Retrying..."
-        & npm install
-    }
-} catch {
-    Write-Err "npm install failed: $_"
+cmd.exe /c "cd /d `"$scriptDir`" && npm install --no-audit --no-fund"
+
+if (Test-Path "$scriptDir\node_modules") {
+    Write-Success "All NPM packages installed successfully!"
+} else {
+    Write-Err "npm install failed. Please check your internet connection."
 }
 
 # 4. Configure Windows Defender Firewall
 Write-Header "STEP 3: Configuring Windows Firewall Rules"
 
 try {
-    $ruleWeb = Get-NetFirewallRule -DisplayName "Sanctuary AV Controller (Web & WS 3050)" -ErrorAction SilentlyContinue
-    if (-not $ruleWeb) {
-        New-NetFirewallRule -DisplayName "Sanctuary AV Controller (Web & WS 3050)" `
-            -Direction Inbound -Protocol TCP -LocalPort 3050 -Action Allow -Profile Any -Description "Allows sound booth iPads and phones on church Wi-Fi to access Sanctuary AV Controller" | Out-Null
+    netsh advfirewall firewall show rule name="Sanctuary AV Controller (Web 3050)" | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        netsh advfirewall firewall add rule name="Sanctuary AV Controller (Web 3050)" dir=in action=allow protocol=TCP localport=3050 profile=any description="Allows sound booth iPads and mobile devices on church Wi-Fi to access Sanctuary AV Controller" | Out-Null
         Write-Success "Created Inbound TCP Rule for Port 3050 (Web Dashboard & WebSocket)."
     } else {
         Write-Success "Inbound Rule for Port 3050 already exists."
     }
 
-    $ruleOsc = Get-NetFirewallRule -DisplayName "Sanctuary AV Controller (REAPER OSC 9000)" -ErrorAction SilentlyContinue
-    if (-not $ruleOsc) {
-        New-NetFirewallRule -DisplayName "Sanctuary AV Controller (REAPER OSC 9000)" `
-            -Direction Inbound -Protocol UDP -LocalPort 9000 -Action Allow -Profile Any -Description "Allows REAPER DAW to transmit OSC master stereo audio meter telemetry" | Out-Null
+    netsh advfirewall firewall show rule name="Sanctuary AV Controller (OSC 9000)" | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        netsh advfirewall firewall add rule name="Sanctuary AV Controller (OSC 9000)" dir=in action=allow protocol=UDP localport=9000 profile=any description="Allows REAPER DAW to transmit OSC master stereo audio meter telemetry" | Out-Null
         Write-Success "Created Inbound UDP Rule for Port 9000 (REAPER OSC Metering)."
     } else {
         Write-Success "Inbound Rule for Port 9000 already exists."
     }
 } catch {
     Write-Warn "Could not set firewall rules automatically: $_"
-    Write-Info "You may need to allow Node.js through Windows Firewall when prompted."
 }
 
 # 5. Create Desktop & Startup Shortcuts

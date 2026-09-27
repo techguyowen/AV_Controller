@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableDelayedExpansion
 title Sanctuary AV Controller — 1-Click Updater
 cd /d "%~dp0"
 
@@ -9,7 +10,21 @@ echo.
 echo Preserving your config.json and .env settings...
 echo.
 
-where git >nul 2>nul
+:: Ensure Node is in PATH
+where node >nul 2>&1
+if %errorlevel% neq 0 (
+    if exist "%ProgramFiles%\nodejs\node.exe" set "PATH=%ProgramFiles%\nodejs;%PATH%"
+    if exist "%ProgramFiles(x86)%\nodejs\node.exe" set "PATH=%ProgramFiles(x86)%\nodejs;%PATH%"
+    if exist "%LocalAppData%\Programs\node\node.exe" set "PATH=%LocalAppData%\Programs\node;%PATH%"
+)
+
+:: Ensure Git is in PATH
+where git >nul 2>&1
+if %errorlevel% neq 0 (
+    if exist "%ProgramFiles%\Git\cmd\git.exe" set "PATH=%ProgramFiles%\Git\cmd;%PATH%"
+)
+
+where git >nul 2>&1
 if %errorlevel% equ 0 (
     if exist "%~dp0.git" (
         echo [GIT] Pulling latest updates from GitHub...
