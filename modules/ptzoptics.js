@@ -19,6 +19,8 @@ class PTZCamera {
    * @param {string} options.ip - Camera IP address (e.g. '192.168.1.101')
    * @param {number} [options.port=1259] - VISCA UDP port (default 1259)
    * @param {number} [options.httpPort=80] - HTTP CGI port (default 80)
+   * @param {string} [options.username='admin'] - HTTP CGI Username
+   * @param {string} [options.password='admin'] - HTTP CGI Password
    * @param {Array} [options.presets] - Custom preset names [{ id: 1, name: 'Pulpit' }, ...]
    */
   constructor(options = {}) {
@@ -27,6 +29,8 @@ class PTZCamera {
     this.ip = options.ip || '192.168.1.101';
     this.port = options.port || 1259;
     this.httpPort = options.httpPort || 80;
+    this.username = options.username || 'admin';
+    this.password = options.password || 'admin';
     this.presets = options.presets || this._defaultPresets();
     this.speed = options.speed || 12; // Default pan/tilt speed (1-24)
     this.zoomSpeed = options.zoomSpeed || 4; // Default zoom speed (1-7)
@@ -67,7 +71,7 @@ class PTZCamera {
       console.warn(`[PTZ:${this.id}] UDP Socket error: ${err.message}`);
       this.connected = false;
     });
-    // Any inbound VISCA datagram (ACK/completion) proves the camera is alive.
+    // Any inbound VISCA datagram (ACK/completion/inquiry reply) proves the camera is alive.
     this._socket.on('message', () => {
       this._lastAckAt = Date.now();
       this._consecutiveFailures = 0;
@@ -76,38 +80,60 @@ class PTZCamera {
         console.log(`[PTZ:${this.id}] ✓ Camera reachable (${this.ip})`);
       }
     });
+
+    this._sendSequenceReset();
+  }
+
+  /**
+   * Send VISCA-over-IP sequence number reset control packet
+   */
+  _sendSequenceReset() {
+    if (!this._socket) return;
+    // Control Packet: Payload Type 0x0200, length 1, sequence 0, payload 0x01 (Reset)
+    const resetPkt = Buffer.from([
+      0x02, 0x00,
+      0x00, 0x01,
+      0x00, 0x00, 0x00, 0x00,
+      0x01
+    ]);
+    try {
+      this._socket.send(resetPkt, 0, resetPkt.length, this.port, this.ip, () => {});
+      this.sequenceNumber = 1;
+    } catch (e) {}
   }
 
   /**
    * Periodic VISCA health-check ping (every 5s).
-   * Sends the VISCA Address Set command (88 30 01 FF) to the camera on UDP 1259.
-   * If no ACK/response datagram arrives within 2s of the ping, the camera is
-   * marked disconnected. Any inbound datagram marks it connected.
+   * Sends the VISCA CAM_PowerInquiry command (81 09 04 00 FF) to the camera on UDP 1259.
+   * PTZOptics cameras reply over UDP with 90 50 02 FF (Power On), updating _lastAckAt.
+   * If no UDP reply arrives within 2s, falls back to HTTP CGI check before marking disconnected.
    */
   _startHealthCheck() {
     this._stopHealthCheck();
     const ping = () => {
       if (!this._socket) return;
-      const payloadBuf = Buffer.from([0x88, 0x30, 0x01, 0xFF]);
-      const header = Buffer.alloc(8);
-      header.writeUInt16BE(0x0100, 0);
-      header.writeUInt16BE(payloadBuf.length, 2);
-      header.writeUInt32BE(this.sequenceNumber++, 4);
-      const packet = Buffer.concat([header, payloadBuf]);
+      // CAM_PowerInquiry: 81 09 04 00 FF
+      const payloadBuf = Buffer.from([0x81, 0x09, 0x04, 0x00, 0xFF]);
       const pingAt = Date.now();
-      try {
-        this._socket.send(packet, 0, packet.length, this.port, this.ip, (err) => {
-          if (err) {
-            this.connected = false;
-            this._consecutiveFailures++;
-          }
-        });
-      } catch (e) {
-        this.connected = false;
-      }
+
+      this.sendVisca(payloadBuf).then((res) => {
+        if (!res.success) {
+          this.connected = false;
+          this._consecutiveFailures++;
+        }
+      });
+
       if (this._ackTimer) clearTimeout(this._ackTimer);
       this._ackTimer = setTimeout(() => {
-        if (this._lastAckAt < pingAt) this.connected = false;
+        if (this._lastAckAt < pingAt) {
+          this.sendHttpCgi('ptzstop').then((httpRes) => {
+            if (!httpRes.success) {
+              this.connected = false;
+            } else {
+              this.connected = true;
+            }
+          });
+        }
       }, 2000);
       if (this._ackTimer.unref) this._ackTimer.unref();
     };
@@ -134,6 +160,8 @@ class PTZCamera {
     }
     if (options.port) this.port = options.port;
     if (options.httpPort) this.httpPort = options.httpPort;
+    if (options.username) this.username = options.username;
+    if (options.password) this.password = options.password;
     if (options.presets) this.presets = options.presets;
     if (options.speed) this.speed = options.speed;
   }
@@ -152,11 +180,12 @@ class PTZCamera {
       const payloadBuf = Buffer.isBuffer(viscaPayload) ? viscaPayload : Buffer.from(viscaPayload);
       const header = Buffer.alloc(8);
       
-      // Payload type: 0x0100 (VISCA command)
-      header.writeUInt16BE(0x0100, 0);
-      // Payload length
+      // Determine Payload type: 0x0110 for Inquiry (81 09 ...), 0x0100 for Command (81 01 ...)
+      const isInquiry = payloadBuf.length > 1 && payloadBuf[1] === 0x09;
+      const payloadType = isInquiry ? 0x0110 : 0x0100;
+
+      header.writeUInt16BE(payloadType, 0);
       header.writeUInt16BE(payloadBuf.length, 2);
-      // Sequence number
       header.writeUInt32BE(this.sequenceNumber++, 4);
 
       const packet = Buffer.concat([header, payloadBuf]);
@@ -168,7 +197,6 @@ class PTZCamera {
           console.warn(`[PTZ:${this.id}] UDP send error to ${this.ip}:${this.port}: ${err.message}`);
           this.connected = false;
           this._consecutiveFailures++;
-          // Attempt HTTP fallback
           resolve({ success: false, error: err.message });
         } else {
           this.connected = true;
@@ -192,6 +220,7 @@ class PTZCamera {
           port: this.httpPort,
           path,
           method: 'GET',
+          auth: `${this.username}:${this.password}`,
           timeout: 2000,
         }, (res) => {
           let data = '';
@@ -350,7 +379,7 @@ class PTZCamera {
    */
   async recallPreset(presetNumber) {
     const num = Math.max(1, Math.min(16, parseInt(presetNumber, 10) || 1));
-    const viscaNum = num - 1; // 0-indexed in VISCA standard
+    const viscaNum = num; // Preset 1 = Memory 0x01 in PTZOptics standard
 
     console.log(`[PTZ:${this.id}] 🎯 Recalling Preset ${num} on ${this.name}...`);
 
@@ -385,7 +414,7 @@ class PTZCamera {
    */
   async savePreset(presetNumber, name = null) {
     const num = Math.max(1, Math.min(16, parseInt(presetNumber, 10) || 1));
-    const viscaNum = num - 1;
+    const viscaNum = num; // Preset 1 = Memory 0x01 in PTZOptics standard
 
     console.log(`[PTZ:${this.id}] 💾 Saving Preset ${num} (${name || 'Custom'}) on ${this.name}...`);
 
@@ -427,7 +456,10 @@ class PTZCamera {
     const snapshotUrl = `http://${this.ip}:${this.httpPort}/snapshot.jpg`;
 
     return new Promise((resolve) => {
-      const req = http.get(snapshotUrl, { timeout: 3000 }, (res) => {
+      const req = http.get(snapshotUrl, {
+        auth: `${this.username}:${this.password}`,
+        timeout: 3000
+      }, (res) => {
         if (res.statusCode === 200) {
           const chunks = [];
           res.on('data', chunk => chunks.push(chunk));

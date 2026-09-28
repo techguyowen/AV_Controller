@@ -1,7 +1,7 @@
 /**
  * tests/ptz.test.js
  * PTZ regression tests: VISCA-over-IP header format, pan/tilt stop bytes,
- * connected-flag transitions, and health-check wiring.
+ * connected-flag transitions, health-check wiring, inquiry headers, and preset mapping.
  *
  * Run: npm test  (node --test tests/)
  */
@@ -22,13 +22,13 @@ function captureSend(cam, err = null) {
   let seen = null;
   cam._socket.send = (packet, offset, length, port, ip, cb) => {
     seen = { packet: Buffer.from(packet.subarray(offset, offset + length)), port, ip };
-    cb(err);
+    if (cb) cb(err);
   };
   return () => seen;
 }
 
 describe('VISCA-over-IP packet format', () => {
-  it('header is 01 00 + big-endian length + big-endian sequence', async () => {
+  it('command header is 01 00 + big-endian length + big-endian sequence', async () => {
     const cam = makeCam();
     const seen = captureSend(cam);
     await cam.sendVisca([0x81, 0x01, 0x06, 0x01, 0x0c, 0x0a, 0x03, 0x01, 0xff]);
@@ -40,6 +40,16 @@ describe('VISCA-over-IP packet format', () => {
     assert.deepEqual([...pkt.subarray(8)], [0x81, 0x01, 0x06, 0x01, 0x0c, 0x0a, 0x03, 0x01, 0xff]);
     assert.equal(seen().port, 1259);
     assert.equal(seen().ip, '127.0.0.1');
+  });
+
+  it('inquiry header uses payload type 01 10', async () => {
+    const cam = makeCam();
+    const seen = captureSend(cam);
+    await cam.sendVisca([0x81, 0x09, 0x04, 0x00, 0xff]); // CAM_PowerInquiry
+    const pkt = seen().packet;
+    assert.equal(pkt[0], 0x01);
+    assert.equal(pkt[1], 0x10); // Inquiry payload type
+    assert.equal(pkt.readUInt16BE(2), 5);
   });
 
   it('sequence number increments per packet', async () => {
@@ -72,6 +82,16 @@ describe('panTilt()', () => {
     assert.ok(payload[4] >= 1 && payload[4] <= 24);
     assert.ok(payload[5] >= 1 && payload[5] <= 20);
     assert.deepEqual(payload.slice(6), [0x03, 0x01, 0xff]); // up: pDir stop, tDir up
+  });
+});
+
+describe('preset recall and save', () => {
+  it('preset 1 maps to Memory 1 (0x01)', async () => {
+    const cam = makeCam();
+    const seen = captureSend(cam);
+    await cam.recallPreset(1);
+    const payload = [...seen().packet.subarray(8)];
+    assert.deepEqual(payload, [0x81, 0x01, 0x04, 0x3F, 0x02, 0x01, 0xFF]);
   });
 });
 
