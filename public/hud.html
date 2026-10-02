@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#0a0d13]">
+<html lang="en" class="h-full bg-[#090D13]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/icon.svg">
-    <meta name="theme-color" content="#0a0d13">
+    <meta name="theme-color" content="#090D13">
     
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +25,7 @@
         }
 
         .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             font-variant-numeric: tabular-nums slashed-zero;
         }
 
@@ -97,7 +97,7 @@
             <!-- Left: Tally & Facility Branding -->
             <div class="flex items-center gap-2.5">
                 <img src="/favicon.svg" alt="Logo" class="w-6 h-6 rounded shrink-0 border border-emerald-500/30">
-                <div id="tally-pill" class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-bold font-mono text-slate-400 flex items-center gap-1.5 transition-colors">
+                <div id="tally-pill" class="px-2.5 py-1 rounded bg-[#101722] border border-[#243242] text-xs font-bold font-mono text-slate-400 flex items-center gap-1.5 transition-colors">
                     <div id="tally-led" class="tally-led tally-off"></div>
                     <span id="tally-text">OFFLINE</span>
                 </div>
@@ -112,35 +112,35 @@
             <!-- Right: Health Badges & Controls -->
             <div class="flex items-center gap-2 sm:gap-3 text-xs font-mono">
                 <!-- Bitrate -->
-                <div class="bg-black/40 px-2.5 py-1 rounded border border-slate-800 flex items-center gap-1.5">
+                <div class="bg-black/40 px-2.5 py-1 rounded border border-[#243242] flex items-center gap-1.5">
                     <span class="text-slate-500 text-[10px]">BITRATE</span>
                     <span id="bitrate-text" class="text-white font-bold">0 kbps</span>
                 </div>
 
                 <!-- YouTube Stream & Audio -->
-                <div class="bg-black/40 px-2.5 py-1 rounded border border-slate-800 flex items-center gap-1.5">
+                <div class="bg-black/40 px-2.5 py-1 rounded border border-[#243242] flex items-center gap-1.5">
                     <div id="yt-dot" class="tally-led tally-off"></div>
                     <span id="yt-audio-status" class="text-slate-400 font-semibold">YT STANDBY</span>
                 </div>
 
                 <!-- OBS Scene & Proclaim -->
-                <div class="bg-black/40 px-2.5 py-1 rounded border border-slate-800 flex items-center gap-1.5 truncate max-w-32 hidden sm:flex">
+                <div class="bg-black/40 px-2.5 py-1 rounded border border-[#243242] flex items-center gap-1.5 truncate max-w-32 hidden sm:flex">
                     <span class="text-blue-400 text-[10px]">SCENE:</span>
                     <span id="obs-scene-text" class="text-white font-bold truncate">---</span>
                 </div>
 
                 <!-- Viewers -->
-                <div class="bg-black/40 px-2.5 py-1 rounded border border-slate-800 flex items-center gap-1">
+                <div class="bg-black/40 px-2.5 py-1 rounded border border-[#243242] flex items-center gap-1">
                     <span class="text-slate-500 text-[10px]">👥</span>
                     <span id="viewers-count" class="text-white font-bold">0</span>
                 </div>
 
                 <!-- Quick Camera Switching Controls (2-Camera Setup) -->
                 <div class="flex items-center gap-1 font-mono text-[10px]">
-                    <button id="hud-cam1" onclick="HUD.setCam(1)" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 cursor-pointer" title="Switch Program to Camera 1 (Pulpit)">
+                    <button id="hud-cam1" onclick="HUD.setCam(1)" class="px-2 py-1 rounded bg-[#182230] hover:bg-slate-700 text-slate-300 font-bold border border-[#243242] cursor-pointer" title="Switch Program to Camera 1 (Pulpit)">
                         CAM 1
                     </button>
-                    <button id="hud-cam2" onclick="HUD.setCam(2)" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 cursor-pointer" title="Switch Program to Camera 2 (Wide)">
+                    <button id="hud-cam2" onclick="HUD.setCam(2)" class="px-2 py-1 rounded bg-[#182230] hover:bg-slate-700 text-slate-300 font-bold border border-[#243242] cursor-pointer" title="Switch Program to Camera 2 (Wide)">
                         CAM 2
                     </button>
                     <button onclick="HUD.atemCut()" class="px-2 py-1 rounded bg-slate-700 hover:bg-white hover:text-black text-white font-bold border border-slate-600 cursor-pointer" title="Execute Hard Cut">
@@ -159,7 +159,7 @@
                 </button>
 
                 <!-- Full Dashboard Link -->
-                <a href="/" target="_blank" title="Open Full Dashboard" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition-colors">
+                <a href="/" target="_blank" title="Open Full Dashboard" class="p-1.5 rounded-lg bg-[#182230] hover:bg-slate-700 text-[#7BAFD4] border border-[#243242] transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </a>
             </div>
@@ -167,7 +167,7 @@
         </div>
 
         <!-- Master Audio Meter Bar (Soundcraft Si / REAPER Livestream Bus) -->
-        <div class="bg-black/40 p-2 rounded-lg border border-slate-800/80 flex items-center gap-3 text-xs font-mono">
+        <div class="bg-black/40 p-2 rounded-lg border border-[#243242]/80 flex items-center gap-3 text-xs font-mono">
             <span class="text-[10px] font-bold text-slate-400 shrink-0 uppercase tracking-wider">Si / REAPER Master:</span>
             
             <div class="flex-grow flex flex-col gap-1">
@@ -251,7 +251,7 @@ const HUD = {
             this.dom.tallyLed.className = 'tally-led tally-red';
             this.dom.tallyText.textContent = 'ON AIR';
         } else {
-            this.dom.tallyPill.className = 'px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-bold font-mono text-slate-400 flex items-center gap-1.5';
+            this.dom.tallyPill.className = 'px-2.5 py-1 rounded bg-[#101722] border border-[#243242] text-xs font-bold font-mono text-slate-400 flex items-center gap-1.5';
             this.dom.tallyLed.className = 'tally-led tally-off';
             this.dom.tallyText.textContent = 'OFFLINE';
         }
@@ -312,12 +312,12 @@ const HUD = {
         if (cam1Btn) {
             cam1Btn.className = pgm === 1
                 ? 'px-2 py-1 rounded bg-red-600 text-white font-black border border-red-400 shadow-sm cursor-pointer'
-                : 'px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 cursor-pointer';
+                : 'px-2 py-1 rounded bg-[#182230] hover:bg-slate-700 text-slate-300 font-bold border border-[#243242] cursor-pointer';
         }
         if (cam2Btn) {
             cam2Btn.className = pgm === 2
                 ? 'px-2 py-1 rounded bg-red-600 text-white font-black border border-red-400 shadow-sm cursor-pointer'
-                : 'px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 cursor-pointer';
+                : 'px-2 py-1 rounded bg-[#182230] hover:bg-slate-700 text-slate-300 font-bold border border-[#243242] cursor-pointer';
         }
     },
 

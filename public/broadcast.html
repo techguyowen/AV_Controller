@@ -26,15 +26,15 @@
 <body class="min-h-screen pb-20 sm:pb-6 flex flex-col justify-between">
 
     <!-- Header -->
-    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
+    <header class="bg-[#090D13]/90 border-b border-[#243242]/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg bg-cyan-600/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+            <div class="w-8 h-8 rounded-lg bg-[#7BAFD4] text-[#081018]/20 border border-[#7BAFD4]/40 flex items-center justify-center text-[#7BAFD4]">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a10 10 0 0114.142 0M1.394 9.393a15 15 0 0121.213 0"></path></svg>
             </div>
             <div>
                 <h1 class="text-sm font-extrabold tracking-tight text-white flex items-center gap-1.5">
                     <span>BROADCAST TELEMETRY</span>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-800 text-cyan-400 font-mono">DIAGNOSTICS</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#12263A]/60 border border-[#7BAFD4]/50 text-[#7BAFD4] font-mono">DIAGNOSTICS</span>
                 </h1>
                 <p class="text-[10px] font-mono text-slate-400">Network Latency & YouTube Ingest Monitor</p>
             </div>
@@ -42,7 +42,7 @@
 
         <div class="flex items-center gap-2">
             <div id="global-conn-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
-            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 text-xs font-bold font-mono">
                 🪟 HUD
             </a>
         </div>
@@ -50,14 +50,14 @@
 
     <!-- Simple Direct Station Navigation Bar -->
     <div class="max-w-5xl mx-auto w-full px-3 pt-3">
-        <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+        <nav class="bg-[#090D13]/80 border border-[#243242]/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
             <div class="flex items-center gap-1.5 min-w-max">
-                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
-                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
-                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
-                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
-                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">💬 Captions</a>
-                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">📡 OBS / Stream</a>
+                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
+                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📋 Checklist</a>
+                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">💬 Captions</a>
+                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-[#7BAFD4] text-[#081018] text-slate-950 shadow-sm flex items-center gap-1.5">📡 OBS / Stream</a>
             </div>
             <div class="flex items-center gap-2 min-w-max">
                 <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
@@ -88,25 +88,25 @@
 
         <!-- 1. Key Metrics 4-Card Grid -->
         <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
-            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+            <div class="bg-[#101722]/80 border border-[#243242] p-4 rounded-2xl space-y-1">
                 <span class="text-[10px] text-slate-500 uppercase font-bold">STREAM DURATION</span>
                 <div id="metric-duration" class="text-lg sm:text-xl font-black text-white">00:00:00</div>
                 <div id="metric-duration-sub" class="text-[10px] text-slate-400">Standby</div>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+            <div class="bg-[#101722]/80 border border-[#243242] p-4 rounded-2xl space-y-1">
                 <span class="text-[10px] text-slate-500 uppercase font-bold">PRIMARY (ATEM)</span>
                 <div id="metric-atem-state" class="text-lg sm:text-xl font-black text-slate-400">OFFLINE</div>
                 <div id="metric-atem-sub" class="text-[10px] text-slate-500">192.168.1.240</div>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+            <div class="bg-[#101722]/80 border border-[#243242] p-4 rounded-2xl space-y-1">
                 <span class="text-[10px] text-slate-500 uppercase font-bold">LOCAL / REC (OBS)</span>
                 <div id="metric-obs-state" class="text-lg sm:text-xl font-black text-slate-400">STANDBY</div>
                 <div id="metric-obs-sub" class="text-[10px] text-slate-500">Localhost:4455</div>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl space-y-1">
+            <div class="bg-[#101722]/80 border border-[#243242] p-4 rounded-2xl space-y-1">
                 <span class="text-[10px] text-slate-500 uppercase font-bold">YOUTUBE INGEST</span>
                 <div id="metric-ping-yt" class="text-lg sm:text-xl font-black text-emerald-400">-- ms</div>
                 <div class="text-[10px] text-slate-400">RTMP Connection</div>
@@ -114,11 +114,11 @@
         </section>
 
         <!-- 2. Primary Encoder: Blackmagic ATEM Mini Pro -->
-        <section class="bg-slate-900/80 border-2 border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 font-mono text-xs">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+        <section class="bg-[#101722]/80 border-2 border-[#243242] rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-[#243242] pb-3 flex-wrap gap-2">
                 <div class="flex items-center gap-2">
                     <span class="text-sm font-extrabold uppercase tracking-wider text-white">🔴 Primary Broadcast Encoder: ATEM Mini Pro</span>
-                    <span id="atem-status-pill" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">OFFLINE</span>
+                    <span id="atem-status-pill" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#182230] text-slate-400">OFFLINE</span>
                 </div>
                 <div class="text-[11px] text-slate-400">Hardware YouTube Streaming via Ethernet</div>
             </div>
@@ -130,12 +130,12 @@
                     <span id="label-atem-stream" class="text-xs uppercase">Start ATEM Stream</span>
                 </button>
 
-                <button id="btn-atem-record" onclick="SanctuaryClient.toggleAtemRecord()" class="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer">
+                <button id="btn-atem-record" onclick="SanctuaryClient.toggleAtemRecord()" class="p-3.5 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-200 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer">
                     <span class="text-lg" id="icon-atem-record">📼</span>
                     <span id="label-atem-record" class="text-xs uppercase">Start USB Record</span>
                 </button>
 
-                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between px-4">
+                <div class="p-3.5 rounded-xl bg-[#090D13] border border-[#243242] flex items-center justify-between px-4">
                     <span class="text-slate-400 font-bold">PROGRAM:</span>
                     <span id="atem-pgm-tally" class="px-2.5 py-1 rounded bg-red-950 border border-red-800 text-red-300 font-black">INPUT 1</span>
                 </div>
@@ -143,33 +143,33 @@
         </section>
 
         <!-- 3. Secondary Encoder & Local Distribution: OBS Studio -->
-        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 font-mono text-xs">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+        <section class="bg-[#101722]/80 border border-[#243242] rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-[#243242] pb-3 flex-wrap gap-2">
                 <div class="flex items-center gap-2">
                     <span class="text-sm font-extrabold uppercase tracking-wider text-slate-200">🎥 Secondary / Local Distribution: OBS Studio</span>
-                    <span id="obs-status-pill" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">STANDBY</span>
+                    <span id="obs-status-pill" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#182230] text-slate-400">STANDBY</span>
                 </div>
                 <div class="text-[11px] text-slate-400">Overflow Rooms, Local Recording & Captions</div>
             </div>
 
             <!-- Master Stream / Record Action Bar for OBS -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button id="btn-obs-stream" onclick="SanctuaryClient.toggleObsStream()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                <button id="btn-obs-stream" onclick="SanctuaryClient.toggleObsStream()" class="p-3 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
                     <span class="text-base" id="icon-obs-stream">🔴</span>
                     <span id="label-obs-stream" class="text-xs uppercase">Start OBS Stream</span>
                 </button>
 
-                <button id="btn-obs-record" onclick="SanctuaryClient.toggleObsRecord()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                <button id="btn-obs-record" onclick="SanctuaryClient.toggleObsRecord()" class="p-3 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-200 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
                     <span class="text-base" id="icon-obs-record">📼</span>
                     <span id="label-obs-record" class="text-xs uppercase">Start Record</span>
                 </button>
 
-                <button id="btn-obs-studio" onclick="SanctuaryClient.toggleObsStudioMode()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                <button id="btn-obs-studio" onclick="SanctuaryClient.toggleObsStudioMode()" class="p-3 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
                     <span class="text-base">🎬</span>
                     <span id="label-obs-studio" class="text-xs uppercase">Studio Mode</span>
                 </button>
 
-                <button id="btn-obs-vcam" onclick="SanctuaryClient.toggleObsVirtualCam()" class="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
+                <button id="btn-obs-vcam" onclick="SanctuaryClient.toggleObsVirtualCam()" class="p-3 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer">
                     <span class="text-base">📹</span>
                     <span id="label-obs-vcam" class="text-xs uppercase">Virtual Cam</span>
                 </button>
@@ -182,63 +182,63 @@
                     <span class="text-[10px] text-slate-500">Tap to switch scene</span>
                 </div>
                 <div id="obs-scenes-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    <div class="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 text-center text-slate-500 text-[11px]">Loading scenes...</div>
+                    <div class="p-2.5 rounded-lg bg-[#090D13]/60 border border-[#243242] text-center text-slate-500 text-[11px]">Loading scenes...</div>
                 </div>
             </div>
         </section>
 
         <!-- 4. Network Latency Ping Table -->
-        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3 font-mono text-xs">
+        <section class="bg-[#101722]/80 border border-[#243242] rounded-2xl p-4 shadow-xl space-y-3 font-mono text-xs">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">Signal Nodes & Network Latency</span>
-                <button onclick="SanctuaryClient.refreshAll()" class="text-[10px] text-cyan-400 hover:underline font-bold cursor-pointer">
+                <button onclick="SanctuaryClient.refreshAll()" class="text-[10px] text-[#7BAFD4] hover:underline font-bold cursor-pointer">
                     🔄 Refresh Status
                 </button>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                <div class="p-3 rounded-xl bg-[#090D13] border border-[#243242] flex items-center justify-between">
                     <div>
                         <div class="text-white font-bold">Internet Gateway Router</div>
                         <div class="text-[10px] text-slate-500">192.168.1.1</div>
                     </div>
-                    <span id="ping-gateway" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                    <span id="ping-gateway" class="px-2 py-0.5 rounded bg-[#101722] text-slate-400 font-bold">-- ms</span>
                 </div>
 
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                <div class="p-3 rounded-xl bg-[#090D13] border border-[#243242] flex items-center justify-between">
                     <div>
                         <div class="text-white font-bold">YouTube RTMP Ingest</div>
                         <div class="text-[10px] text-slate-500">a.rtmp.youtube.com</div>
                     </div>
-                    <span id="ping-youtube" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                    <span id="ping-youtube" class="px-2 py-0.5 rounded bg-[#101722] text-slate-400 font-bold">-- ms</span>
                 </div>
 
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                <div class="p-3 rounded-xl bg-[#090D13] border border-[#243242] flex items-center justify-between">
                     <div>
                         <div class="text-white font-bold">ATEM Mini Video Switcher</div>
                         <div class="text-[10px] text-slate-500">192.168.1.240</div>
                     </div>
-                    <span id="ping-atem" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                    <span id="ping-atem" class="px-2 py-0.5 rounded bg-[#101722] text-slate-400 font-bold">-- ms</span>
                 </div>
 
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                <div class="p-3 rounded-xl bg-[#090D13] border border-[#243242] flex items-center justify-between">
                     <div>
                         <div class="text-white font-bold">REAPER Livestream DAW</div>
                         <div class="text-[10px] text-slate-500">127.0.0.1:9000</div>
                     </div>
-                    <span id="ping-reaper" class="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-bold">-- ms</span>
+                    <span id="ping-reaper" class="px-2 py-0.5 rounded bg-[#101722] text-slate-400 font-bold">-- ms</span>
                 </div>
             </div>
         </section>
 
         <!-- 5. System Event Log Feed -->
-        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3 font-mono text-xs">
+        <section class="bg-[#101722]/80 border border-[#243242] rounded-2xl p-4 shadow-xl space-y-3 font-mono text-xs">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">Live Incident & Broadcast Log</span>
                 <span class="text-[10px] text-slate-500">Real-Time Event Stream</span>
             </div>
 
-            <div id="event-log-feed" class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 space-y-2 max-h-48 overflow-y-auto">
+            <div id="event-log-feed" class="bg-[#090D13] p-3 rounded-xl border border-[#243242]/80 space-y-2 max-h-48 overflow-y-auto">
                 <div class="text-slate-500 text-[11px]">System initialized and monitoring all church broadcast systems.</div>
             </div>
         </section>
@@ -306,7 +306,7 @@
             if (atemPill) {
                 if (!atem.connected) {
                     atemPill.textContent = 'OFFLINE';
-                    atemPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-500';
+                    atemPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-[#182230] text-slate-500';
                 } else if (atem.isStreaming) {
                     atemPill.textContent = '● LIVE BROADCAST';
                     atemPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-red-950/80 border border-red-800 text-red-400 animate-pulse';
@@ -337,7 +337,7 @@
                     atemRecBtn.className = 'p-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-black flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-lg animate-pulse';
                 } else {
                     atemRecLbl.textContent = 'Start USB Record';
-                    atemRecBtn.className = 'p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer';
+                    atemRecBtn.className = 'p-3.5 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-200 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer';
                 }
             }
 
@@ -357,7 +357,7 @@
             if (obsPill) {
                 if (!obs.connected) {
                     obsPill.textContent = 'OFFLINE';
-                    obsPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-500';
+                    obsPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-[#182230] text-slate-500';
                 } else if (obs.isStreaming) {
                     obsPill.textContent = '● STREAMING';
                     obsPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-red-950/80 border border-red-800 text-red-400 animate-pulse';
@@ -381,7 +381,7 @@
                     obsStreamBtn.className = 'p-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer shadow-lg animate-pulse';
                 } else {
                     obsStreamLbl.textContent = 'Start OBS Stream';
-                    obsStreamBtn.className = 'p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer';
+                    obsStreamBtn.className = 'p-3 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-300 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer';
                 }
             }
 
@@ -391,7 +391,7 @@
                     obsRecBtn.className = 'p-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-black flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer shadow-lg animate-pulse';
                 } else {
                     obsRecLbl.textContent = 'Start Record';
-                    obsRecBtn.className = 'p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer';
+                    obsRecBtn.className = 'p-3 rounded-xl bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-200 font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer';
                 }
             }
 
@@ -407,7 +407,7 @@
                     grid.dataset.sceneCount = obs.scenes.length;
                     grid.dataset.activeScene = obs.currentScene;
                     grid.innerHTML = obs.scenes.map(s => `
-                        <button onclick="SanctuaryClient.setObsScene('${s.replace(/'/g, "\\'")}')" class="p-2.5 rounded-lg text-center transition-all cursor-pointer truncate ${s === obs.currentScene ? 'bg-red-600 text-white font-black border border-red-400 shadow-md' : 'bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300'}">
+                        <button onclick="SanctuaryClient.setObsScene('${s.replace(/'/g, "\\'")}')" class="p-2.5 rounded-lg text-center transition-all cursor-pointer truncate ${s === obs.currentScene ? 'bg-red-600 text-white font-black border border-red-400 shadow-md' : 'bg-[#090D13] hover:bg-[#182230] border border-[#243242] text-slate-300'}">
                             ${s}
                         </button>
                     `).join('');
@@ -440,11 +440,11 @@
                 }
                 if (at && pingAtEl) {
                     pingAtEl.textContent = at.alive ? `${at.latency || 1} ms` : 'Offline';
-                    pingAtEl.className = `px-2 py-0.5 rounded font-bold ${at.alive ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400' : 'bg-slate-900 text-slate-500'}`;
+                    pingAtEl.className = `px-2 py-0.5 rounded font-bold ${at.alive ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400' : 'bg-[#101722] text-slate-500'}`;
                 }
                 if (rp && pingRpEl) {
                     pingRpEl.textContent = rp.alive ? `${rp.latency || 0} ms` : 'Offline';
-                    pingRpEl.className = `px-2 py-0.5 rounded font-bold ${rp.alive ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400' : 'bg-slate-900 text-slate-500'}`;
+                    pingRpEl.className = `px-2 py-0.5 rounded font-bold ${rp.alive ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-400' : 'bg-[#101722] text-slate-500'}`;
                 }
             }
 

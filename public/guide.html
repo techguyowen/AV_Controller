@@ -28,14 +28,14 @@
             .print-card { border: 1px solid #ccc !important; background: #fafafa !important; color: black !important; }
             .text-white { color: black !important; }
             .text-slate-400, .text-slate-300, .text-slate-500 { color: #444 !important; }
-            .bg-black\/40, .bg-slate-900, .bg-slate-950 { background: white !important; border-color: #ccc !important; }
+            .bg-black\/40, .bg-[#101722], .bg-[#090D13] { background: white !important; border-color: #ccc !important; }
         }
     </style>
 </head>
 <body class="min-h-screen pb-20 sm:pb-8 flex flex-col justify-between">
 
     <!-- Top Header -->
-    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
+    <header class="bg-[#090D13]/90 border-b border-[#243242]/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
                 📖
@@ -50,30 +50,30 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <button onclick="window.print()" class="no-print px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold font-mono transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm">
+            <button onclick="window.print()" class="no-print px-3 py-1.5 rounded-lg bg-[#182230] hover:bg-slate-700 text-slate-200 border border-[#243242] text-xs font-bold font-mono transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm">
                 <span>🖨️ Print / PDF</span>
             </button>
-            <a href="/" class="no-print px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 text-xs font-black font-mono transition-colors flex items-center gap-1 shadow-sm">
+            <a href="/" class="no-print px-3 py-1.5 rounded-lg bg-[#7BAFD4] text-[#081018] text-slate-950 text-xs font-black font-mono transition-colors flex items-center gap-1 shadow-sm">
                 <span>🎛️ Master Hub</span>
             </a>
         </div>
     </header>
 
     <!-- Navigation Bar -->
-    <nav class="no-print bg-slate-950/80 border-b border-slate-800/80 px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-sm">
+    <nav class="no-print bg-[#090D13]/80 border-b border-[#243242]/80 px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-sm">
         <div class="flex items-center gap-1.5 min-w-max text-xs">
-            <a href="/" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors">🎛️ Master Hub</a>
-            <a href="/checklist" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors">📋 Checklist</a>
-            <a href="/cameras" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors">📷 Cameras & ATEM</a>
-            <a href="/audio" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors">🎙️ Audio</a>
-            <a href="/captions" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors">💬 Captions</a>
-            <a href="/broadcast" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors">📡 OBS / Stream</a>
+            <a href="/" class="px-3 py-1.5 rounded-lg font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors">🎛️ Master Hub</a>
+            <a href="/checklist" class="px-3 py-1.5 rounded-lg font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors">📋 Checklist</a>
+            <a href="/cameras" class="px-3 py-1.5 rounded-lg font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors">📷 Cameras & ATEM</a>
+            <a href="/audio" class="px-3 py-1.5 rounded-lg font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors">🎙️ Audio</a>
+            <a href="/captions" class="px-3 py-1.5 rounded-lg font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors">💬 Captions</a>
+            <a href="/broadcast" class="px-3 py-1.5 rounded-lg font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors">📡 OBS / Stream</a>
         </div>
         <div class="flex items-center gap-2 min-w-max">
             <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 border border-purple-800 text-xs font-bold font-mono">
                 📖 Booth Ops (8085)
             </a>
-            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">🪟 HUD</a>
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 text-xs font-bold font-mono">🪟 HUD</a>
         </div>
     </nav>
 
@@ -81,8 +81,8 @@
     <main class="max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
 
         <!-- Mode / Tab Switcher Ribbon -->
-        <div class="no-print flex items-center p-1 rounded-xl bg-slate-950/80 border border-slate-800 gap-1 select-none overflow-x-auto">
-            <button id="tab-btn-volunteer" onclick="switchGuideTab('volunteer')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-cyan-500 text-slate-950 shadow-sm cursor-pointer min-w-max">
+        <div class="no-print flex items-center p-1 rounded-xl bg-[#090D13]/80 border border-[#243242] gap-1 select-none overflow-x-auto">
+            <button id="tab-btn-volunteer" onclick="switchGuideTab('volunteer')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-[#7BAFD4] text-[#081018] text-slate-950 shadow-sm cursor-pointer min-w-max">
                 1. 📖 Volunteer Sunday Playbook
             </button>
             <button id="tab-btn-emergency" onclick="switchGuideTab('emergency')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-slate-400 hover:text-white cursor-pointer min-w-max">
@@ -104,19 +104,19 @@
             <!-- Welcome Hero -->
             <div class="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 border border-white/[0.08] shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div class="space-y-1">
-                    <span class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">Sunday Morning Operator Guide</span>
+                    <span class="text-xs font-mono font-bold text-[#7BAFD4] uppercase tracking-widest">Sunday Morning Operator Guide</span>
                     <h2 class="text-lg font-black text-white">Welcome to the Waypoint AV Booth!</h2>
                     <p class="text-xs text-slate-300 max-w-2xl">This walkthrough covers everything you need to run the live stream with confidence. All hardware is monitored automatically, and emergency safeguards protect the stream at all times.</p>
                 </div>
-                <div class="px-4 py-3 rounded-xl bg-black/50 border border-slate-800 text-right font-mono shrink-0">
+                <div class="px-4 py-3 rounded-xl bg-black/50 border border-[#243242] text-right font-mono shrink-0">
                     <div class="text-[10px] text-slate-400 uppercase">Golden Rule</div>
                     <div class="text-xs font-extrabold text-emerald-400">Check Twice, Cut Once.</div>
                 </div>
             </div>
 
             <!-- Sunday Timeline -->
-            <div class="p-5 rounded-2xl bg-slate-900/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="p-5 rounded-2xl bg-[#101722]/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
+                <div class="flex items-center justify-between pb-3 border-b border-[#243242]">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
                         <span>⏰ Sunday Morning Timeline</span>
                     </h3>
@@ -124,22 +124,22 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
-                    <div class="p-3 rounded-xl bg-black/40 border border-slate-800 space-y-1">
-                        <div class="text-cyan-400 font-bold">8:30 AM</div>
+                    <div class="p-3 rounded-xl bg-black/40 border border-[#243242] space-y-1">
+                        <div class="text-[#7BAFD4] font-bold">8:30 AM</div>
                         <div class="font-semibold text-white">Power On Booth</div>
                         <div class="text-[11px] text-slate-400">Turn on monitors, soundboard, and open AV Controller.</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-black/40 border border-slate-800 space-y-1">
+                    <div class="p-3 rounded-xl bg-black/40 border border-[#243242] space-y-1">
                         <div class="text-emerald-400 font-bold">8:45 AM</div>
                         <div class="font-semibold text-white">Pre-Flight Check</div>
                         <div class="text-[11px] text-slate-400">Go to <a href="/checklist" class="underline text-emerald-400">/checklist</a> and click "⚡ Run Auto-Check".</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-black/40 border border-slate-800 space-y-1">
+                    <div class="p-3 rounded-xl bg-black/40 border border-[#243242] space-y-1">
                         <div class="text-red-400 font-bold">8:58 AM</div>
                         <div class="font-semibold text-white">Go Live</div>
                         <div class="text-[11px] text-slate-400">Cue countdown slide and click "🔴 ATEM Stream".</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-black/40 border border-slate-800 space-y-1">
+                    <div class="p-3 rounded-xl bg-black/40 border border-[#243242] space-y-1">
                         <div class="text-purple-400 font-bold">12:00 PM</div>
                         <div class="font-semibold text-white">Shutdown</div>
                         <div class="text-[11px] text-slate-400">Stop stream, stop recording, and park PTZ cameras.</div>
@@ -151,15 +151,15 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
                 <!-- 1. Video Switching -->
-                <div class="p-5 rounded-2xl bg-slate-900/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
-                    <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                <div class="p-5 rounded-2xl bg-[#101722]/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
+                    <div class="flex items-center gap-2.5 pb-2 border-b border-[#243242]">
                         <span class="text-base">🎥</span>
                         <h4 class="text-xs font-bold uppercase tracking-wider text-white">1. Video Switching (ATEM Mini)</h4>
                     </div>
                     <div class="space-y-2 text-xs text-slate-300">
                         <p><strong>Top Row (RED = PROGRAM)</strong>: The camera currently being broadcast to YouTube.</p>
                         <p><strong>Bottom Row (GREEN = PREVIEW)</strong>: The next camera or slide cued up.</p>
-                        <div class="bg-black/40 p-3 rounded-xl border border-slate-800 font-mono text-[11px] space-y-1">
+                        <div class="bg-black/40 p-3 rounded-xl border border-[#243242] font-mono text-[11px] space-y-1">
                             <div>• <span class="text-white font-bold">[1] Pulpit</span>: Preacher / Center Stage</div>
                             <div>• <span class="text-white font-bold">[2] Wide</span>: Congregation / Whole Stage</div>
                             <div>• <span class="text-white font-bold">[3] Proclaim</span>: Lyrics & Sermon Slides</div>
@@ -169,8 +169,8 @@
                 </div>
 
                 <!-- 2. Steering PTZ Cameras -->
-                <div class="p-5 rounded-2xl bg-slate-900/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
-                    <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                <div class="p-5 rounded-2xl bg-[#101722]/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
+                    <div class="flex items-center gap-2.5 pb-2 border-b border-[#243242]">
                         <span class="text-base">🕹️</span>
                         <h4 class="text-xs font-bold uppercase tracking-wider text-white">2. Steering PTZ Cameras</h4>
                     </div>
@@ -185,14 +185,14 @@
                 </div>
 
                 <!-- 3. Monitoring Audio Levels -->
-                <div class="p-5 rounded-2xl bg-slate-900/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
-                    <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                <div class="p-5 rounded-2xl bg-[#101722]/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
+                    <div class="flex items-center gap-2.5 pb-2 border-b border-[#243242]">
                         <span class="text-base">🎙️</span>
                         <h4 class="text-xs font-bold uppercase tracking-wider text-white">3. Audio Levels & Sweet Spot</h4>
                     </div>
                     <div class="space-y-2 text-xs text-slate-300">
                         <p>Look at the stereo VU meters on the dashboard:</p>
-                        <div class="bg-black/40 p-3 rounded-xl border border-slate-800 font-mono text-[11px] space-y-1">
+                        <div class="bg-black/40 p-3 rounded-xl border border-[#243242] font-mono text-[11px] space-y-1">
                             <div>• <span class="text-emerald-400 font-bold">-18 to -12 dBFS</span>: Nominal sweet spot for dialogue & music.</div>
                             <div>• <span class="text-amber-400 font-bold">-6 dBFS</span>: Loud peaks (worship band).</div>
                             <div>• <span class="text-red-400 font-bold">0 dBFS</span>: Clipping / Distorting (pull fader down).</div>
@@ -202,14 +202,14 @@
                 </div>
 
                 <!-- 4. Live Speech Captions -->
-                <div class="p-5 rounded-2xl bg-slate-900/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
-                    <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                <div class="p-5 rounded-2xl bg-[#101722]/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
+                    <div class="flex items-center gap-2.5 pb-2 border-b border-[#243242]">
                         <span class="text-base">💬</span>
                         <h4 class="text-xs font-bold uppercase tracking-wider text-white">4. Live Speech Captions (VoxStream)</h4>
                     </div>
                     <div class="space-y-2 text-xs text-slate-300">
                         <p>Speech from the pulpit mic appears in real time on the dashboard and feeds the stage teleprompter (port 8765).</p>
-                        <div class="bg-black/40 p-3 rounded-xl border border-slate-800 font-mono text-[11px] space-y-1">
+                        <div class="bg-black/40 p-3 rounded-xl border border-[#243242] font-mono text-[11px] space-y-1">
                             <div>• <strong>🧹 Clear Text</strong>: Clears current sentence preview.</div>
                             <div>• <strong>🚨 Panic</strong>: Instantly blacks out all captions everywhere if an inappropriate word is transcribed.</div>
                             <div>• <strong>📱 Stage ↗</strong>: Opens the musicians' read-along display.</div>
@@ -302,7 +302,7 @@
                 <div class="p-4 rounded-xl bg-black/60 border border-slate-500/40 space-y-2 print-card">
                     <div class="flex items-center justify-between">
                         <span class="text-slate-300 font-bold font-mono">6. ATEM OR OBS SHOWS "OFFLINE"</span>
-                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">NETWORK</span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#101722] text-slate-400 border border-[#243242] font-mono">NETWORK</span>
                     </div>
                     <ol class="list-decimal list-inside text-slate-300 space-y-1">
                         <li>Check the Ethernet cable plugged into the ATEM Mini Pro.</li>
@@ -319,43 +319,43 @@
         <!-- ============================================================ -->
         <section id="tab-install" class="space-y-6 hidden">
             
-            <div class="p-5 rounded-2xl bg-slate-900/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="p-5 rounded-2xl bg-[#101722]/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
+                <div class="flex items-center justify-between pb-3 border-b border-[#243242]">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
                         <span>🛠️ Step-by-Step Installation on Broadcast Computer</span>
                     </h3>
-                    <span class="text-[10px] font-mono text-cyan-400">macOS & Windows</span>
+                    <span class="text-[10px] font-mono text-[#7BAFD4]">macOS & Windows</span>
                 </div>
 
                 <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
                     
                     <!-- Step 1 -->
-                    <div class="p-3.5 rounded-xl bg-black/40 border border-slate-800 space-y-1.5">
+                    <div class="p-3.5 rounded-xl bg-black/40 border border-[#243242] space-y-1.5">
                         <div class="font-bold text-white text-sm flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-xs font-black">1</span>
+                            <span class="w-5 h-5 rounded-full bg-[#7BAFD4] text-[#081018] text-slate-950 flex items-center justify-center text-xs font-black">1</span>
                             Install Node.js
                         </div>
-                        <p>Download and install <strong>Node.js v20+ LTS</strong> from <a href="https://nodejs.org" target="_blank" class="text-cyan-400 underline">https://nodejs.org</a>. Run the installer and accept default settings.</p>
+                        <p>Download and install <strong>Node.js v20+ LTS</strong> from <a href="https://nodejs.org" target="_blank" class="text-[#7BAFD4] underline">https://nodejs.org</a>. Run the installer and accept default settings.</p>
                         <div class="bg-black/80 p-2 rounded text-[11px] font-mono text-slate-400">
                             Verification command in Terminal/CMD: <span class="text-white">node -v</span>
                         </div>
                     </div>
 
                     <!-- Step 2 -->
-                    <div class="p-3.5 rounded-xl bg-black/40 border border-slate-800 space-y-1.5">
+                    <div class="p-3.5 rounded-xl bg-black/40 border border-[#243242] space-y-1.5">
                         <div class="font-bold text-white text-sm flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-xs font-black">2</span>
+                            <span class="w-5 h-5 rounded-full bg-[#7BAFD4] text-[#081018] text-slate-950 flex items-center justify-center text-xs font-black">2</span>
                             Place Folder & Run `npm install`
                         </div>
-                        <p>Place the <code class="text-cyan-400">AV_Controller</code> folder in your desired permanent directory (e.g. <code class="text-slate-300">C:\AV_Controller</code> on Windows or <code class="text-slate-300">~/AV_Controller</code> on Mac).</p>
+                        <p>Place the <code class="text-[#7BAFD4]">AV_Controller</code> folder in your desired permanent directory (e.g. <code class="text-slate-300">C:\AV_Controller</code> on Windows or <code class="text-slate-300">~/AV_Controller</code> on Mac).</p>
                         <p>Open Command Prompt (Windows) or Terminal (Mac) in that folder and run:</p>
-                        <pre class="bg-black/80 p-2.5 rounded text-[11px] font-mono text-cyan-300 overflow-x-auto">cd AV_Controller&#10;npm install</pre>
+                        <pre class="bg-black/80 p-2.5 rounded text-[11px] font-mono text-[#7BAFD4] overflow-x-auto">cd AV_Controller&#10;npm install</pre>
                     </div>
 
                     <!-- Step 3 -->
-                    <div class="p-3.5 rounded-xl bg-black/40 border border-slate-800 space-y-1.5">
+                    <div class="p-3.5 rounded-xl bg-black/40 border border-[#243242] space-y-1.5">
                         <div class="font-bold text-white text-sm flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-xs font-black">3</span>
+                            <span class="w-5 h-5 rounded-full bg-[#7BAFD4] text-[#081018] text-slate-950 flex items-center justify-center text-xs font-black">3</span>
                             Configure REAPER DAW OSC Metering
                         </div>
                         <p>In REAPER: <strong>Options > Preferences > Control/OSC/web > Add</strong>:</p>
@@ -367,9 +367,9 @@
                     </div>
 
                     <!-- Step 4 -->
-                    <div class="p-3.5 rounded-xl bg-black/40 border border-slate-800 space-y-1.5">
+                    <div class="p-3.5 rounded-xl bg-black/40 border border-[#243242] space-y-1.5">
                         <div class="font-bold text-white text-sm flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-xs font-black">4</span>
+                            <span class="w-5 h-5 rounded-full bg-[#7BAFD4] text-[#081018] text-slate-950 flex items-center justify-center text-xs font-black">4</span>
                             Configure OBS Studio WebSocket v5
                         </div>
                         <p>In OBS Studio: <strong>Tools > WebSocket Server Settings</strong>:</p>
@@ -380,19 +380,19 @@
                     </div>
 
                     <!-- Step 5 -->
-                    <div class="p-3.5 rounded-xl bg-black/40 border border-slate-800 space-y-1.5">
+                    <div class="p-3.5 rounded-xl bg-black/40 border border-[#243242] space-y-1.5">
                         <div class="font-bold text-white text-sm flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-xs font-black">5</span>
+                            <span class="w-5 h-5 rounded-full bg-[#7BAFD4] text-[#081018] text-slate-950 flex items-center justify-center text-xs font-black">5</span>
                             1-Click Startup & Auto-Boot (Windows & Mac)
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-700 space-y-1">
+                            <div class="p-3 rounded-lg bg-[#101722]/90 border border-[#243242] space-y-1">
                                 <div class="font-bold text-sky-400">🪟 Windows 10/11</div>
                                 <p class="text-[11px] text-slate-300">1. Fast Setup: Right-click <strong>`install.bat`</strong> ➔ <em>Run as administrator</em> (auto-installs Node.js via winget & sets firewall).</p>
                                 <p class="text-[11px] text-slate-300">2. Launch: Double-click <strong>`start.bat`</strong> or Desktop shortcut.</p>
                                 <p class="text-[11px] text-slate-400">To shut down: Double-click <strong>`stop.bat`</strong>.</p>
                             </div>
-                            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-700 space-y-1">
+                            <div class="p-3 rounded-lg bg-[#101722]/90 border border-[#243242] space-y-1">
                                 <div class="font-bold text-slate-200">🍎 macOS</div>
                                 <p class="text-[11px] text-slate-300">1. Double-click <strong>`start.command`</strong>.</p>
                                 <p class="text-[11px] text-slate-300">2. To auto-start as a daemon:</p>
@@ -411,8 +411,8 @@
         <!-- ============================================================ -->
         <section id="tab-network" class="space-y-6 hidden">
             
-            <div class="p-5 rounded-2xl bg-slate-900/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="p-5 rounded-2xl bg-[#101722]/60 border border-white/[0.08] shadow-lg space-y-3 print-card">
+                <div class="flex items-center justify-between pb-3 border-b border-[#243242]">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
                         <span>🌐 Hardware Subsystems, Static IPs & Port Map</span>
                     </h3>
@@ -422,7 +422,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs font-mono">
                         <thead>
-                            <tr class="border-b border-slate-800 text-slate-400">
+                            <tr class="border-b border-[#243242] text-slate-400">
                                 <th class="pb-2">Subsystem</th>
                                 <th class="pb-2">Hardware / Software</th>
                                 <th class="pb-2">IP / Endpoint</th>
@@ -432,7 +432,7 @@
                         </thead>
                         <tbody class="divide-y divide-slate-800/60 text-slate-200">
                             <tr>
-                                <td class="py-2 font-bold text-cyan-400">Master Hub</td>
+                                <td class="py-2 font-bold text-[#7BAFD4]">Master Hub</td>
                                 <td class="py-2">Sanctuary AV Controller</td>
                                 <td class="py-2">localhost</td>
                                 <td class="py-2 text-white font-bold">3050</td>
@@ -453,14 +453,14 @@
                                 <td class="py-2 text-slate-400">Blackmagic UDP</td>
                             </tr>
                             <tr>
-                                <td class="py-2 font-bold text-cyan-400">Camera 1</td>
+                                <td class="py-2 font-bold text-[#7BAFD4]">Camera 1</td>
                                 <td class="py-2">PTZOptics 20X (Pulpit)</td>
                                 <td class="py-2">192.168.1.101</td>
                                 <td class="py-2 text-white font-bold">1259</td>
                                 <td class="py-2 text-slate-400">VISCA over IP (UDP)</td>
                             </tr>
                             <tr>
-                                <td class="py-2 font-bold text-cyan-400">Camera 2</td>
+                                <td class="py-2 font-bold text-[#7BAFD4]">Camera 2</td>
                                 <td class="py-2">PTZOptics 20X (Wide)</td>
                                 <td class="py-2">192.168.1.102</td>
                                 <td class="py-2 text-white font-bold">1259</td>
@@ -517,7 +517,7 @@
                 if (t === tabId) {
                     if (el) el.classList.remove('hidden');
                     if (btn) {
-                        btn.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-cyan-500 text-slate-950 shadow-sm cursor-pointer min-w-max';
+                        btn.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-[#7BAFD4] text-[#081018] text-slate-950 shadow-sm cursor-pointer min-w-max';
                     }
                 } else {
                     if (el) el.classList.add('hidden');

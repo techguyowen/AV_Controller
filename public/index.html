@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#0a0d13]">
+<html lang="en" class="h-full bg-[#090D13]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/icon.svg">
-    <meta name="theme-color" content="#0a0d13">
+    <meta name="theme-color" content="#090D13">
     
     <!-- Google Fonts: Plus Jakarta Sans, Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,15 +19,25 @@
     
     <style>
         :root {
-            --bg-base: #0a0e17;
-            --bg-panel: #101726;
-            --bg-card: #161f32;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(6, 182, 212, 0.5);
+            --bg-base: #090D13;
+            --bg-panel: #101722;
+            --bg-card: #182230;
+            --border-subtle: #243242;
+            --border-focus: #7BAFD4;
+            --color-accent: #7BAFD4;
+            --color-accent-hover: #93BFDF;
+            --color-accent-subtle: #12263A;
+            --color-on-accent: #081018;
+            --color-primary: #F0F6FC;
+            --color-secondary: #8B9BB0;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 10px;
+            --radius-full: 9999px;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
             background-color: var(--bg-base);
             color: #cbd5e1;
             -webkit-font-smoothing: antialiased;
@@ -35,7 +45,7 @@
         }
 
         .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             font-variant-numeric: tabular-nums slashed-zero;
         }
 
@@ -153,13 +163,13 @@
     <header class="hardware-panel rounded-xl px-5 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4 border border-white/[0.08]">
         <!-- Brand & Facility -->
         <div class="flex items-center gap-3.5 w-full md:w-auto">
-            <div class="w-10 h-10 rounded-lg p-1.5 flex items-center justify-center shrink-0 shadow-sm border border-cyan-500/30 bg-cyan-950/40">
+            <div class="w-10 h-10 rounded-lg p-1.5 flex items-center justify-center shrink-0 shadow-sm border border-[#7BAFD4]/40 bg-[#12263A]">
                 <img src="/favicon.svg" alt="Sanctuary AV Logo" class="w-full h-full object-contain">
             </div>
             <div>
                 <div class="flex items-center gap-2">
                     <h1 id="brand-facility-name" class="text-sm font-extrabold tracking-tight text-white uppercase">WAYPOINT AV CONTROLLER</h1>
-                    <span id="brand-facility-subtitle" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-700 font-bold">LIVE RACK</span>
+                    <span id="brand-facility-subtitle" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4] font-bold">LIVE RACK</span>
                 </div>
                 <div id="brand-facility-desc" class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)] inline-block animate-pulse"></span>
@@ -179,7 +189,7 @@
         <!-- Global Status & Quick Settings -->
         <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
             <!-- Version Pill & Update Trigger -->
-            <button id="btn-version-pill" onclick="LiveEngine.openUpdateModal()" class="px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-all bg-slate-900/80 hover:bg-slate-800 border-slate-700 text-slate-300 shadow-sm cursor-pointer" title="Check for updates / View software version">
+            <button id="btn-version-pill" onclick="LiveEngine.openUpdateModal()" class="px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-all bg-[#101722]/80 hover:bg-[#182230] border-[#243242] text-slate-300 shadow-sm cursor-pointer" title="Check for updates / View software version">
                 <span id="version-pill-icon">📦</span>
                 <span id="version-pill-text">v1.0.0</span>
             </button>
@@ -205,34 +215,34 @@
                 <span>📖 Ops Guide</span>
             </a>
 
-            <button onclick="window.open('/hud', 'SanctuaryHUD', 'width=720,height=160,top=40,left=40')" class="px-3 py-1.5 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-300 border border-cyan-800 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm" title="Launch floating mini stream stats bar for Mixing Station">
-                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+            <button onclick="window.open('/hud', 'SanctuaryHUD', 'width=720,height=160,top=40,left=40')" class="px-3 py-1.5 bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm" title="Launch floating mini stream stats bar for Mixing Station">
+                <svg class="w-3.5 h-3.5 text-[#7BAFD4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                 <span>HUD</span>
             </button>
 
-            <button id="btn-settings" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm">
-                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <button id="btn-settings" class="px-3 py-1.5 bg-[#182230]/80 hover:bg-slate-700/80 text-slate-200 border border-[#243242] rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm">
+                <svg class="w-3.5 h-3.5 text-[#7BAFD4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 <span>Settings</span>
             </button>
         </div>
     </header>
 
     <!-- Simple Direct Station Navigation Bar -->
-    <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+    <nav class="bg-[#090D13]/80 border border-[#243242]/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
         <div class="flex items-center gap-1.5 min-w-max">
-            <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">🎛️ Master Hub</a>
-            <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
-            <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
-            <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
-            <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">💬 Captions</a>
-            <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
+            <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-[#7BAFD4] text-[#081018] text-slate-950 shadow-sm flex items-center gap-1.5">🎛️ Master Hub</a>
+            <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📋 Checklist</a>
+            <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+            <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+            <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">💬 Captions</a>
+            <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
             <a href="/guide" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 hover:text-white border border-emerald-800 transition-colors flex items-center gap-1.5">📖 Training & Setup</a>
         </div>
         <div class="flex items-center gap-2 min-w-max">
             <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
                 <span>📖 Booth Ops</span>
             </a>
-            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">🪟 HUD</a>
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 text-xs font-bold font-mono">🪟 HUD</a>
         </div>
     </nav>
 
@@ -254,9 +264,9 @@
 
     <!-- 1. Signal Pipeline Flow -->
     <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg space-y-3">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+        <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-cyan-600/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold">
+                <div class="w-8 h-8 rounded-lg bg-[#7BAFD4] text-[#081018]/20 border border-[#7BAFD4]/40 flex items-center justify-center text-[#7BAFD4] font-bold">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
                 <div>
@@ -264,7 +274,7 @@
                     <p class="text-[10px] font-mono text-slate-400">End-to-End Live Audio/Video Production Pipeline</p>
                 </div>
             </div>
-            <span class="text-[11px] font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-slate-800">5 Active Nodes</span>
+            <span class="text-[11px] font-mono text-slate-400 bg-[#101722] px-2.5 py-1 rounded border border-[#243242]">5 Active Nodes</span>
         </div>
 
         <div id="signal-chain-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 relative">
@@ -274,7 +284,7 @@
 
     <!-- 2. VoxStream Live Captioning Telemetry Banner -->
     <section id="voxstream-bar" class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg space-y-3">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+        <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-lg bg-amber-600/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
@@ -286,14 +296,14 @@
             </div>
             <div class="flex items-center gap-2 font-mono">
                 <span id="voxstream-dot" class="tally-led tally-off"></span>
-                <span id="voxstream-status-badge" class="px-2.5 py-1 rounded text-[10px] font-bold bg-slate-900 border border-slate-800 text-slate-400">Offline</span>
+                <span id="voxstream-status-badge" class="px-2.5 py-1 rounded text-[10px] font-bold bg-[#101722] border border-[#243242] text-slate-400">Offline</span>
                 <span id="voxstream-wpm-badge" class="hidden px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-amber-950/60 border border-amber-800 text-amber-300">⚡ 0 WPM</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-center">
             <!-- Transcript Box (8 cols) -->
-            <div class="lg:col-span-8 bg-black/50 p-3.5 rounded-xl border border-slate-800 flex items-center min-h-[56px]">
+            <div class="lg:col-span-8 bg-black/50 p-3.5 rounded-xl border border-[#243242] flex items-center min-h-[56px]">
                 <div class="text-xs font-mono text-slate-300 truncate w-full">
                     <span class="text-slate-500 font-bold mr-2 uppercase text-[10px]">Real-Time Speech:</span>
                     <span id="voxstream-live-text" class="text-white font-medium italic">"Standing by for speech transcription..."</span>
@@ -302,10 +312,10 @@
 
             <!-- Actions (4 cols) -->
             <div class="lg:col-span-4 flex items-center gap-2 justify-end flex-wrap">
-                <button onclick="LiveEngine.toggleCaptions()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs cursor-pointer transition-colors shadow-sm">
+                <button onclick="LiveEngine.toggleCaptions()" class="px-3 py-2 rounded-lg bg-[#182230] hover:bg-slate-700 text-slate-200 border border-[#243242] font-semibold text-xs cursor-pointer transition-colors shadow-sm">
                     Start / Stop
                 </button>
-                <button onclick="LiveEngine.clearCaptionsPreview()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold cursor-pointer transition-colors" title="Clear current speech preview text">
+                <button onclick="LiveEngine.clearCaptionsPreview()" class="px-3 py-2 rounded-lg bg-[#101722] hover:bg-[#182230] text-slate-300 border border-[#243242] text-xs font-semibold cursor-pointer transition-colors" title="Clear current speech preview text">
                     🧹 Clear Text
                 </button>
                 <button onclick="LiveEngine.triggerPanic()" class="px-3 py-2 rounded-lg bg-red-950/40 hover:bg-red-900/50 text-red-400 border border-red-800 font-bold text-xs cursor-pointer transition-colors" title="Instantly blank all screen captions">
@@ -320,7 +330,7 @@
 
     <!-- 3. Video Switching & PTZ Camera Control Console (2-Camera Church Setup) -->
     <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+        <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-lg bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 font-bold">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
@@ -330,7 +340,7 @@
                     <p class="text-[10px] font-mono text-slate-400">Live Video Matrix Bus & 2-Camera Motion Controls (VISCA over IP)</p>
                 </div>
             </div>
-            <a href="/cameras" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-400 hover:text-cyan-300 text-xs font-mono font-bold flex items-center gap-1.5 transition-colors">
+            <a href="/cameras" class="px-3 py-1.5 rounded-lg bg-[#101722] hover:bg-[#182230] border border-[#243242] text-[#7BAFD4] hover:text-[#7BAFD4] text-xs font-mono font-bold flex items-center gap-1.5 transition-colors">
                 <span>Dedicated Cameras Page ↗</span>
             </a>
         </div>
@@ -338,7 +348,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
             <!-- LEFT: ATEM 2-Camera Switcher Strip (7 cols) -->
-            <div class="lg:col-span-7 bg-black/40 p-4 rounded-xl border border-slate-800/80 space-y-3.5 flex flex-col justify-between">
+            <div class="lg:col-span-7 bg-black/40 p-4 rounded-xl border border-[#243242]/80 space-y-3.5 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">ATEM Mini Video Matrix</span>
@@ -352,23 +362,23 @@
                     <div class="space-y-1 mb-3">
                         <div class="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider">PROGRAM (ON AIR):</div>
                         <div class="grid grid-cols-5 gap-1.5 font-mono text-xs">
-                            <button id="btn-pgm-1" onclick="LiveEngine.setAtemProgram(1)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-1" onclick="LiveEngine.setAtemProgram(1)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 1</div>
                                 <div class="truncate text-xs">Pulpit</div>
                             </button>
-                            <button id="btn-pgm-2" onclick="LiveEngine.setAtemProgram(2)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-2" onclick="LiveEngine.setAtemProgram(2)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 2</div>
                                 <div class="truncate text-xs">Wide</div>
                             </button>
-                            <button id="btn-pgm-3" onclick="LiveEngine.setAtemProgram(3)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-3" onclick="LiveEngine.setAtemProgram(3)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">HDMI 3</div>
                                 <div class="truncate text-xs">Proclaim</div>
                             </button>
-                            <button id="btn-pgm-3010" onclick="LiveEngine.setAtemProgram(3010)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-3010" onclick="LiveEngine.setAtemProgram(3010)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">MEDIA</div>
                                 <div class="truncate text-xs">Still 1</div>
                             </button>
-                            <button id="btn-pgm-0" onclick="LiveEngine.setAtemProgram(0)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-0" onclick="LiveEngine.setAtemProgram(0)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">BLACK</div>
                                 <div class="truncate text-xs">Fade</div>
                             </button>
@@ -379,23 +389,23 @@
                     <div class="space-y-1">
                         <div class="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider">PREVIEW (NEXT):</div>
                         <div class="grid grid-cols-5 gap-1.5 font-mono text-xs">
-                            <button id="btn-pvw-1" onclick="LiveEngine.setAtemPreview(1)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-1" onclick="LiveEngine.setAtemPreview(1)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 1</div>
                                 <div class="truncate text-xs">Pulpit</div>
                             </button>
-                            <button id="btn-pvw-2" onclick="LiveEngine.setAtemPreview(2)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-2" onclick="LiveEngine.setAtemPreview(2)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 2</div>
                                 <div class="truncate text-xs">Wide</div>
                             </button>
-                            <button id="btn-pvw-3" onclick="LiveEngine.setAtemPreview(3)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-3" onclick="LiveEngine.setAtemPreview(3)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">HDMI 3</div>
                                 <div class="truncate text-xs">Proclaim</div>
                             </button>
-                            <button id="btn-pvw-3010" onclick="LiveEngine.setAtemPreview(3010)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-3010" onclick="LiveEngine.setAtemPreview(3010)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">MEDIA</div>
                                 <div class="truncate text-xs">Still 1</div>
                             </button>
-                            <button id="btn-pvw-0" onclick="LiveEngine.setAtemPreview(0)" class="atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-0" onclick="LiveEngine.setAtemPreview(0)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">BLACK</div>
                                 <div class="truncate text-xs">Fade</div>
                             </button>
@@ -404,25 +414,25 @@
                 </div>
 
                 <!-- Transitions Bar -->
-                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800">
-                    <button onclick="LiveEngine.atemCut()" class="py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-white active:text-slate-950 text-white font-bold font-mono text-xs uppercase tracking-wider transition-all border border-slate-700 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-[#243242]">
+                    <button onclick="LiveEngine.atemCut()" class="py-2.5 rounded-lg bg-[#182230] hover:bg-slate-700 active:bg-white active:text-slate-950 text-white font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
                         <span>⚡ CUT (Instant)</span>
                     </button>
                     <button onclick="LiveEngine.atemAuto()" class="py-2.5 rounded-lg bg-red-950/40 hover:bg-red-900/50 active:bg-red-600 active:text-white text-red-300 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-red-800/80 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
                         <span>✨ AUTO (Mix)</span>
                     </button>
-                    <button onclick="LiveEngine.atemFtb()" class="py-2.5 rounded-lg bg-slate-900 hover:bg-black text-slate-400 active:text-red-400 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-slate-800 cursor-pointer flex items-center justify-center gap-1.5">
+                    <button onclick="LiveEngine.atemFtb()" class="py-2.5 rounded-lg bg-[#101722] hover:bg-black text-slate-400 active:text-red-400 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5">
                         <span>🌑 FTB</span>
                     </button>
                 </div>
             </div>
 
             <!-- RIGHT: PTZOptics 2-Camera Motion & Preset Console (5 cols) -->
-            <div class="lg:col-span-5 bg-black/40 p-4 rounded-xl border border-slate-800/80 flex flex-col justify-between space-y-3.5">
+            <div class="lg:col-span-5 bg-black/40 p-4 rounded-xl border border-[#243242]/80 flex flex-col justify-between space-y-3.5">
                 <div class="flex items-center justify-between">
                     <!-- 2-Camera Selector Tabs -->
-                    <div class="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-lg border border-slate-800 text-xs font-bold">
-                        <button id="ptz-tab-cam1" onclick="LiveEngine.selectPtzCamera('cam1')" class="px-2.5 py-1 rounded bg-cyan-500 text-slate-950 transition-all cursor-pointer">
+                    <div class="flex items-center gap-1.5 bg-[#101722]/90 p-1 rounded-lg border border-[#243242] text-xs font-bold">
+                        <button id="ptz-tab-cam1" onclick="LiveEngine.selectPtzCamera('cam1')" class="px-2.5 py-1 rounded bg-[#7BAFD4] text-[#081018] text-slate-950 transition-all cursor-pointer">
                             📷 Cam 1 (Pulpit)
                         </button>
                         <button id="ptz-tab-cam2" onclick="LiveEngine.selectPtzCamera('cam2')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all cursor-pointer">
@@ -440,17 +450,17 @@
                     <!-- 8-Way Pan/Tilt Compass (7 cols) -->
                     <div class="col-span-7 flex flex-col items-center">
                         <div class="grid grid-cols-3 gap-1 w-32 h-32 select-none">
-                            <button onpointerdown="LiveEngine.ptzMove('upleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◤</button>
-                            <button onpointerdown="LiveEngine.ptzMove('up')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▲</button>
-                            <button onpointerdown="LiveEngine.ptzMove('upright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◥</button>
+                            <button onpointerdown="LiveEngine.ptzMove('upleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◤</button>
+                            <button onpointerdown="LiveEngine.ptzMove('up')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▲</button>
+                            <button onpointerdown="LiveEngine.ptzMove('upright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◥</button>
 
-                            <button onpointerdown="LiveEngine.ptzMove('left')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">◀</button>
-                            <div class="p-1 rounded bg-slate-950 border border-slate-800 text-cyan-400 text-xs flex items-center justify-center select-none pointer-events-none shadow-inner">📷</div>
-                            <button onpointerdown="LiveEngine.ptzMove('right')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▶</button>
+                            <button onpointerdown="LiveEngine.ptzMove('left')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">◀</button>
+                            <div class="p-1 rounded bg-[#090D13] border border-[#243242] text-[#7BAFD4] text-xs flex items-center justify-center select-none pointer-events-none shadow-inner">📷</div>
+                            <button onpointerdown="LiveEngine.ptzMove('right')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▶</button>
 
-                            <button onpointerdown="LiveEngine.ptzMove('downleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◣</button>
-                            <button onpointerdown="LiveEngine.ptzMove('down')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▼</button>
-                            <button onpointerdown="LiveEngine.ptzMove('downright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◢</button>
+                            <button onpointerdown="LiveEngine.ptzMove('downleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◣</button>
+                            <button onpointerdown="LiveEngine.ptzMove('down')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▼</button>
+                            <button onpointerdown="LiveEngine.ptzMove('downright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◢</button>
                         </div>
                     </div>
 
@@ -459,10 +469,10 @@
                         <div class="space-y-1">
                             <span class="text-[10px] font-mono text-slate-400 block uppercase font-bold">Zoom Lens:</span>
                             <div class="flex gap-1.5 select-none">
-                                <button onpointerdown="LiveEngine.ptzZoom('in')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                <button onpointerdown="LiveEngine.ptzZoom('in')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
                                     ➕ In
                                 </button>
-                                <button onpointerdown="LiveEngine.ptzZoom('out')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                <button onpointerdown="LiveEngine.ptzZoom('out')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
                                     ➖ Out
                                 </button>
                             </div>
@@ -471,18 +481,18 @@
                         <div class="space-y-1">
                             <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
                                 <span>SPEED</span>
-                                <span id="ptz-speed-val" class="font-bold text-cyan-400">12</span>
+                                <span id="ptz-speed-val" class="font-bold text-[#7BAFD4]">12</span>
                             </div>
-                            <input type="range" id="ptz-speed-slider" min="1" max="24" value="12" oninput="LiveEngine.setPtzSpeed(this.value)" class="w-full accent-cyan-400 cursor-pointer h-1.5 bg-slate-800 rounded">
+                            <input type="range" id="ptz-speed-slider" min="1" max="24" value="12" oninput="LiveEngine.setPtzSpeed(this.value)" class="w-full accent-[#7BAFD4] cursor-pointer h-1.5 bg-[#182230] rounded">
                         </div>
                     </div>
                 </div>
 
                 <!-- 6-Preset Quick Recall Grid -->
-                <div class="pt-2 border-t border-slate-800">
+                <div class="pt-2 border-t border-[#243242]">
                     <div class="flex items-center justify-between mb-1.5 text-[10px] font-mono text-slate-400">
                         <span class="font-bold uppercase tracking-wider text-slate-300">Church Position Presets:</span>
-                        <button onclick="LiveEngine.promptSavePreset()" class="text-[10px] text-cyan-400 hover:underline cursor-pointer">
+                        <button onclick="LiveEngine.promptSavePreset()" class="text-[10px] text-[#7BAFD4] hover:underline cursor-pointer">
                             + Save Current
                         </button>
                     </div>
@@ -503,7 +513,7 @@
             
             <!-- 4. REAPER Master VU Meter -->
             <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between h-[420px]">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
@@ -517,7 +527,7 @@
                         <div id="silence-alarm" class="hidden px-2.5 py-1 rounded border text-[11px] font-bold uppercase tracking-wider silence-flashing">
                             Silence (> 30s)
                         </div>
-                        <a href="/audio" class="text-xs font-mono text-cyan-400 hover:underline">Dedicated Meters ↗</a>
+                        <a href="/audio" class="text-xs font-mono text-[#7BAFD4] hover:underline">Dedicated Meters ↗</a>
                     </div>
                 </div>
 
@@ -530,7 +540,7 @@
                             <div id="vu-l-fill" class="meter-bar" style="height: 0%"></div>
                             <div id="vu-l-peak" class="meter-peak-line" style="bottom: 0%"></div>
                         </div>
-                        <div class="text-[10px] font-mono bg-black/40 px-2 py-1 rounded border border-slate-800 text-center w-16">
+                        <div class="text-[10px] font-mono bg-black/40 px-2 py-1 rounded border border-[#243242] text-center w-16">
                             <div class="text-slate-300">PK: <span id="vu-l-pk-val" class="text-white font-bold">-inf</span></div>
                             <div class="text-slate-500">RM: <span id="vu-l-rm-val">-inf</span></div>
                         </div>
@@ -555,21 +565,21 @@
                             <div id="vu-r-fill" class="meter-bar" style="height: 0%"></div>
                             <div id="vu-r-peak" class="meter-peak-line" style="bottom: 0%"></div>
                         </div>
-                        <div class="text-[10px] font-mono bg-black/40 px-2 py-1 rounded border border-slate-800 text-center w-16">
+                        <div class="text-[10px] font-mono bg-black/40 px-2 py-1 rounded border border-[#243242] text-center w-16">
                             <div class="text-slate-300">PK: <span id="vu-r-pk-val" class="text-white font-bold">-inf</span></div>
                             <div class="text-slate-500">RM: <span id="vu-r-rm-val">-inf</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-[11px] text-slate-500 text-center font-mono border-t border-slate-800/80 pt-2.5">
+                <div class="text-[11px] text-slate-500 text-center font-mono border-t border-[#243242]/80 pt-2.5">
                     Target Broadcast Sweet Spot: <span class="text-emerald-400 font-bold">-18 dBFS to -12 dBFS</span> (Nominal Dialogue & Music)
                 </div>
             </section>
 
             <!-- 5. Network Diagnostics Panel -->
             <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between flex-grow">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-lg bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-bold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
@@ -594,9 +604,9 @@
             
             <!-- 6. Broadcast Encoders Telemetry Card -->
             <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-cyan-600/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold">
+                        <div class="w-8 h-8 rounded-lg bg-[#7BAFD4] text-[#081018]/20 border border-[#7BAFD4]/40 flex items-center justify-center text-[#7BAFD4] font-bold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
                         </div>
                         <div>
@@ -605,18 +615,18 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">1080p30 CBR</span>
-                        <a href="/broadcast" class="text-xs font-mono text-cyan-400 hover:underline">Broadcast Hub ↗</a>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#101722] border border-[#243242] text-slate-400">1080p30 CBR</span>
+                        <a href="/broadcast" class="text-xs font-mono text-[#7BAFD4] hover:underline">Broadcast Hub ↗</a>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3.5 my-3.5">
-                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                    <div class="hardware-card p-3.5 rounded-xl border border-[#243242]/80 bg-black/40">
                         <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">On-Air Duration</div>
                         <div id="stream-duration" class="text-2xl font-mono font-bold text-white">00:00:00</div>
                     </div>
 
-                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                    <div class="hardware-card p-3.5 rounded-xl border border-[#243242]/80 bg-black/40">
                         <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Encoder Bitrate</div>
                         <div class="text-2xl font-mono font-bold text-white flex items-baseline gap-1.5">
                             <span id="bitrate-val">0</span>
@@ -624,7 +634,7 @@
                         </div>
                     </div>
 
-                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                    <div class="hardware-card p-3.5 rounded-xl border border-[#243242]/80 bg-black/40">
                         <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Dropped Frames</div>
                         <div class="text-xl font-mono font-bold text-white flex items-baseline gap-2">
                             <span id="stream-dropped">0</span>
@@ -632,7 +642,7 @@
                         </div>
                     </div>
 
-                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                    <div class="hardware-card p-3.5 rounded-xl border border-[#243242]/80 bg-black/40">
                         <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Output Resolution</div>
                         <div class="text-xl font-mono font-bold text-white">1920×1080 <span class="text-xs text-slate-500 font-normal">@30fps</span></div>
                     </div>
@@ -646,12 +656,12 @@
                     <button onclick="SanctuaryClient.toggleAtemRecord()" class="py-2 px-2 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono transition-colors cursor-pointer text-center truncate">
                         ⏺️ ATEM Rec
                     </button>
-                    <button onclick="LiveEngine.toggleObsStream()" class="py-2 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold font-mono transition-colors cursor-pointer text-center truncate">
+                    <button onclick="LiveEngine.toggleObsStream()" class="py-2 px-2 rounded-lg bg-[#182230] hover:bg-slate-700 text-slate-200 border border-[#243242] text-xs font-bold font-mono transition-colors cursor-pointer text-center truncate">
                         📡 OBS Stream
                     </button>
                 </div>
 
-                <div class="text-[11px] font-mono text-slate-400 bg-black/40 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+                <div class="text-[11px] font-mono text-slate-400 bg-black/40 p-2.5 rounded-lg border border-[#243242] flex items-center justify-between">
                     <span>Hardware H.264 High Profile</span>
                     <span class="text-emerald-400 font-semibold">AAC Stereo 48kHz</span>
                 </div>
@@ -659,7 +669,7 @@
 
             <!-- 7. YouTube Broadcast Health Card -->
             <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between flex-grow">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-lg bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 font-bold">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -669,19 +679,19 @@
                             <p class="text-[10px] font-mono text-slate-400">RTMP Primary Ingest & Audience Analytics</p>
                         </div>
                     </div>
-                    <div id="yt-status-pill" class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-bold text-slate-400 flex items-center gap-1.5">
+                    <div id="yt-status-pill" class="px-2.5 py-1 rounded bg-[#101722] border border-[#243242] text-xs font-bold text-slate-400 flex items-center gap-1.5">
                         <div class="tally-led tally-off"></div>
                         <span id="yt-status-text">OFFLINE</span>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3.5 my-3.5">
-                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                    <div class="hardware-card p-3.5 rounded-xl border border-[#243242]/80 bg-black/40">
                         <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Live Viewers</div>
                         <div id="yt-viewers-val" class="text-2xl font-mono font-bold text-white">0</div>
                     </div>
 
-                    <div class="hardware-card p-3.5 rounded-xl border border-slate-800/80 bg-black/40">
+                    <div class="hardware-card p-3.5 rounded-xl border border-[#243242]/80 bg-black/40">
                         <div class="text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1">Chat Frequency</div>
                         <div class="text-2xl font-mono font-bold text-white flex items-baseline gap-1.5">
                             <span id="yt-chat-rate">0</span>
@@ -691,8 +701,8 @@
                 </div>
 
                 <!-- Ingest Health Rows -->
-                <div class="space-y-2 text-xs font-mono bg-black/40 p-3.5 rounded-xl border border-slate-800">
-                    <div class="flex justify-between items-center pb-2 border-b border-slate-800/80">
+                <div class="space-y-2 text-xs font-mono bg-black/40 p-3.5 rounded-xl border border-[#243242]">
+                    <div class="flex justify-between items-center pb-2 border-b border-[#243242]/80">
                         <span class="text-slate-400">Stream Ingest Quality</span>
                         <div class="flex items-center gap-1.5">
                             <div id="yt-health-dot" class="tally-led tally-off"></div>
@@ -717,7 +727,7 @@
         
         <!-- Active Thresholds & Quick Actions -->
         <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg flex flex-col justify-between space-y-3.5">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+            <div class="flex items-center justify-between pb-3 border-b border-[#243242]/80">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-slate-700/30 border border-slate-600/40 flex items-center justify-center text-slate-300 font-bold">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
@@ -727,30 +737,30 @@
                         <p class="text-[10px] font-mono text-slate-400">Active Alert Guardrails</p>
                     </div>
                 </div>
-                <button onclick="LiveEngine.openSettings()" class="text-xs font-mono text-cyan-400 hover:underline cursor-pointer">Configure ⚙️</button>
+                <button onclick="LiveEngine.openSettings()" class="text-xs font-mono text-[#7BAFD4] hover:underline cursor-pointer">Configure ⚙️</button>
             </div>
             
-            <div class="space-y-2.5 text-xs font-mono bg-black/40 p-3.5 rounded-xl border border-slate-800">
+            <div class="space-y-2.5 text-xs font-mono bg-black/40 p-3.5 rounded-xl border border-[#243242]">
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Silence Alert:</span>
-                    <span id="display-setting-sil" class="text-white bg-slate-900 px-2 py-0.5 rounded border border-slate-800">120s (2 min)</span>
+                    <span id="display-setting-sil" class="text-white bg-[#101722] px-2 py-0.5 rounded border border-[#243242]">120s (2 min)</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Max Stream Time:</span>
-                    <span id="display-setting-dur" class="text-white bg-slate-900 px-2 py-0.5 rounded border border-slate-800">120 min</span>
+                    <span id="display-setting-dur" class="text-white bg-[#101722] px-2 py-0.5 rounded border border-[#243242]">120 min</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">GroupMe Bot Alert:</span>
                     <span id="display-setting-groupme" class="text-sky-400 font-bold bg-sky-950/40 px-2 py-0.5 rounded border border-sky-800">Active</span>
                 </div>
-                <div class="flex justify-between items-center pt-1 border-t border-slate-800/80">
+                <div class="flex justify-between items-center pt-1 border-t border-[#243242]/80">
                     <span class="text-slate-400">Alert Schedule:</span>
                     <span id="display-setting-sched" class="text-amber-300 font-semibold bg-amber-950/40 px-2 py-0.5 rounded border border-amber-800/80">Sundays 9am - 3pm</span>
                 </div>
             </div>
 
             <div class="pt-2 grid grid-cols-3 gap-2">
-                <a href="/checklist" class="py-2 text-center rounded-lg bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-300 border border-cyan-800 text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
+                <a href="/checklist" class="py-2 text-center rounded-lg bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
                     📋 Checklist
                 </a>
                 <a href="/guide" class="py-2 text-center rounded-lg bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 border border-emerald-800 text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
@@ -764,7 +774,7 @@
 
         <!-- Live Telemetry Event Console -->
         <section class="hardware-panel rounded-2xl p-5 border border-white/[0.08] shadow-lg lg:col-span-2 flex flex-col justify-between space-y-3.5">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-800/80">
+            <div class="flex justify-between items-center pb-3 border-b border-[#243242]/80">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-slate-700/30 border border-slate-600/40 flex items-center justify-center text-slate-300 font-bold">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
@@ -774,10 +784,10 @@
                         <p class="text-[10px] font-mono text-slate-400">Real-Time System Log & Health Telemetry Feed</p>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-slate-500 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Auto-Refreshed</span>
+                <span class="text-[10px] font-mono text-slate-500 bg-[#101722] px-2 py-0.5 rounded border border-[#243242]">Auto-Refreshed</span>
             </div>
 
-            <div id="event-log" class="h-44 overflow-y-auto pr-2 space-y-1.5 text-xs font-mono console-scroll bg-black/50 p-3 rounded-xl border border-slate-800">
+            <div id="event-log" class="h-44 overflow-y-auto pr-2 space-y-1.5 text-xs font-mono console-scroll bg-black/50 p-3 rounded-xl border border-[#243242]">
                 <!-- Live logs injected here -->
             </div>
         </section>
@@ -788,11 +798,11 @@
 
 <!-- Software Update Modal -->
 <div id="update-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="hardware-panel border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col space-y-4">
+    <div class="hardware-panel border border-[#243242] rounded-2xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col space-y-4">
         <!-- Header -->
-        <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <div class="flex justify-between items-center pb-3 border-b border-[#243242]">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg font-bold">
+                <div class="w-9 h-9 rounded-lg bg-[#7BAFD4] text-[#081018]/10 border border-[#7BAFD4]/40 flex items-center justify-center text-[#7BAFD4] text-lg font-bold">
                     🚀
                 </div>
                 <div>
@@ -800,26 +810,26 @@
                     <p class="text-xs text-slate-400">Sanctuary AV Controller GitHub Synchronization</p>
                 </div>
             </div>
-            <button onclick="LiveEngine.closeUpdateModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
+            <button onclick="LiveEngine.closeUpdateModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-[#182230] transition-colors cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
 
         <!-- Version Status Card -->
-        <div class="hardware-card p-4 rounded-xl border border-slate-700/80 space-y-3">
+        <div class="hardware-card p-4 rounded-xl border border-[#243242]/80 space-y-3">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Installed Version</span>
-                <span id="update-modal-current-version" class="text-xs font-mono font-bold text-white bg-slate-800 px-2 py-0.5 rounded border border-slate-700">v1.0.0</span>
+                <span id="update-modal-current-version" class="text-xs font-mono font-bold text-white bg-[#182230] px-2 py-0.5 rounded border border-[#243242]">v1.0.0</span>
             </div>
             <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Latest GitHub Version</span>
-                <span id="update-modal-latest-version" class="text-xs font-mono font-bold text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">v1.0.0</span>
+                <span id="update-modal-latest-version" class="text-xs font-mono font-bold text-[#7BAFD4] bg-[#12263A]/60 px-2 py-0.5 rounded border border-[#7BAFD4]/50">v1.0.0</span>
             </div>
             <div class="flex items-center justify-between text-xs">
                 <span class="text-slate-400">Commit Status:</span>
                 <span id="update-modal-commit-diff" class="font-mono text-slate-300">Up to date</span>
             </div>
-            <div id="update-modal-commit-info" class="bg-black/40 p-2.5 rounded-lg border border-slate-800/80 text-xs font-mono space-y-1">
+            <div id="update-modal-commit-info" class="bg-black/40 p-2.5 rounded-lg border border-[#243242]/80 text-xs font-mono space-y-1">
                 <div class="flex items-center justify-between text-slate-400 text-[11px]">
                     <span id="update-modal-commit-hash">Commit: -</span>
                     <span id="update-modal-commit-date">Date: -</span>
@@ -840,10 +850,10 @@
         <!-- Progress / Status Area -->
         <div id="update-progress-container" class="hidden space-y-2">
             <div class="flex items-center justify-between text-xs font-bold">
-                <span id="update-progress-text" class="text-cyan-400 animate-pulse">Updating controller...</span>
-                <span id="update-progress-spinner" class="animate-spin text-cyan-400">⚙️</span>
+                <span id="update-progress-text" class="text-[#7BAFD4] animate-pulse">Updating controller...</span>
+                <span id="update-progress-spinner" class="animate-spin text-[#7BAFD4]">⚙️</span>
             </div>
-            <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-700">
+            <div class="w-full bg-[#101722] rounded-full h-2 overflow-hidden border border-[#243242]">
                 <div id="update-progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-500 h-2 rounded-full w-full animate-pulse"></div>
             </div>
         </div>
@@ -856,11 +866,11 @@
 
         <!-- Footer Actions -->
         <div class="flex items-center justify-between gap-3 pt-2">
-            <button id="btn-check-updates" onclick="LiveEngine.checkForUpdates()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
+            <button id="btn-check-updates" onclick="LiveEngine.checkForUpdates()" class="px-3.5 py-2 rounded-lg bg-[#182230] hover:bg-slate-700 text-slate-200 border border-[#243242] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>⚡ Check for Updates</span>
             </button>
             <div class="flex items-center gap-2">
-                <button onclick="LiveEngine.closeUpdateModal()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold cursor-pointer">
+                <button onclick="LiveEngine.closeUpdateModal()" class="px-4 py-2 rounded-lg border border-[#243242] text-slate-300 hover:bg-[#182230] text-xs font-bold cursor-pointer">
                     Close
                 </button>
                 <button id="btn-apply-update" onclick="LiveEngine.performUpdate()" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
@@ -873,11 +883,11 @@
 
 <!-- Settings & Guide Modal -->
 <div id="settings-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="hardware-panel border border-slate-700 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[92vh] flex flex-col">
+    <div class="hardware-panel border border-[#243242] rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[92vh] flex flex-col">
         <!-- Header -->
-        <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <div class="flex justify-between items-center pb-3 border-b border-[#243242]">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+                <div class="w-8 h-8 rounded-lg bg-[#7BAFD4] text-[#081018]/10 border border-[#7BAFD4]/40 flex items-center justify-center text-[#7BAFD4] font-bold">
                     ⚙️
                 </div>
                 <div>
@@ -885,14 +895,14 @@
                     <p class="text-xs text-slate-400">Volunteer guides, device network setup, and GroupMe Bot alerts.</p>
                 </div>
             </div>
-            <button onclick="LiveEngine.closeSettings()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+            <button onclick="LiveEngine.closeSettings()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-[#182230] transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
 
         <!-- 4 Tabs -->
-        <div class="grid grid-cols-4 gap-1 pt-3 border-b border-slate-800">
-            <button id="tab-btn-weekly" onclick="LiveEngine.switchModalTab('weekly')" class="py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-cyan-400 text-cyan-400 bg-slate-800/60">
+        <div class="grid grid-cols-4 gap-1 pt-3 border-b border-[#243242]">
+            <button id="tab-btn-weekly" onclick="LiveEngine.switchModalTab('weekly')" class="py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-cyan-400 text-[#7BAFD4] bg-[#182230]/60">
                 1. Sunday Checklist
             </button>
             <button id="tab-btn-hardware" onclick="LiveEngine.switchModalTab('hardware')" class="py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-transparent text-slate-400 hover:text-slate-200">
@@ -916,24 +926,24 @@
                     <span class="text-[10px] text-emerald-400 font-mono">Volunteer Checklist</span>
                 </div>
                 <div class="space-y-2 text-xs text-slate-200">
-                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-[#182230] border-[#243242] text-emerald-500">
                         <span><strong>1. Start Proclaim:</strong> Open today's service presentation. Verify the <strong>Proclaim</strong> node shows <span class="text-emerald-400 font-semibold">On Air</span> or <span class="text-emerald-400 font-semibold">Standby</span>.</span>
                     </label>
-                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-[#182230] border-[#243242] text-emerald-500">
                         <span><strong>2. Start REAPER:</strong> Open today's Sunday broadcast project. Verify the <strong>REAPER DAW</strong> node shows <span class="text-emerald-400 font-semibold">Online</span>.</span>
                     </label>
-                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-[#182230] border-[#243242] text-emerald-500">
                         <span><strong>3. Soundcheck:</strong> Check audio meters bounce in the <span class="text-emerald-400 font-semibold">-18dB to -12dB</span> nominal sweet spot.</span>
                     </label>
-                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-[#182230] border-[#243242] text-emerald-500">
                         <span><strong>4. Check Switcher & OBS:</strong> Ensure the ATEM is in <span class="text-emerald-400 font-semibold">Standby</span> and OBS is on the starting scene.</span>
                     </label>
-                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                        <input type="checkbox" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500">
+                    <label class="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 rounded bg-[#182230] border-[#243242] text-emerald-500">
                         <span><strong>5. Go Live:</strong> Press <strong>ON AIR</strong> on the ATEM. The <strong>YouTube Live</strong> node will turn <span class="text-red-500 font-bold">● LIVE</span>.</span>
                     </label>
                 </div>
@@ -945,19 +955,19 @@
                     ⚠️ Sunday Morning Quick Fixes
                 </h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
                         <div class="text-red-400 font-bold mb-1">🚨 "Silence Detected" Alarm Flashing</div>
                         <p class="text-slate-400 text-[11px]">Audio is dead for >2 min. Check: 1) Is REAPER master fader muted? 2) Is the USB interface unplugged? 3) Is the church soundboard master fader down?</p>
                     </div>
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
                         <div class="text-amber-400 font-bold mb-1">⚠️ REAPER Shows "Offline"</div>
                         <p class="text-slate-400 text-[11px]">Check if REAPER is open. In REAPER Preferences > Control/OSC/web, ensure Device Port is set to <span class="text-white font-mono">9000</span>.</p>
                     </div>
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
                         <div class="text-blue-400 font-bold mb-1">⚠️ OBS Shows "Offline"</div>
                         <p class="text-slate-400 text-[11px]">In OBS: Tools > WebSocket Server Settings > Ensure "Enable WebSocket server" is checked on port 4455.</p>
                     </div>
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
                         <div class="text-indigo-400 font-bold mb-1">⚠️ Proclaim Shows "Offline"</div>
                         <p class="text-slate-400 text-[11px]">In Proclaim on presentation PC: Settings > Remote > Enable Remote and verify network password matches Tab 2.</p>
                     </div>
@@ -970,40 +980,40 @@
             <form id="settings-form-hardware" onsubmit="LiveEngine.saveSettings(event)" class="space-y-4">
                 
                 <!-- Module Enable / Disable Signal Chain Toggles -->
-                <div class="hardware-card p-4 rounded-xl space-y-3 border border-cyan-500/30">
+                <div class="hardware-card p-4 rounded-xl space-y-3 border border-[#7BAFD4]/40">
                     <div class="flex items-center justify-between">
-                        <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">
+                        <div class="text-xs font-bold text-[#7BAFD4] uppercase tracking-wider">
                             Active Signal Chain Modules
                         </div>
                         <span class="text-[10px] text-slate-400 font-mono">Toggle Devices In/Out of Live Rack</span>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-mod-proclaim" class="rounded bg-slate-900 border-slate-700 text-indigo-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-proclaim" class="rounded bg-[#101722] border-[#243242] text-indigo-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">Proclaim</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-mod-reaper" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-reaper" class="rounded bg-[#101722] border-[#243242] text-emerald-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">REAPER</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-mod-atem" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-atem" class="rounded bg-[#101722] border-[#243242] text-[#7BAFD4] focus:ring-0">
                             <span class="text-slate-200 font-medium">ATEM Mini</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-mod-ptz" class="rounded bg-slate-900 border-slate-700 text-cyan-400 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-ptz" class="rounded bg-[#101722] border-[#243242] text-[#7BAFD4] focus:ring-0">
                             <span class="text-slate-200 font-medium">PTZOptics</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-mod-obs" class="rounded bg-slate-900 border-slate-700 text-blue-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-obs" class="rounded bg-[#101722] border-[#243242] text-blue-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">OBS Studio</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-mod-captioner" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-captioner" class="rounded bg-[#101722] border-[#243242] text-amber-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">Captions</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-mod-youtube" class="rounded bg-slate-900 border-slate-700 text-red-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-mod-youtube" class="rounded bg-[#101722] border-[#243242] text-red-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">YouTube</span>
                         </label>
                     </div>
@@ -1018,24 +1028,24 @@
                         <span class="text-[10px] text-slate-400 font-mono">Show / Hide Station Pages</span>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-sta-checklist" class="rounded bg-slate-900 border-slate-700 text-purple-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-checklist" class="rounded bg-[#101722] border-[#243242] text-purple-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">📋 Checklist</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-sta-cameras" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-cameras" class="rounded bg-[#101722] border-[#243242] text-[#7BAFD4] focus:ring-0">
                             <span class="text-slate-200 font-medium">🎥 Cameras</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-sta-audio" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-audio" class="rounded bg-[#101722] border-[#243242] text-emerald-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">🎙️ Audio Mix</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-sta-captions" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-captions" class="rounded bg-[#101722] border-[#243242] text-amber-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">📺 Captions</span>
                         </label>
-                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-slate-800 cursor-pointer">
-                            <input type="checkbox" id="cfg-sta-broadcast" class="rounded bg-slate-900 border-slate-700 text-red-500 focus:ring-0">
+                        <label class="flex items-center gap-2 p-2 rounded-lg bg-black/40 border border-[#243242] cursor-pointer">
+                            <input type="checkbox" id="cfg-sta-broadcast" class="rounded bg-[#101722] border-[#243242] text-red-500 focus:ring-0">
                             <span class="text-slate-200 font-medium">📡 Broadcast</span>
                         </label>
                     </div>
@@ -1048,21 +1058,21 @@
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <div>
                                 <label class="block text-slate-400 mb-1">Host IP</label>
-                                <input type="text" id="cfg-reaperHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="127.0.0.1">
+                                <input type="text" id="cfg-reaperHost" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="127.0.0.1">
                             </div>
                             <div>
                                 <label class="block text-slate-400 mb-1">OSC In Port</label>
-                                <input type="number" id="cfg-reaperSendPort" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="9000">
+                                <input type="number" id="cfg-reaperSendPort" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="9000">
                             </div>
                         </div>
                     </div>
 
                     <!-- ATEM Mini -->
                     <div class="hardware-card p-4 rounded-xl space-y-2">
-                        <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Blackmagic ATEM Switcher</div>
+                        <div class="text-xs font-bold text-[#7BAFD4] uppercase tracking-wider">Blackmagic ATEM Switcher</div>
                         <div class="text-xs">
                             <label class="block text-slate-400 mb-1">ATEM Static IP Address on Church LAN</label>
-                            <input type="text" id="cfg-atemIp" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.240">
+                            <input type="text" id="cfg-atemIp" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.1.240">
                         </div>
                     </div>
                 </div>
@@ -1074,16 +1084,16 @@
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <div>
                                 <label class="block text-slate-400 mb-1">Host IP</label>
-                                <input type="text" id="cfg-obsHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="127.0.0.1">
+                                <input type="text" id="cfg-obsHost" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="127.0.0.1">
                             </div>
                             <div>
                                 <label class="block text-slate-400 mb-1">Port</label>
-                                <input type="number" id="cfg-obsPort" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="4455">
+                                <input type="number" id="cfg-obsPort" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="4455">
                             </div>
                         </div>
                         <div class="text-xs">
                             <label class="block text-slate-400 mb-1">WebSocket Password</label>
-                            <input type="password" id="cfg-obsPassword" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="(Optional)">
+                            <input type="password" id="cfg-obsPassword" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-blue-500 outline-none" placeholder="(Optional)">
                         </div>
                     </div>
 
@@ -1093,16 +1103,16 @@
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <div>
                                 <label class="block text-slate-400 mb-1">Host IP</label>
-                                <input type="text" id="cfg-proclaimHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="192.168.1.X">
+                                <input type="text" id="cfg-proclaimHost" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="192.168.1.X">
                             </div>
                             <div>
                                 <label class="block text-slate-400 mb-1">Port</label>
-                                <input type="number" id="cfg-proclaimPort" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="52195">
+                                <input type="number" id="cfg-proclaimPort" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="52195">
                             </div>
                         </div>
                         <div class="text-xs">
                             <label class="block text-slate-400 mb-1">Network Password</label>
-                            <input type="password" id="cfg-proclaimPassword" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="Required for remote">
+                            <input type="password" id="cfg-proclaimPassword" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-indigo-500 outline-none" placeholder="Required for remote">
                         </div>
                     </div>
                 </div>
@@ -1116,11 +1126,11 @@
                     <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
                             <label class="block text-slate-400 mb-1">OAuth Client ID</label>
-                            <input type="text" id="cfg-youtubeClientId" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-red-500 outline-none">
+                            <input type="text" id="cfg-youtubeClientId" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-red-500 outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">OAuth Client Secret</label>
-                            <input type="password" id="cfg-youtubeClientSecret" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-red-500 outline-none">
+                            <input type="password" id="cfg-youtubeClientSecret" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-red-500 outline-none">
                         </div>
                     </div>
                 </div>
@@ -1132,22 +1142,22 @@
                             <span>📺 VoxStream Live Captioner PRO & Display Restore</span>
                         </div>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="cfg-captionerEnabled" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                            <input type="checkbox" id="cfg-captionerEnabled" class="rounded bg-[#101722] border-[#243242] text-amber-500 focus:ring-0">
                             <span class="text-[11px] text-slate-200 font-bold">Enabled</span>
                         </label>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                         <div>
                             <label class="block text-slate-400 mb-1">VoxStream API URL (Default Port 8765)</label>
-                            <input type="text" id="cfg-captionerApiUrl" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="http://127.0.0.1:8765">
+                            <input type="text" id="cfg-captionerApiUrl" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="http://127.0.0.1:8765">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">Target Screen / Monitor Index</label>
-                            <input type="number" id="cfg-captionerMonitorIndex" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="1 (LONTIUM Screen)">
+                            <input type="number" id="cfg-captionerMonitorIndex" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="1 (LONTIUM Screen)">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">Video Mix Type</label>
-                            <select id="cfg-captionerMixType" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none">
+                            <select id="cfg-captionerMixType" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none">
                                 <option value="preview">Preview Video Mix</option>
                                 <option value="program">Program Video Mix</option>
                             </select>
@@ -1155,14 +1165,14 @@
                     </div>
 
                     <!-- Quick Web Interfaces & Links -->
-                    <div class="bg-black/30 p-2.5 rounded-lg border border-slate-800 text-[11px] space-y-1.5">
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-[#243242] text-[11px] space-y-1.5">
                         <div class="font-bold text-slate-300">VoxStream Web Interfaces:</div>
                         <div class="flex flex-wrap gap-2 text-slate-400 font-mono">
-                            <a href="http://127.0.0.1:8765/" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Stream Overlay (/)</a>
-                            <a href="http://127.0.0.1:8765/display" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Stage Confidence Monitor (/display)</a>
-                            <a href="http://127.0.0.1:8765/dashboard" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Control Panel (/dashboard)</a>
-                            <a href="http://127.0.0.1:8765/dock" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">In-OBS Dock (/dock)</a>
-                            <a href="http://127.0.0.1:8765/bible" target="_blank" class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 hover:text-cyan-400">Scripture Overlay (/bible)</a>
+                            <a href="http://127.0.0.1:8765/" target="_blank" class="px-2 py-0.5 rounded bg-[#101722] border border-[#243242] hover:text-[#7BAFD4]">Stream Overlay (/)</a>
+                            <a href="http://127.0.0.1:8765/display" target="_blank" class="px-2 py-0.5 rounded bg-[#101722] border border-[#243242] hover:text-[#7BAFD4]">Stage Confidence Monitor (/display)</a>
+                            <a href="http://127.0.0.1:8765/dashboard" target="_blank" class="px-2 py-0.5 rounded bg-[#101722] border border-[#243242] hover:text-[#7BAFD4]">Control Panel (/dashboard)</a>
+                            <a href="http://127.0.0.1:8765/dock" target="_blank" class="px-2 py-0.5 rounded bg-[#101722] border border-[#243242] hover:text-[#7BAFD4]">In-OBS Dock (/dock)</a>
+                            <a href="http://127.0.0.1:8765/bible" target="_blank" class="px-2 py-0.5 rounded bg-[#101722] border border-[#243242] hover:text-[#7BAFD4]">Scripture Overlay (/bible)</a>
                         </div>
                     </div>
 
@@ -1170,7 +1180,7 @@
                     <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] pt-1">
                         <span class="text-slate-400">Restores video to LONTIUM screen (Monitor 1) & auto-resumes captions upon 1-click or API call.</span>
                         <div class="flex items-center gap-2">
-                            <button type="button" onclick="LiveEngine.runDiagnostics()" class="px-3 py-1 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-400 border border-cyan-800 rounded text-xs font-bold transition-all shrink-0 cursor-pointer">
+                            <button type="button" onclick="LiveEngine.runDiagnostics()" class="px-3 py-1 bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 rounded text-xs font-bold transition-all shrink-0 cursor-pointer">
                                 🔍 Run Diagnostics / Troubleshoot
                             </button>
                             <button type="button" onclick="LiveEngine.triggerReopenScreen()" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded text-xs font-bold transition-all shrink-0 cursor-pointer">
@@ -1180,9 +1190,9 @@
                     </div>
 
                     <!-- Diagnostics Output Container (Hidden by default) -->
-                    <div id="diagnostics-panel" class="hidden p-3 rounded-lg bg-black/60 border border-slate-700 space-y-2 text-xs font-mono">
-                        <div class="flex items-center justify-between font-bold border-b border-slate-700 pb-1">
-                            <span id="diagnostics-title" class="text-cyan-400">Diagnostic Report</span>
+                    <div id="diagnostics-panel" class="hidden p-3 rounded-lg bg-black/60 border border-[#243242] space-y-2 text-xs font-mono">
+                        <div class="flex items-center justify-between font-bold border-b border-[#243242] pb-1">
+                            <span id="diagnostics-title" class="text-[#7BAFD4]">Diagnostic Report</span>
                             <span id="diagnostics-timestamp" class="text-slate-500 text-[10px]"></span>
                         </div>
                         <div id="diagnostics-checks" class="space-y-1"></div>
@@ -1191,26 +1201,26 @@
                 </div>
 
                 <!-- PTZOptics 2-Camera Configuration Card -->
-                <div class="hardware-card p-4 rounded-xl space-y-3 border border-cyan-500/30">
+                <div class="hardware-card p-4 rounded-xl space-y-3 border border-[#7BAFD4]/40">
                     <div class="flex items-center justify-between">
-                        <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                        <div class="text-xs font-bold text-[#7BAFD4] uppercase tracking-wider flex items-center gap-2">
                             <span>🕹️ PTZOptics Cameras (VISCA over IP / UDP 1259)</span>
                         </div>
                         <span class="text-[10px] font-mono text-slate-400">2-Camera Church Setup</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <div class="bg-black/30 p-2.5 rounded-lg border border-slate-800 space-y-1.5">
+                        <div class="bg-black/30 p-2.5 rounded-lg border border-[#243242] space-y-1.5">
                             <span class="font-bold text-slate-200">Camera 1 (Pulpit / Stage)</span>
                             <div>
                                 <label class="block text-slate-400 text-[10px] mb-1">Static IP Address</label>
-                                <input type="text" id="cfg-cam1Ip" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.101">
+                                <input type="text" id="cfg-cam1Ip" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.1.101">
                             </div>
                         </div>
-                        <div class="bg-black/30 p-2.5 rounded-lg border border-slate-800 space-y-1.5">
+                        <div class="bg-black/30 p-2.5 rounded-lg border border-[#243242] space-y-1.5">
                             <span class="font-bold text-slate-200">Camera 2 (Wide Sanctuary)</span>
                             <div>
                                 <label class="block text-slate-400 text-[10px] mb-1">Static IP Address</label>
-                                <input type="text" id="cfg-cam2Ip" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.102">
+                                <input type="text" id="cfg-cam2Ip" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.1.102">
                             </div>
                         </div>
                     </div>
@@ -1222,25 +1232,25 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                         <div>
                             <label class="block text-slate-400 mb-1">Gateway IP</label>
-                            <input type="text" id="cfg-gatewayIp" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.1">
+                            <input type="text" id="cfg-gatewayIp" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.1.1">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">REAPER Host</label>
-                            <input type="text" id="cfg-ping-reaper" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="127.0.0.1">
+                            <input type="text" id="cfg-ping-reaper" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="127.0.0.1">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">ATEM IP</label>
-                            <input type="text" id="cfg-ping-atem" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="192.168.1.240">
+                            <input type="text" id="cfg-ping-atem" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.1.240">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">YouTube Ingest Host</label>
-                            <input type="text" id="cfg-youtubeIngestHost" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="a.rtmp.youtube.com">
+                            <input type="text" id="cfg-youtubeIngestHost" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="a.rtmp.youtube.com">
                         </div>
                     </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="LiveEngine.closeSettings()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold uppercase tracking-wider">
+                    <button type="button" onclick="LiveEngine.closeSettings()" class="px-4 py-2 rounded-lg border border-[#243242] text-slate-300 hover:bg-[#182230] text-xs font-bold uppercase tracking-wider">
                         Cancel
                     </button>
                     <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold uppercase tracking-wider">
@@ -1261,7 +1271,7 @@
                         <div class="text-[11px] text-slate-400">Enable or disable all incident evaluation and notification dispatching</div>
                     </div>
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="cfg-alertsEnabled" class="rounded bg-slate-900 border-slate-700 text-purple-500 focus:ring-0">
+                        <input type="checkbox" id="cfg-alertsEnabled" class="rounded bg-[#101722] border-[#243242] text-purple-500 focus:ring-0">
                         <span class="text-xs text-slate-200 font-bold">Alerts Enabled</span>
                     </label>
                 </div>
@@ -1272,55 +1282,55 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                         <!-- Silence Rule -->
-                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                        <div class="bg-black/40 p-3 rounded-lg border border-[#243242] space-y-2">
                             <div class="flex items-center justify-between">
                                 <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="cfg-alertSilenceEnabled" class="rounded bg-slate-900 border-slate-700 text-red-500 focus:ring-0">
+                                    <input type="checkbox" id="cfg-alertSilenceEnabled" class="rounded bg-[#101722] border-[#243242] text-red-500 focus:ring-0">
                                     <span class="font-bold text-slate-200">1. Audio Silence Alarm</span>
                                 </label>
                             </div>
                             <div class="grid grid-cols-2 gap-2 pt-1">
                                 <div>
                                     <label class="block text-slate-400 text-[10px] mb-1">Silence dBFS Limit</label>
-                                    <input type="number" id="cfg-silenceDbThreshold" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-red-500 outline-none" placeholder="-50">
+                                    <input type="number" id="cfg-silenceDbThreshold" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-red-500 outline-none" placeholder="-50">
                                 </div>
                                 <div>
                                     <label class="block text-slate-400 text-[10px] mb-1">Timeout (Seconds)</label>
-                                    <input type="number" id="cfg-silenceTimeoutSec" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-red-500 outline-none" placeholder="120">
+                                    <input type="number" id="cfg-silenceTimeoutSec" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-red-500 outline-none" placeholder="120">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Overtime Rule -->
-                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                        <div class="bg-black/40 p-3 rounded-lg border border-[#243242] space-y-2">
                             <div class="flex items-center justify-between">
                                 <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="cfg-alertOvertimeEnabled" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                                    <input type="checkbox" id="cfg-alertOvertimeEnabled" class="rounded bg-[#101722] border-[#243242] text-amber-500 focus:ring-0">
                                     <span class="font-bold text-slate-200">2. Stream Overtime Alarm</span>
                                 </label>
                             </div>
                             <div class="pt-1">
                                 <label class="block text-slate-400 text-[10px] mb-1">Max Duration Limit (Minutes)</label>
-                                <input type="number" id="cfg-maxDurationMin" class="w-full bg-black/60 border border-slate-700 rounded p-1.5 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="120">
+                                <input type="number" id="cfg-maxDurationMin" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-amber-500 outline-none" placeholder="120">
                             </div>
                         </div>
 
                         <!-- Disconnects Rule -->
-                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+                        <div class="bg-black/40 p-3 rounded-lg border border-[#243242] flex items-center justify-between">
                             <div>
                                 <span class="font-bold text-slate-200">3. Device Disconnect Alarms</span>
                                 <div class="text-[10px] text-slate-400">Alert if REAPER, ATEM, OBS, or Proclaim drop</div>
                             </div>
-                            <input type="checkbox" id="cfg-alertDisconnectEnabled" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0">
+                            <input type="checkbox" id="cfg-alertDisconnectEnabled" class="rounded bg-[#101722] border-[#243242] text-[#7BAFD4] focus:ring-0">
                         </div>
 
                         <!-- Network Outage Rule -->
-                        <div class="bg-black/40 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+                        <div class="bg-black/40 p-3 rounded-lg border border-[#243242] flex items-center justify-between">
                             <div>
                                 <span class="font-bold text-slate-200">4. Network Outage Alarms</span>
                                 <div class="text-[10px] text-slate-400">Alert if Gateway or YouTube Ingest fails ping</div>
                             </div>
-                            <input type="checkbox" id="cfg-alertNetworkEnabled" class="rounded bg-slate-900 border-slate-700 text-blue-500 focus:ring-0">
+                            <input type="checkbox" id="cfg-alertNetworkEnabled" class="rounded bg-[#101722] border-[#243242] text-blue-500 focus:ring-0">
                         </div>
                     </div>
                 </div>
@@ -1330,13 +1340,13 @@
                     <div class="flex items-center justify-between">
                         <div class="text-xs font-bold text-sky-400 uppercase tracking-wider">GroupMe Bot Team Chat Alerts (Dual-Bot Routing)</div>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="cfg-groupmeEnabled" class="rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-0">
+                            <input type="checkbox" id="cfg-groupmeEnabled" class="rounded bg-[#101722] border-[#243242] text-sky-500 focus:ring-0">
                             <span class="text-xs text-slate-300 font-semibold">Enable GroupMe Alerts</span>
                         </label>
                     </div>
 
                     <!-- Bot 1: Main Team Group -->
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242] space-y-2">
                         <div class="flex items-center justify-between">
                             <div>
                                 <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
@@ -1344,32 +1354,32 @@
                                 </div>
                                 <div class="text-[10px] text-slate-400">Receives: <strong>Audio Silence (>2m)</strong> & <strong>Stream Overtime (>120m)</strong></div>
                             </div>
-                            <button type="button" id="btn-test-groupme-main" onclick="LiveEngine.testGroupMe('main')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 rounded text-[11px] font-semibold">
+                            <button type="button" id="btn-test-groupme-main" onclick="LiveEngine.testGroupMe('main')" class="px-2.5 py-1 bg-[#182230] hover:bg-slate-700 text-emerald-300 border border-[#243242] rounded text-[11px] font-semibold">
                                 Test Main Bot
                             </button>
                         </div>
                         <div>
                             <label class="block text-slate-400 text-[11px] mb-1">Main Team Bot ID</label>
-                            <input type="text" id="cfg-groupmeMainBotId" class="w-full bg-black/60 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="e.g. a1b2c3d4e5f6g7h8">
+                            <input type="text" id="cfg-groupmeMainBotId" class="w-full bg-black/60 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-emerald-500 outline-none" placeholder="e.g. a1b2c3d4e5f6g7h8">
                         </div>
                     </div>
 
                     <!-- Bot 2: Tech Leads / Admins Group -->
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800 space-y-2">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242] space-y-2">
                         <div class="flex items-center justify-between">
                             <div>
-                                <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                                <div class="text-xs font-bold text-[#7BAFD4] flex items-center gap-1.5">
                                     <span>🛠️ Bot #2: Tech Leads / Admins Group</span>
                                 </div>
                                 <div class="text-[10px] text-slate-400">Receives: <strong>Device Disconnects (REAPER/ATEM/OBS)</strong> & <strong>Network Issues</strong></div>
                             </div>
-                            <button type="button" id="btn-test-groupme-tech" onclick="LiveEngine.testGroupMe('tech')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 rounded text-[11px] font-semibold">
+                            <button type="button" id="btn-test-groupme-tech" onclick="LiveEngine.testGroupMe('tech')" class="px-2.5 py-1 bg-[#182230] hover:bg-slate-700 text-[#7BAFD4] border border-[#243242] rounded text-[11px] font-semibold">
                                 Test Tech Bot
                             </button>
                         </div>
                         <div>
                             <label class="block text-slate-400 text-[11px] mb-1">Tech Leads Bot ID <span class="text-slate-500 font-normal">(Optional — falls back to Bot #1 if empty)</span></label>
-                            <input type="text" id="cfg-groupmeTechBotId" class="w-full bg-black/60 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" placeholder="e.g. z9y8x7w6v5u4t3s2">
+                            <input type="text" id="cfg-groupmeTechBotId" class="w-full bg-black/60 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="e.g. z9y8x7w6v5u4t3s2">
                         </div>
                     </div>
                 </div>
@@ -1385,7 +1395,7 @@
 
                     <div class="flex items-center gap-2 pt-0.5">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="cfg-scheduleEnabled" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                            <input type="checkbox" id="cfg-scheduleEnabled" class="rounded bg-[#101722] border-[#243242] text-amber-500 focus:ring-0">
                             <span class="text-xs text-slate-200 font-medium">Only send silence & disconnect alerts during scheduled broadcast hours</span>
                         </label>
                     </div>
@@ -1393,7 +1403,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
                         <div>
                             <label class="block text-slate-400 mb-1">Active Day</label>
-                            <select id="cfg-scheduleDays" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none">
+                            <select id="cfg-scheduleDays" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none">
                                 <option value="0">Sundays Only</option>
                                 <option value="0,3">Sundays & Wednesdays</option>
                                 <option value="0,6">Weekends (Sat & Sun)</option>
@@ -1402,17 +1412,17 @@
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">Window Start Time</label>
-                            <input type="time" id="cfg-scheduleStart" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" value="09:00">
+                            <input type="time" id="cfg-scheduleStart" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" value="09:00">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">Window End Time</label>
-                            <input type="time" id="cfg-scheduleEnd" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none" value="15:00">
+                            <input type="time" id="cfg-scheduleEnd" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" value="15:00">
                         </div>
                     </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="LiveEngine.closeSettings()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold uppercase tracking-wider">
+                    <button type="button" onclick="LiveEngine.closeSettings()" class="px-4 py-2 rounded-lg border border-[#243242] text-slate-300 hover:bg-[#182230] text-xs font-bold uppercase tracking-wider">
                         Cancel
                     </button>
                     <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold uppercase tracking-wider">
@@ -1432,15 +1442,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                         <div>
                             <label class="block text-slate-400 mb-1">Facility / Church Name</label>
-                            <input type="text" id="cfg-facilityName" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs focus:border-cyan-500 outline-none" placeholder="SANCTUARY AV">
+                            <input type="text" id="cfg-facilityName" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 text-xs focus:border-[#7BAFD4] outline-none" placeholder="SANCTUARY AV">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">Subtitle / Room</label>
-                            <input type="text" id="cfg-facilitySubtitle" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs focus:border-cyan-500 outline-none" placeholder="LIVE RACK">
+                            <input type="text" id="cfg-facilitySubtitle" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 text-xs focus:border-[#7BAFD4] outline-none" placeholder="LIVE RACK">
                         </div>
                         <div>
                             <label class="block text-slate-400 mb-1">Master Clock Format</label>
-                            <select id="cfg-clockFormat" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-cyan-500 outline-none">
+                            <select id="cfg-clockFormat" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none">
                                 <option value="24h">24-Hour (14:30:00)</option>
                                 <option value="12h">12-Hour AM/PM (2:30:00 PM)</option>
                             </select>
@@ -1448,7 +1458,7 @@
                     </div>
                     <div class="text-xs">
                         <label class="block text-slate-400 mb-1">Header Description</label>
-                        <input type="text" id="cfg-facilityDescription" class="w-full bg-black/50 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs focus:border-cyan-500 outline-none" placeholder="Telemetry & Broadcast Health Monitor">
+                        <input type="text" id="cfg-facilityDescription" class="w-full bg-black/50 border border-[#243242] rounded-lg p-2 text-slate-100 text-xs focus:border-[#7BAFD4] outline-none" placeholder="Telemetry & Broadcast Health Monitor">
                     </div>
                 </div>
 
@@ -1460,15 +1470,15 @@
             </form>
 
             <!-- Backup, Restore, & Factory Reset -->
-            <div class="hardware-card p-4 rounded-xl space-y-3 border border-slate-700">
+            <div class="hardware-card p-4 rounded-xl space-y-3 border border-[#243242]">
                 <div class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
                     <span>Configuration Backup & Reset</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                    <button type="button" onclick="LiveEngine.exportConfig()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center gap-1.5 font-semibold">
+                    <button type="button" onclick="LiveEngine.exportConfig()" class="p-2.5 rounded-lg bg-[#182230] hover:bg-slate-700 text-slate-200 border border-[#243242] flex items-center justify-center gap-1.5 font-semibold">
                         <span>📥 Export Config (JSON)</span>
                     </button>
-                    <label class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center gap-1.5 font-semibold cursor-pointer text-center">
+                    <label class="p-2.5 rounded-lg bg-[#182230] hover:bg-slate-700 text-slate-200 border border-[#243242] flex items-center justify-center gap-1.5 font-semibold cursor-pointer text-center">
                         <span>📤 Import Config</span>
                         <input type="file" accept=".json" onchange="LiveEngine.importConfig(event)" class="hidden">
                     </label>
@@ -1480,21 +1490,21 @@
 
             <!-- Setup Guides & References -->
             <div class="space-y-3 pt-2">
-                <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Quick First-Time Connection Steps</div>
+                <div class="text-xs font-bold text-[#7BAFD4] uppercase tracking-wider">Quick First-Time Connection Steps</div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
                         <div class="text-emerald-400 font-bold mb-1">REAPER OSC</div>
                         <p class="text-slate-400 text-[11px]">In REAPER: Preferences > Control/OSC/web > Add OSC with Mode = OSC, IP = 127.0.0.1, Port = 9000.</p>
                     </div>
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
-                        <div class="text-cyan-400 font-bold mb-1">ATEM Mini LAN</div>
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
+                        <div class="text-[#7BAFD4] font-bold mb-1">ATEM Mini LAN</div>
                         <p class="text-slate-400 text-[11px]">Connect Ethernet to church router. Paste its static IP (e.g. 192.168.1.240) in Tab 2.</p>
                     </div>
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
                         <div class="text-blue-400 font-bold mb-1">OBS WebSocket</div>
                         <p class="text-slate-400 text-[11px]">In OBS: Tools > WebSocket Server Settings > Check "Enable WebSocket server" (port 4455).</p>
                     </div>
-                    <div class="bg-black/40 p-3 rounded-lg border border-slate-800">
+                    <div class="bg-black/40 p-3 rounded-lg border border-[#243242]">
                         <div class="text-indigo-400 font-bold mb-1">Proclaim Remote</div>
                         <p class="text-slate-400 text-[11px]">In Proclaim: Settings > Remote > Enable and note password. Enter IP & password in Tab 2.</p>
                     </div>
@@ -1607,7 +1617,7 @@ const LiveEngine = {
             if (!content || !btn) return;
             if (t === tab) {
                 content.classList.remove('hidden');
-                btn.className = 'py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-cyan-400 text-cyan-400 bg-slate-800/60';
+                btn.className = 'py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-cyan-400 text-[#7BAFD4] bg-[#182230]/60';
             } else {
                 content.classList.add('hidden');
                 btn.className = 'py-2 text-[11px] font-bold uppercase tracking-wider rounded-t-lg transition-colors border-b-2 text-center border-transparent text-slate-400 hover:text-slate-200';
@@ -1739,7 +1749,7 @@ const LiveEngine = {
                 const lat = updater.latestVersion || 'New';
                 pillText.textContent = `⚡ v${cur} → v${lat}`;
             } else {
-                pill.className = 'px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-all bg-slate-900/80 hover:bg-slate-800 border-slate-700 text-slate-300 shadow-sm cursor-pointer';
+                pill.className = 'px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-all bg-[#101722]/80 hover:bg-[#182230] border-[#243242] text-slate-300 shadow-sm cursor-pointer';
                 if (pillIcon) pillIcon.textContent = '📦';
                 pillText.textContent = `v${updater.currentVersion || '1.0.0'}`;
             }
@@ -2034,7 +2044,7 @@ const LiveEngine = {
         const adviceEl = document.getElementById('diagnostics-advice');
 
         if (panel) panel.classList.remove('hidden');
-        if (title) title.innerHTML = '<span class="animate-pulse text-cyan-400">⏳ Running VoxStream & Display Diagnostics...</span>';
+        if (title) title.innerHTML = '<span class="animate-pulse text-[#7BAFD4]">⏳ Running VoxStream & Display Diagnostics...</span>';
         if (checksEl) checksEl.innerHTML = '';
         if (adviceEl) adviceEl.innerHTML = '';
 
@@ -2062,7 +2072,7 @@ const LiveEngine = {
             }
 
             if (adviceEl && Array.isArray(data.troubleshootingAdvice) && data.troubleshootingAdvice.length > 0) {
-                adviceEl.innerHTML = '<div class="font-bold text-amber-400 pt-1 border-t border-slate-800">💡 Troubleshooting Steps:</div>' +
+                adviceEl.innerHTML = '<div class="font-bold text-amber-400 pt-1 border-t border-[#243242]">💡 Troubleshooting Steps:</div>' +
                     data.troubleshootingAdvice.map(a => `<div>• ${a}</div>`).join('');
             }
         } catch (err) {
@@ -2171,11 +2181,11 @@ const LiveEngine = {
         const tab2 = document.getElementById('ptz-tab-cam2');
         if (tab1 && tab2) {
             if (camId === 'cam1') {
-                tab1.className = 'px-2.5 py-1 rounded bg-cyan-500 text-slate-950 font-bold transition-all cursor-pointer';
+                tab1.className = 'px-2.5 py-1 rounded bg-[#7BAFD4] text-[#081018] text-slate-950 font-bold transition-all cursor-pointer';
                 tab2.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-bold transition-all cursor-pointer';
             } else {
                 tab1.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-bold transition-all cursor-pointer';
-                tab2.className = 'px-2.5 py-1 rounded bg-cyan-500 text-slate-950 font-bold transition-all cursor-pointer';
+                tab2.className = 'px-2.5 py-1 rounded bg-[#7BAFD4] text-[#081018] text-slate-950 font-bold transition-all cursor-pointer';
             }
         }
         if (this.lastState && this.lastState.ptz) {
@@ -2319,8 +2329,8 @@ const LiveEngine = {
         if (!cam || !cam.presets) return;
 
         container.innerHTML = cam.presets.slice(0, 6).map(p => `
-            <button onclick="LiveEngine.recallPtzPreset(${p.id})" class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 active:bg-cyan-600 active:text-white border border-slate-700/80 text-left transition-all truncate cursor-pointer shadow-sm">
-                <div class="text-[9px] text-cyan-400 font-bold">P${p.id}</div>
+            <button onclick="LiveEngine.recallPtzPreset(${p.id})" class="p-2 rounded-lg bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-white border border-[#243242]/80 text-left transition-all truncate cursor-pointer shadow-sm">
+                <div class="text-[9px] text-[#7BAFD4] font-bold">P${p.id}</div>
                 <div class="truncate text-slate-200 text-xs font-semibold">${p.name}</div>
             </button>
         `).join('');
@@ -2337,7 +2347,7 @@ const LiveEngine = {
                 if (pgm === id) {
                     btnPgm.className = 'atem-btn p-2 rounded-lg bg-red-600 border border-red-400 text-white font-black transition-all text-center shadow-lg shadow-red-900/60 scale-[1.02] cursor-pointer';
                 } else {
-                    btnPgm.className = 'atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 font-bold transition-all text-center hover:border-red-500 cursor-pointer';
+                    btnPgm.className = 'atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-400 font-bold transition-all text-center hover:border-red-500 cursor-pointer';
                 }
             }
 
@@ -2346,7 +2356,7 @@ const LiveEngine = {
                 if (pvw === id) {
                     btnPvw.className = 'atem-btn p-2 rounded-lg bg-emerald-600 border border-emerald-400 text-white font-black transition-all text-center shadow-lg shadow-emerald-900/60 scale-[1.02] cursor-pointer';
                 } else {
-                    btnPvw.className = 'atem-btn p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer';
+                    btnPvw.className = 'atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-400 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer';
                 }
             }
         });
@@ -2509,12 +2519,12 @@ const LiveEngine = {
         if (this.dom.dispSil) this.dom.dispSil.textContent = `${cfg.silenceTimeoutSec}s (${Math.round(cfg.silenceTimeoutSec / 60)} min)`;
         if (this.dom.dispGroupMe) {
             this.dom.dispGroupMe.textContent = cfg.groupmeEnabled ? 'Active' : 'Off';
-            this.dom.dispGroupMe.className = `px-2 py-0.5 rounded border text-xs font-bold ${cfg.groupmeEnabled ? 'bg-sky-950/40 border-sky-800 text-sky-300' : 'bg-slate-900 border-slate-800 text-slate-500'}`;
+            this.dom.dispGroupMe.className = `px-2 py-0.5 rounded border text-xs font-bold ${cfg.groupmeEnabled ? 'bg-sky-950/40 border-sky-800 text-sky-300' : 'bg-[#101722] border-[#243242] text-slate-500'}`;
         }
         if (this.dom.dispSched) {
             if (cfg.scheduleEnabled === false) {
                 this.dom.dispSched.textContent = 'All Days / 24h';
-                this.dom.dispSched.className = 'text-slate-300 font-semibold bg-slate-900 px-2 py-0.5 rounded border border-slate-800';
+                this.dom.dispSched.className = 'text-slate-300 font-semibold bg-[#101722] px-2 py-0.5 rounded border border-[#243242]';
             } else {
                 const s = cfg.scheduleStart || '09:00';
                 const e = cfg.scheduleEnd || '15:00';
@@ -2583,7 +2593,7 @@ const LiveEngine = {
         }
         if (badge) {
             badge.textContent = captioner.connected ? (captioner.isCapturing ? 'Capturing' : 'Standby') : 'Offline';
-            badge.className = `px-2 py-0.5 rounded text-[10px] font-bold border ${captioner.connected ? (captioner.isCapturing ? 'bg-emerald-950/40 border-emerald-800 text-emerald-400' : 'bg-amber-950/40 border-amber-800 text-amber-400') : 'bg-slate-900 border-slate-800 text-slate-500'}`;
+            badge.className = `px-2 py-0.5 rounded text-[10px] font-bold border ${captioner.connected ? (captioner.isCapturing ? 'bg-emerald-950/40 border-emerald-800 text-emerald-400' : 'bg-amber-950/40 border-amber-800 text-amber-400') : 'bg-[#101722] border-[#243242] text-slate-500'}`;
         }
         if (wpmBadge) {
             if (captioner.connected && captioner.currentWpm > 0) {
@@ -2596,7 +2606,7 @@ const LiveEngine = {
         }
         if (text) {
             if (captioner.interimTranscript) {
-                text.innerHTML = `<span class="text-white font-medium">"${captioner.lastTranscript || ''}"</span> <span class="text-cyan-400 italic font-semibold">${captioner.interimTranscript}...</span>`;
+                text.innerHTML = `<span class="text-white font-medium">"${captioner.lastTranscript || ''}"</span> <span class="text-[#7BAFD4] italic font-semibold">${captioner.interimTranscript}...</span>`;
             } else if (captioner.lastTranscript) {
                 text.textContent = `"${captioner.lastTranscript}"`;
             } else {
@@ -2640,14 +2650,14 @@ const LiveEngine = {
         this.dom.signalChainContainer.innerHTML = nodes.map(node => {
             const isOk = node.status === 'ok';
             const isWarn = node.status === 'warn';
-            const borderCol = isOk ? 'border-emerald-500/40' : (isWarn ? 'border-amber-500/40' : 'border-slate-800');
+            const borderCol = isOk ? 'border-emerald-500/40' : (isWarn ? 'border-amber-500/40' : 'border-[#243242]');
             const tallyClass = isOk ? 'tally-green' : (isWarn ? 'tally-amber' : 'tally-off');
             const textCol = isOk ? 'text-emerald-400' : (isWarn ? 'text-amber-400' : 'text-slate-400');
 
             return `
                 <div class="hardware-card p-3 rounded-lg flex items-center justify-between border ${borderCol} relative transition-all">
                     <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded bg-slate-900 flex items-center justify-center text-slate-400 border border-slate-800 shrink-0">
+                        <div class="w-7 h-7 rounded bg-[#101722] flex items-center justify-center text-slate-400 border border-[#243242] shrink-0">
                             ${getIcon(node.id)}
                         </div>
                         <div>
@@ -2655,7 +2665,7 @@ const LiveEngine = {
                             <div class="text-[9px] text-slate-400 font-mono">${node.subtitle}</div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-[10px] font-semibold">
+                    <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#101722] border border-[#243242] text-[10px] font-semibold">
                         <div class="tally-led ${tallyClass}"></div>
                         <span class="${textCol}">${node.statusText}</span>
                     </div>
@@ -2741,7 +2751,7 @@ const LiveEngine = {
             if (led) led.className = 'tally-led tally-red';
             this.dom.ytText.textContent = 'LIVE';
         } else {
-            pill.className = 'px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-bold text-slate-400 flex items-center gap-1.5';
+            pill.className = 'px-2.5 py-1 rounded bg-[#101722] border border-[#243242] text-xs font-bold text-slate-400 flex items-center gap-1.5';
             if (led) led.className = 'tally-led tally-off';
             this.dom.ytText.textContent = 'OFFLINE';
         }
@@ -2784,7 +2794,7 @@ const LiveEngine = {
             container.innerHTML = '';
             for (const [key, ep] of Object.entries(network.endpoints)) {
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between text-xs font-mono bg-black/40 px-3 py-2 rounded-lg border border-slate-800';
+                div.className = 'flex items-center justify-between text-xs font-mono bg-black/40 px-3 py-2 rounded-lg border border-[#243242]';
                 div.id = `ping-row-${key}`;
                 div.innerHTML = `
                     <div class="flex items-center gap-2.5">
@@ -2853,7 +2863,7 @@ const LiveEngine = {
         entry.className = 'flex items-baseline gap-2 py-0.5 border-b border-white/[0.03]';
 
         let badge = 'INFO';
-        let badgeColor = 'text-cyan-400';
+        let badgeColor = 'text-[#7BAFD4]';
 
         if (severity === 'warn') {
             badge = 'WARN';

@@ -46,7 +46,7 @@
 <body class="min-h-screen pb-20 sm:pb-6 flex flex-col justify-between">
 
     <!-- Top Navigation Header -->
-    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
+    <header class="bg-[#090D13]/90 border-b border-[#243242]/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-lg bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
@@ -62,7 +62,7 @@
 
         <div class="flex items-center gap-2">
             <div id="global-conn-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
-            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 text-xs font-bold font-mono">
                 🪟 HUD
             </a>
         </div>
@@ -70,14 +70,14 @@
 
     <!-- Simple Direct Station Navigation Bar -->
     <div class="max-w-4xl mx-auto w-full px-3 pt-3">
-        <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+        <nav class="bg-[#090D13]/80 border border-[#243242]/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
             <div class="flex items-center gap-1.5 min-w-max">
-                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
-                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
-                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">📷 Cameras & ATEM</a>
-                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
-                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">💬 Captions</a>
-                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
+                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
+                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📋 Checklist</a>
+                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-[#7BAFD4] text-[#081018] text-slate-950 shadow-sm flex items-center gap-1.5">📷 Cameras & ATEM</a>
+                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">💬 Captions</a>
+                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
             </div>
             <div class="flex items-center gap-2 min-w-max">
                 <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
@@ -91,7 +91,7 @@
     <main class="flex-grow p-3 sm:p-5 max-w-5xl mx-auto w-full space-y-4">
 
         <!-- 1. ATEM Mini Video Matrix (Touch Optimized) -->
-        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+        <section class="bg-[#101722]/80 border border-[#243242] rounded-2xl p-4 shadow-xl space-y-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-red-500"></span>
@@ -107,23 +107,23 @@
             <div class="space-y-1">
                 <div class="text-[10px] font-mono font-bold text-red-400 uppercase">PROGRAM BUS (LIVE):</div>
                 <div class="grid grid-cols-5 gap-2 font-mono">
-                    <button id="pgm-1" onclick="SanctuaryClient.setAtemProgram(1)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pgm-1" onclick="SanctuaryClient.setAtemProgram(1)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">CAM 1</div>
                         <div class="text-xs truncate">Pulpit</div>
                     </button>
-                    <button id="pgm-2" onclick="SanctuaryClient.setAtemProgram(2)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pgm-2" onclick="SanctuaryClient.setAtemProgram(2)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">CAM 2</div>
                         <div class="text-xs truncate">Wide</div>
                     </button>
-                    <button id="pgm-3" onclick="SanctuaryClient.setAtemProgram(3)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pgm-3" onclick="SanctuaryClient.setAtemProgram(3)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">HDMI 3</div>
                         <div class="text-xs truncate">Proclaim</div>
                     </button>
-                    <button id="pgm-3010" onclick="SanctuaryClient.setAtemProgram(3010)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pgm-3010" onclick="SanctuaryClient.setAtemProgram(3010)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">STILL</div>
                         <div class="text-xs truncate">Media 1</div>
                     </button>
-                    <button id="pgm-0" onclick="SanctuaryClient.setAtemProgram(0)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pgm-0" onclick="SanctuaryClient.setAtemProgram(0)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">BLACK</div>
                         <div class="text-xs truncate">Fade</div>
                     </button>
@@ -134,23 +134,23 @@
             <div class="space-y-1 pt-1">
                 <div class="text-[10px] font-mono font-bold text-emerald-400 uppercase">PREVIEW BUS (NEXT):</div>
                 <div class="grid grid-cols-5 gap-2 font-mono">
-                    <button id="pvw-1" onclick="SanctuaryClient.setAtemPreview(1)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pvw-1" onclick="SanctuaryClient.setAtemPreview(1)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">CAM 1</div>
                         <div class="text-xs truncate">Pulpit</div>
                     </button>
-                    <button id="pvw-2" onclick="SanctuaryClient.setAtemPreview(2)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pvw-2" onclick="SanctuaryClient.setAtemPreview(2)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">CAM 2</div>
                         <div class="text-xs truncate">Wide</div>
                     </button>
-                    <button id="pvw-3" onclick="SanctuaryClient.setAtemPreview(3)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pvw-3" onclick="SanctuaryClient.setAtemPreview(3)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">HDMI 3</div>
                         <div class="text-xs truncate">Proclaim</div>
                     </button>
-                    <button id="pvw-3010" onclick="SanctuaryClient.setAtemPreview(3010)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pvw-3010" onclick="SanctuaryClient.setAtemPreview(3010)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">STILL</div>
                         <div class="text-xs truncate">Media 1</div>
                     </button>
-                    <button id="pvw-0" onclick="SanctuaryClient.setAtemPreview(0)" class="p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
+                    <button id="pvw-0" onclick="SanctuaryClient.setAtemPreview(0)" class="p-3 rounded-xl bg-[#090D13] border border-[#243242] text-slate-300 font-bold text-center active:scale-95 transition-all cursor-pointer">
                         <div class="text-[10px] text-slate-500">BLACK</div>
                         <div class="text-xs truncate">Fade</div>
                     </button>
@@ -158,26 +158,26 @@
             </div>
 
             <!-- Transitions Row -->
-            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800">
-                <button onclick="SanctuaryClient.atemCut()" class="py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-white active:text-slate-950 text-white font-black font-mono text-sm tracking-wider uppercase border border-slate-700 cursor-pointer flex items-center justify-center gap-1.5 shadow-md">
+            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-[#243242]">
+                <button onclick="SanctuaryClient.atemCut()" class="py-3 rounded-xl bg-[#182230] hover:bg-slate-700 active:bg-white active:text-slate-950 text-white font-black font-mono text-sm tracking-wider uppercase border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5 shadow-md">
                     <span>⚡ CUT</span>
                 </button>
                 <button onclick="SanctuaryClient.atemAuto()" class="py-3 rounded-xl bg-red-950/60 hover:bg-red-900/60 active:bg-red-600 active:text-white text-red-300 font-black font-mono text-sm tracking-wider uppercase border border-red-800 cursor-pointer flex items-center justify-center gap-1.5 shadow-md">
                     <span>✨ AUTO (Mix)</span>
                 </button>
-                <button onclick="SanctuaryClient.atemFtb()" class="py-3 rounded-xl bg-slate-950 hover:bg-black active:text-red-400 text-slate-400 font-bold font-mono text-sm tracking-wider uppercase border border-slate-800 cursor-pointer flex items-center justify-center gap-1.5">
+                <button onclick="SanctuaryClient.atemFtb()" class="py-3 rounded-xl bg-[#090D13] hover:bg-black active:text-red-400 text-slate-400 font-bold font-mono text-sm tracking-wider uppercase border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5">
                     <span>🌑 FTB</span>
                 </button>
             </div>
         </section>
 
         <!-- 2. PTZOptics 2-Camera Motion & Preset Console -->
-        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
+        <section class="bg-[#101722]/80 border border-[#243242] rounded-2xl p-4 shadow-xl space-y-4">
             
             <!-- Camera Tabs Header -->
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
-                    <button id="cam-tab-1" onclick="selectCamera('cam1')" class="px-4 py-2 rounded-lg bg-cyan-500 text-slate-950 font-black text-xs transition-all cursor-pointer">
+                <div class="flex items-center gap-2 bg-[#090D13] p-1 rounded-xl border border-[#243242]">
+                    <button id="cam-tab-1" onclick="selectCamera('cam1')" class="px-4 py-2 rounded-lg bg-[#7BAFD4] text-[#081018] text-slate-950 font-black text-xs transition-all cursor-pointer">
                         📷 Cam 1 (Pulpit)
                     </button>
                     <button id="cam-tab-2" onclick="selectCamera('cam2')" class="px-4 py-2 rounded-lg text-slate-400 hover:text-white font-bold text-xs transition-all cursor-pointer">
@@ -185,7 +185,7 @@
                     </button>
                 </div>
                 <div class="text-[10px] font-mono text-slate-400">
-                    <span id="ptz-active-label" class="font-bold text-cyan-400">Camera 1 (Pulpit)</span>
+                    <span id="ptz-active-label" class="font-bold text-[#7BAFD4]">Camera 1 (Pulpit)</span>
                 </div>
             </div>
 
@@ -195,54 +195,54 @@
                 <!-- 8-Way Pan/Tilt Compass (7 cols) -->
                 <div class="sm:col-span-7 flex justify-center">
                     <div class="grid grid-cols-3 gap-2 w-48 h-48 sm:w-56 sm:h-56 select-none">
-                        <button onpointerdown="startMove('upleft')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◤</button>
-                        <button onpointerdown="startMove('up')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">▲</button>
-                        <button onpointerdown="startMove('upright')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◥</button>
+                        <button onpointerdown="startMove('upleft')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◤</button>
+                        <button onpointerdown="startMove('up')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">▲</button>
+                        <button onpointerdown="startMove('upright')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◥</button>
 
-                        <button onpointerdown="startMove('left')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◀</button>
-                        <div class="touch-pad-btn p-3 rounded-2xl bg-slate-950 border border-slate-800 text-cyan-400 text-xl font-bold flex items-center justify-center select-none pointer-events-none shadow-inner">📷</div>
-                        <button onpointerdown="startMove('right')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">▶</button>
+                        <button onpointerdown="startMove('left')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◀</button>
+                        <div class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] border border-[#243242] text-[#7BAFD4] text-xl font-bold flex items-center justify-center select-none pointer-events-none shadow-inner">📷</div>
+                        <button onpointerdown="startMove('right')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">▶</button>
 
-                        <button onpointerdown="startMove('downleft')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◣</button>
-                        <button onpointerdown="startMove('down')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">▼</button>
-                        <button onpointerdown="startMove('downright')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-800 text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◢</button>
+                        <button onpointerdown="startMove('downleft')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◣</button>
+                        <button onpointerdown="startMove('down')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-xl font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">▼</button>
+                        <button onpointerdown="startMove('downright')" onpointerup="stopMove()" onpointerleave="stopMove()" onpointercancel="stopMove()" oncontextmenu="return false;" class="touch-pad-btn p-3 rounded-2xl bg-[#090D13] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-base font-bold flex items-center justify-center cursor-pointer shadow-md transition-all">◢</button>
                     </div>
                 </div>
 
                 <!-- Zoom & Speed Sliders (5 cols) -->
                 <div class="sm:col-span-5 space-y-3">
-                    <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                    <div class="bg-[#090D13]/70 p-3.5 rounded-xl border border-[#243242] space-y-2">
                         <span class="text-xs font-mono text-slate-300 block uppercase font-bold">Lens Zoom:</span>
                         <div class="grid grid-cols-2 gap-2 font-mono select-none">
-                            <button onpointerdown="startZoom('in')" onpointerup="stopZoom()" onpointerleave="stopZoom()" onpointercancel="stopZoom()" oncontextmenu="return false;" class="touch-pad-btn py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-700 text-white font-bold text-sm flex items-center justify-center gap-1 shadow-md transition-all">
+                            <button onpointerdown="startZoom('in')" onpointerup="stopZoom()" onpointerleave="stopZoom()" onpointercancel="stopZoom()" oncontextmenu="return false;" class="touch-pad-btn py-3 rounded-xl bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-white font-bold text-sm flex items-center justify-center gap-1 shadow-md transition-all">
                                 <span>➕ ZOOM IN</span>
                             </button>
-                            <button onpointerdown="startZoom('out')" onpointerup="stopZoom()" onpointerleave="stopZoom()" onpointercancel="stopZoom()" oncontextmenu="return false;" class="touch-pad-btn py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-cyan-500 active:text-slate-950 border border-slate-700 text-white font-bold text-sm flex items-center justify-center gap-1 shadow-md transition-all">
+                            <button onpointerdown="startZoom('out')" onpointerup="stopZoom()" onpointerleave="stopZoom()" onpointercancel="stopZoom()" oncontextmenu="return false;" class="touch-pad-btn py-3 rounded-xl bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-white font-bold text-sm flex items-center justify-center gap-1 shadow-md transition-all">
                                 <span>➖ ZOOM OUT</span>
                             </button>
                         </div>
                     </div>
 
-                    <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                    <div class="bg-[#090D13]/70 p-3.5 rounded-xl border border-[#243242] space-y-1.5">
                         <div class="flex items-center justify-between text-xs font-mono text-slate-300">
                             <span class="font-bold">PAN / TILT SPEED</span>
-                            <span id="speed-display" class="font-black text-cyan-400 text-sm">12</span>
+                            <span id="speed-display" class="font-black text-[#7BAFD4] text-sm">12</span>
                         </div>
-                        <input type="range" id="speed-slider" min="1" max="24" value="12" oninput="setSpeed(this.value)" class="w-full accent-cyan-400 cursor-pointer h-2 bg-slate-800 rounded-lg">
+                        <input type="range" id="speed-slider" min="1" max="24" value="12" oninput="setSpeed(this.value)" class="w-full accent-[#7BAFD4] cursor-pointer h-2 bg-[#182230] rounded-lg">
                     </div>
                 </div>
 
             </div>
 
             <!-- Position Presets Grid (Visual Framing Cards) -->
-            <div class="pt-3 border-t border-slate-800 space-y-2">
+            <div class="pt-3 border-t border-[#243242] space-y-2">
                 <div class="flex items-center justify-between">
                     <div>
                         <span class="text-xs font-extrabold uppercase tracking-wider text-slate-200">Church Position Presets</span>
                         <div class="text-[10px] text-slate-400">Visual framing thumbnails — tap any card to recall position</div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="promptSaveCurrentPreset()" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-xs font-mono text-cyan-400 font-semibold cursor-pointer">
+                        <button onclick="promptSaveCurrentPreset()" class="px-2.5 py-1 bg-[#101722] hover:bg-[#182230] border border-[#243242] rounded text-xs font-mono text-[#7BAFD4] font-semibold cursor-pointer">
                             💾 Save Position
                         </button>
                     </div>
@@ -291,12 +291,12 @@
             const label = document.getElementById('ptz-active-label');
 
             if (camId === 'cam1') {
-                tab1.className = 'px-4 py-2 rounded-lg bg-cyan-500 text-slate-950 font-black text-xs transition-all cursor-pointer';
+                tab1.className = 'px-4 py-2 rounded-lg bg-[#7BAFD4] text-[#081018] text-slate-950 font-black text-xs transition-all cursor-pointer';
                 tab2.className = 'px-4 py-2 rounded-lg text-slate-400 hover:text-white font-bold text-xs transition-all cursor-pointer';
                 if (label) label.textContent = 'Camera 1 (Pulpit / Stage)';
             } else {
                 tab1.className = 'px-4 py-2 rounded-lg text-slate-400 hover:text-white font-bold text-xs transition-all cursor-pointer';
-                tab2.className = 'px-4 py-2 rounded-lg bg-cyan-500 text-slate-950 font-black text-xs transition-all cursor-pointer';
+                tab2.className = 'px-4 py-2 rounded-lg bg-[#7BAFD4] text-[#081018] text-slate-950 font-black text-xs transition-all cursor-pointer';
                 if (label) label.textContent = 'Camera 2 (Wide Sanctuary)';
             }
             renderPresets();
@@ -309,9 +309,9 @@
                 const imgFallback = `/presets/${currentCamera}_preset${p.id}.svg`;
                 const imgJpg = `/presets/${currentCamera}_preset${p.id}.jpg`;
                 return `
-                <div class="group relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 hover:border-cyan-500/70 transition-all shadow-lg flex flex-col justify-between">
+                <div class="group relative rounded-xl overflow-hidden bg-[#090D13] border border-[#243242] hover:border-[#7BAFD4]/70 transition-all shadow-lg flex flex-col justify-between">
                     <!-- Image Preview Area (Click to Recall) -->
-                    <div onclick="SanctuaryClient.ptzRecallPreset('${currentCamera}', ${p.id})" class="relative aspect-video w-full bg-slate-900 overflow-hidden cursor-pointer">
+                    <div onclick="SanctuaryClient.ptzRecallPreset('${currentCamera}', ${p.id})" class="relative aspect-video w-full bg-[#101722] overflow-hidden cursor-pointer">
                         <img id="img-${currentCamera}-${p.id}" 
                              src="${imgJpg}" 
                              onerror="this.onerror=null; this.src='${imgFallback}'" 
@@ -320,29 +320,29 @@
                         
                         <!-- Top Badges Overlay -->
                         <div class="absolute top-1.5 left-1.5 flex items-center gap-1">
-                            <span class="px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-sm text-cyan-400 font-bold text-[9px] font-mono border border-cyan-500/30">#${p.id}</span>
+                            <span class="px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[#7BAFD4] font-bold text-[9px] font-mono border border-[#7BAFD4]/40">#${p.id}</span>
                         </div>
 
                         <!-- 1-Click Snapshot Button -->
                         <button onclick="event.stopPropagation(); capturePresetSnapshot('${currentCamera}', ${p.id})" 
                                 title="Capture Live Snapshot from Camera" 
-                                class="absolute top-1.5 right-1.5 p-1 rounded-md bg-black/70 hover:bg-cyan-500 hover:text-slate-950 text-slate-300 backdrop-blur-sm text-[10px] transition-all cursor-pointer">
+                                class="absolute top-1.5 right-1.5 p-1 rounded-md bg-black/70 hover:bg-[#7BAFD4] text-[#081018] hover:text-slate-950 text-slate-300 backdrop-blur-sm text-[10px] transition-all cursor-pointer">
                             📸
                         </button>
 
                         <!-- Tap to Recall Cue Banner -->
-                        <div class="absolute inset-0 bg-cyan-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                            <span class="px-2.5 py-1 rounded bg-cyan-500 text-slate-950 font-black text-[10px] tracking-wider uppercase shadow-md">▶ RECALL</span>
+                        <div class="absolute inset-0 bg-[#12263A] opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <span class="px-2.5 py-1 rounded bg-[#7BAFD4] text-[#081018] text-slate-950 font-black text-[10px] tracking-wider uppercase shadow-md">▶ RECALL</span>
                         </div>
                     </div>
 
                     <!-- Bottom Label & Quick Recall -->
-                    <div onclick="SanctuaryClient.ptzRecallPreset('${currentCamera}', ${p.id})" class="p-2 bg-slate-950/90 flex items-center justify-between border-t border-slate-800/80 cursor-pointer">
+                    <div onclick="SanctuaryClient.ptzRecallPreset('${currentCamera}', ${p.id})" class="p-2 bg-[#090D13]/90 flex items-center justify-between border-t border-[#243242]/80 cursor-pointer">
                         <div class="truncate">
                             <div class="text-[11px] text-white font-bold truncate">${p.name}</div>
                             <div class="text-[9px] text-slate-500 font-mono">Tap to move</div>
                         </div>
-                        <span class="text-xs text-cyan-400 font-black">▶</span>
+                        <span class="text-xs text-[#7BAFD4] font-black">▶</span>
                     </div>
                 </div>
                 `;

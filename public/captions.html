@@ -31,7 +31,7 @@
 <body class="min-h-screen pb-12 flex flex-col justify-between select-none">
 
     <!-- Top Navigation Header -->
-    <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between gap-3">
+    <header class="bg-[#090D13]/90 border-b border-[#243242]/80 px-4 py-3 sticky top-0 z-30 backdrop-blur-md flex items-center justify-between gap-3">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-lg bg-amber-600/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
@@ -46,10 +46,10 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <button onclick="clearOutput()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
+            <button onclick="clearOutput()" class="px-3 py-1.5 rounded-lg bg-[#101722] hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>🧹 Clear Preview</span>
             </button>
-            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900 text-cyan-400 border border-cyan-800 text-xs font-bold font-mono">
+            <a href="/hud" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-[#12263A] hover:bg-[#12263A] text-[#7BAFD4] border border-[#7BAFD4]/50 text-xs font-bold font-mono">
                 🪟 HUD
             </a>
         </div>
@@ -57,14 +57,14 @@
 
     <!-- Navigation Bar -->
     <div class="max-w-5xl mx-auto w-full px-3 pt-3">
-        <nav class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
+        <nav class="bg-[#090D13]/80 border border-[#243242]/80 rounded-xl p-2 flex items-center justify-between gap-2 overflow-x-auto select-none shadow-md">
             <div class="flex items-center gap-1.5 min-w-max">
-                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
-                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📋 Checklist</a>
-                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
-                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">🎙️ Audio</a>
-                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-cyan-500 text-slate-950 shadow-sm flex items-center gap-1.5">💬 Captions</a>
-                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
+                <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">🎛️ Master Hub</a>
+                <a href="/checklist" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📋 Checklist</a>
+                <a href="/cameras" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📷 Cameras & ATEM</a>
+                <a href="/audio" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">🎙️ Audio</a>
+                <a href="/captions" class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-[#7BAFD4] text-[#081018] text-slate-950 shadow-sm flex items-center gap-1.5">💬 Captions</a>
+                <a href="/obs" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#101722]/80 hover:bg-[#182230] text-slate-300 hover:text-white border border-[#243242] transition-colors flex items-center gap-1.5">📡 OBS / Stream</a>
             </div>
             <div class="flex items-center gap-2 min-w-max">
                 <a href="http://localhost:8085/" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900 text-purple-300 hover:text-purple-100 border border-purple-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm" title="Waypoint Sound Booth Operations & Troubleshooting Guide">
@@ -78,9 +78,9 @@
     <main class="flex-grow p-3 sm:p-5 max-w-5xl mx-auto w-full space-y-5">
 
         <!-- 1. Live Recent Sentences Preview Box -->
-        <section class="bg-slate-950/95 border-2 border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+        <section class="bg-[#090D13]/95 border-2 border-[#243242] rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
             
-            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 text-xs font-mono">
+            <div class="flex items-center justify-between border-b border-[#243242]/80 pb-3 text-xs font-mono">
                 <div class="flex items-center gap-2">
                     <span id="speech-indicator" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span class="text-slate-400 font-bold uppercase tracking-wider">LIVE SPEECH OUTPUT (MOST RECENT)</span>
@@ -119,24 +119,24 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 
                 <!-- Link 1: Stage Read-Along Display -->
-                <a href="http://127.0.0.1:8765/display" target="_blank" class="group p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
+                <a href="http://127.0.0.1:8765/display" target="_blank" class="group p-4 rounded-2xl bg-[#101722]/80 hover:bg-[#101722] border border-[#243242] hover:border-[#7BAFD4]/60 shadow-lg transition-all flex flex-col justify-between gap-3">
                     <div class="flex items-start justify-between gap-2">
-                        <div class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg">
+                        <div class="w-9 h-9 rounded-xl bg-[#7BAFD4] text-[#081018]/10 border border-[#7BAFD4]/40 flex items-center justify-center text-[#7BAFD4] text-lg">
                             📖
                         </div>
-                        <span class="text-[10px] font-mono font-bold text-cyan-400 group-hover:underline flex items-center gap-1">
+                        <span class="text-[10px] font-mono font-bold text-[#7BAFD4] group-hover:underline flex items-center gap-1">
                             <span>Open</span> ↗
                         </span>
                     </div>
                     <div>
-                        <div class="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">Live Read-Along Display</div>
+                        <div class="text-sm font-bold text-white group-hover:text-[#7BAFD4] transition-colors">Live Read-Along Display</div>
                         <p class="text-[11px] text-slate-400 mt-0.5">Stage confidence monitor view for pastors and speakers.</p>
                     </div>
                     <div class="text-[10px] font-mono text-slate-500">http://127.0.0.1:8765/display</div>
                 </a>
 
                 <!-- Link 2: Dashboard & In-OBS Dock -->
-                <a href="http://127.0.0.1:8765/dashboard" target="_blank" class="group p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
+                <a href="http://127.0.0.1:8765/dashboard" target="_blank" class="group p-4 rounded-2xl bg-[#101722]/80 hover:bg-[#101722] border border-[#243242] hover:border-amber-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
                     <div class="flex items-start justify-between gap-2">
                         <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg">
                             🎛️
@@ -153,7 +153,7 @@
                 </a>
 
                 <!-- Link 3: Stream Overlay (OBS Browser Source) -->
-                <a href="http://127.0.0.1:8765/" target="_blank" class="group p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
+                <a href="http://127.0.0.1:8765/" target="_blank" class="group p-4 rounded-2xl bg-[#101722]/80 hover:bg-[#101722] border border-[#243242] hover:border-emerald-500/60 shadow-lg transition-all flex flex-col justify-between gap-3">
                     <div class="flex items-start justify-between gap-2">
                         <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg">
                             📺
