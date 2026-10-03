@@ -2437,7 +2437,10 @@ const LiveEngine = {
         const pvw = (atem.previewInput === undefined || atem.previewInput === null) ? 0 : atem.previewInput;
 
         const badge = document.getElementById('atem-model-badge');
-        if (badge && atem.modelName) badge.textContent = atem.modelName;
+        if (badge) {
+            const name = atem.modelName || 'ATEM Switcher';
+            badge.textContent = atem.connected ? name : `${name} (OFFLINE)`;
+        }
 
         [1, 2, 3, 4, 5, 6, 7, 8, 6000, 3010, 0].forEach(id => {
             const btnPgm = document.getElementById(`btn-pgm-${id}`);
@@ -2795,16 +2798,16 @@ const LiveEngine = {
     },
 
     applyStreamTelemetry(atem, obs) {
-        if (!atem) return;
+        if (!atem && !obs) return;
         
         // Check both ATEM and OBS
         const atemSec = atem?.isStreaming ? (atem.streamDuration || 0) : 0;
         const obsSec = obs?.isStreaming ? (obs.streamDuration || 0) : 0;
         const isStreaming = Boolean(atem?.isStreaming || obs?.isStreaming);
         const durationSec = Math.max(atemSec, obsSec);
-        const bitrate = obs?.isStreaming ? (obs.outputBitrate || 0) : (atem?.isStreaming ? 4500 : 0);
-        const drops = obs?.isStreaming ? (obs.droppedFrames || 0) : 0;
-        const dropPct = obs?.isStreaming ? (obs.dropPercentage || 0) : 0;
+        const bitrate = obs?.isStreaming ? (obs.outputBitrate || 0) : (atem?.isStreaming ? (atem.bitrate || 4500) : 0);
+        const drops = obs?.isStreaming ? (obs.droppedFrames || 0) : (atem?.isStreaming ? (atem.cacheUsed || 0) : 0);
+        const dropPct = obs?.isStreaming ? (obs.dropPercentage || 0) : (atem?.isStreaming ? (atem.cacheUsed || 0) : 0);
 
         if (isStreaming && durationSec > 0) {
             const h = Math.floor(durationSec / 3600).toString().padStart(2, '0');
@@ -2819,10 +2822,16 @@ const LiveEngine = {
 
         if (isStreaming) {
             this.dom.strBit.textContent = `${bitrate} kbps`;
-            this.dom.strDrop.textContent = drops;
-            this.dom.strDropPct.textContent = `(${dropPct.toFixed(1)}%)`;
+            if (obs?.isStreaming) {
+                this.dom.strDrop.textContent = drops;
+                this.dom.strDropPct.textContent = `(${dropPct.toFixed(1)}%)`;
+            } else if (atem?.isStreaming) {
+                this.dom.strDrop.textContent = `${drops}%`;
+                this.dom.strDropPct.textContent = '(buf)';
+            }
 
-            if (dropPct > 0.1) {
+            const isHighDrop = obs?.isStreaming ? (dropPct > 0.1) : (dropPct > 5.0);
+            if (isHighDrop) {
                 this.dom.strDrop.classList.add('text-red-400');
                 this.dom.strDropPct.classList.add('text-red-400');
             } else {

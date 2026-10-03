@@ -68,6 +68,10 @@ class AtemSwitcher {
     this.isStreaming = false;
     this.isRecording = false;
     this.streamDuration = 0;
+    this.bitrate = 0;
+    this.cacheUsed = 0;
+    this.recordDuration = 0;
+    this.recordingTimeAvailable = 0;
     this.programInput = 0;
     this.previewInput = 0;
     this.streamingState = 'idle'; // idle, connecting, streaming, stopping
@@ -212,6 +216,46 @@ class AtemSwitcher {
 
   // ── State sync ──────────────────────────────────────────────────
 
+  _syncStreamingStats(state) {
+    if (!state) return;
+    const stats = state.streaming?.stats;
+    if (stats) {
+      const rawBitrate = stats.encodingBitrate || 0;
+      this.bitrate = rawBitrate > 100000 ? Math.round(rawBitrate / 1000) : rawBitrate;
+      if (typeof stats.cacheUsed === 'number') {
+        this.cacheUsed = Math.min(100, Math.max(0, stats.cacheUsed));
+      }
+    }
+    const duration = state.streaming?.status?.duration;
+    if (duration) {
+      if (typeof duration === 'number') {
+        this.streamDuration = duration;
+      } else if (typeof duration === 'object') {
+        const { hours = 0, minutes = 0, seconds = 0 } = duration;
+        this.streamDuration = hours * 3600 + minutes * 60 + seconds;
+      }
+    }
+  }
+
+  _syncRecordingStats(state) {
+    if (!state) return;
+    const status = state.recording?.status;
+    if (status) {
+      if (typeof status.recordingTimeAvailable === 'number') {
+        this.recordingTimeAvailable = status.recordingTimeAvailable;
+      }
+      const duration = status.duration;
+      if (duration) {
+        if (typeof duration === 'number') {
+          this.recordDuration = duration;
+        } else if (typeof duration === 'object') {
+          const { hours = 0, minutes = 0, seconds = 0 } = duration;
+          this.recordDuration = hours * 3600 + minutes * 60 + seconds;
+        }
+      }
+    }
+  }
+
   _readInitialState() {
     try {
       const state = this.atem.state;
@@ -232,10 +276,12 @@ class AtemSwitcher {
       if (state.streaming?.status) {
         this._updateStreamingState(state.streaming.status.state);
       }
+      this._syncStreamingStats(state);
 
       if (state.recording?.status) {
         this.isRecording = state.recording.status.state === 'recording';
       }
+      this._syncRecordingStats(state);
     } catch (err) {
       console.warn('[ATEM] Error reading initial state:', err.message);
     }
@@ -280,12 +326,14 @@ class AtemSwitcher {
         if (state.streaming?.status) {
           this._updateStreamingState(state.streaming.status.state);
         }
+        this._syncStreamingStats(state);
       }
 
       if (path.startsWith('recording')) {
         if (state.recording?.status) {
           this.isRecording = state.recording.status.state === 'recording';
         }
+        this._syncRecordingStats(state);
       }
     }
   }
@@ -732,6 +780,10 @@ class AtemSwitcher {
       isRecording: this.isRecording,
       streamingState: this.streamingState,
       streamDuration: this.streamDuration,
+      bitrate: this.bitrate,
+      cacheUsed: this.cacheUsed,
+      recordDuration: this.recordDuration,
+      recordingTimeAvailable: this.recordingTimeAvailable,
       superSourceEnabled: this.superSourceEnabled,
       aux1Source: this.aux1Source,
       aux2Source: this.aux2Source,
