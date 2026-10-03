@@ -347,11 +347,14 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
-            <!-- LEFT: ATEM 2-Camera Switcher Strip (7 cols) -->
+            <!-- LEFT: ATEM Mini Extreme 8-Input Switcher Strip (7 cols) -->
             <div class="lg:col-span-7 bg-black/40 p-4 rounded-xl border border-[#243242]/80 space-y-3.5 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">ATEM Mini Video Matrix</span>
+                    <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">ATEM Mini Extreme Video Matrix</span>
+                            <span id="atem-model-badge" class="px-2 py-0.5 rounded-md bg-[#7BAFD4] text-[#081018] text-[10px] font-black font-mono uppercase tracking-wider shadow-sm">ATEM Mini Extreme</span>
+                        </div>
                         <div class="flex items-center gap-2 text-[10px] font-mono">
                             <span class="text-red-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> PROGRAM (LIVE)</span>
                             <span class="text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> PREVIEW (CUED)</span>
@@ -361,24 +364,48 @@
                     <!-- Program Bus Row (Red) -->
                     <div class="space-y-1 mb-3">
                         <div class="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider">PROGRAM (ON AIR):</div>
-                        <div class="grid grid-cols-5 gap-1.5 font-mono text-xs">
-                            <button id="btn-pgm-1" onclick="LiveEngine.setAtemProgram(1)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5 font-mono text-xs">
+                            <button id="btn-pgm-1" onclick="LiveEngine.setAtemProgram(1)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 1</div>
                                 <div class="truncate text-xs">Pulpit</div>
                             </button>
-                            <button id="btn-pgm-2" onclick="LiveEngine.setAtemProgram(2)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-2" onclick="LiveEngine.setAtemProgram(2)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 2</div>
                                 <div class="truncate text-xs">Wide</div>
                             </button>
-                            <button id="btn-pgm-3" onclick="LiveEngine.setAtemProgram(3)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-3" onclick="LiveEngine.setAtemProgram(3)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">HDMI 3</div>
                                 <div class="truncate text-xs">Proclaim</div>
                             </button>
-                            <button id="btn-pgm-3010" onclick="LiveEngine.setAtemProgram(3010)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
-                                <div class="text-[10px] text-slate-500">MEDIA</div>
-                                <div class="truncate text-xs">Still 1</div>
+                            <button id="btn-pgm-4" onclick="LiveEngine.setAtemProgram(4)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 4</div>
+                                <div class="truncate text-xs">Input 4</div>
                             </button>
-                            <button id="btn-pgm-0" onclick="LiveEngine.setAtemProgram(0)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                            <button id="btn-pgm-5" onclick="LiveEngine.setAtemProgram(5)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 5</div>
+                                <div class="truncate text-xs">Input 5</div>
+                            </button>
+                            <button id="btn-pgm-6" onclick="LiveEngine.setAtemProgram(6)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 6</div>
+                                <div class="truncate text-xs">Input 6</div>
+                            </button>
+                            <button id="btn-pgm-7" onclick="LiveEngine.setAtemProgram(7)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 7</div>
+                                <div class="truncate text-xs">Input 7</div>
+                            </button>
+                            <button id="btn-pgm-8" onclick="LiveEngine.setAtemProgram(8)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 8</div>
+                                <div class="truncate text-xs">Input 8</div>
+                            </button>
+                            <button id="btn-pgm-6000" onclick="LiveEngine.setAtemProgram(6000)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#7BAFD4]/50 text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-[#7BAFD4]">SSRC</div>
+                                <div class="truncate text-xs">SuperSrc</div>
+                            </button>
+                            <button id="btn-pgm-3010" onclick="LiveEngine.setAtemProgram(3010)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">MEDIA</div>
+                                <div class="truncate text-xs">MP1</div>
+                            </button>
+                            <button id="btn-pgm-0" onclick="LiveEngine.setAtemProgram(0)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-red-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">BLACK</div>
                                 <div class="truncate text-xs">Fade</div>
                             </button>
@@ -388,24 +415,48 @@
                     <!-- Preview Bus Row (Green) -->
                     <div class="space-y-1">
                         <div class="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider">PREVIEW (NEXT):</div>
-                        <div class="grid grid-cols-5 gap-1.5 font-mono text-xs">
-                            <button id="btn-pvw-1" onclick="LiveEngine.setAtemPreview(1)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5 font-mono text-xs">
+                            <button id="btn-pvw-1" onclick="LiveEngine.setAtemPreview(1)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 1</div>
                                 <div class="truncate text-xs">Pulpit</div>
                             </button>
-                            <button id="btn-pvw-2" onclick="LiveEngine.setAtemPreview(2)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-2" onclick="LiveEngine.setAtemPreview(2)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">CAM 2</div>
                                 <div class="truncate text-xs">Wide</div>
                             </button>
-                            <button id="btn-pvw-3" onclick="LiveEngine.setAtemPreview(3)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-3" onclick="LiveEngine.setAtemPreview(3)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">HDMI 3</div>
                                 <div class="truncate text-xs">Proclaim</div>
                             </button>
-                            <button id="btn-pvw-3010" onclick="LiveEngine.setAtemPreview(3010)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
-                                <div class="text-[10px] text-slate-500">MEDIA</div>
-                                <div class="truncate text-xs">Still 1</div>
+                            <button id="btn-pvw-4" onclick="LiveEngine.setAtemPreview(4)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 4</div>
+                                <div class="truncate text-xs">Input 4</div>
                             </button>
-                            <button id="btn-pvw-0" onclick="LiveEngine.setAtemPreview(0)" class="atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                            <button id="btn-pvw-5" onclick="LiveEngine.setAtemPreview(5)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 5</div>
+                                <div class="truncate text-xs">Input 5</div>
+                            </button>
+                            <button id="btn-pvw-6" onclick="LiveEngine.setAtemPreview(6)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 6</div>
+                                <div class="truncate text-xs">Input 6</div>
+                            </button>
+                            <button id="btn-pvw-7" onclick="LiveEngine.setAtemPreview(7)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 7</div>
+                                <div class="truncate text-xs">Input 7</div>
+                            </button>
+                            <button id="btn-pvw-8" onclick="LiveEngine.setAtemPreview(8)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">HDMI 8</div>
+                                <div class="truncate text-xs">Input 8</div>
+                            </button>
+                            <button id="btn-pvw-6000" onclick="LiveEngine.setAtemPreview(6000)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#7BAFD4]/50 text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-[#7BAFD4]">SSRC</div>
+                                <div class="truncate text-xs">SuperSrc</div>
+                            </button>
+                            <button id="btn-pvw-3010" onclick="LiveEngine.setAtemPreview(3010)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
+                                <div class="text-[10px] text-slate-500">MEDIA</div>
+                                <div class="truncate text-xs">MP1</div>
+                            </button>
+                            <button id="btn-pvw-0" onclick="LiveEngine.setAtemPreview(0)" class="atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-200 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer">
                                 <div class="text-[10px] text-slate-500">BLACK</div>
                                 <div class="truncate text-xs">Fade</div>
                             </button>
@@ -413,15 +464,31 @@
                     </div>
                 </div>
 
+                <!-- Quick Actions: SuperSource Presets + Macro Triggers -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#243242]">
+                    <button onclick="LiveEngine.atemSuperSourcePreset('sideBySide')" class="py-2.5 min-h-[44px] rounded-lg bg-[#12263A] hover:bg-[#1a3450] active:bg-[#7BAFD4] active:text-[#081018] text-[#7BAFD4] font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#7BAFD4]/40 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm" title="SuperSource: Box 1 = Input 1, Box 2 = Input 2">
+                        <span>🖼️ Side-by-Side</span>
+                    </button>
+                    <button onclick="LiveEngine.atemSuperSourcePreset('pip')" class="py-2.5 min-h-[44px] rounded-lg bg-[#12263A] hover:bg-[#1a3450] active:bg-[#7BAFD4] active:text-[#081018] text-[#7BAFD4] font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#7BAFD4]/40 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm" title="SuperSource: Input 1 full-frame, Input 2 picture-in-picture">
+                        <span>🖼️ PiP</span>
+                    </button>
+                    <button onclick="LiveEngine.atemRunMacro(0)" class="py-2.5 min-h-[44px] rounded-lg bg-[#182230] hover:bg-slate-700 active:bg-[#7BAFD4] active:text-[#081018] text-slate-200 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5 shadow-sm" title="Run switcher Macro 1">
+                        <span>▶ Macro 1</span>
+                    </button>
+                    <button onclick="LiveEngine.atemRunMacro(1)" class="py-2.5 min-h-[44px] rounded-lg bg-[#182230] hover:bg-slate-700 active:bg-[#7BAFD4] active:text-[#081018] text-slate-200 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5 shadow-sm" title="Run switcher Macro 2">
+                        <span>▶ Macro 2</span>
+                    </button>
+                </div>
+
                 <!-- Transitions Bar -->
                 <div class="grid grid-cols-3 gap-2 pt-2 border-t border-[#243242]">
-                    <button onclick="LiveEngine.atemCut()" class="py-2.5 rounded-lg bg-[#182230] hover:bg-slate-700 active:bg-white active:text-slate-950 text-white font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                    <button onclick="LiveEngine.atemCut()" class="py-2.5 min-h-[44px] rounded-lg bg-[#182230] hover:bg-slate-700 active:bg-white active:text-slate-950 text-white font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
                         <span>⚡ CUT (Instant)</span>
                     </button>
-                    <button onclick="LiveEngine.atemAuto()" class="py-2.5 rounded-lg bg-red-950/40 hover:bg-red-900/50 active:bg-red-600 active:text-white text-red-300 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-red-800/80 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                    <button onclick="LiveEngine.atemAuto()" class="py-2.5 min-h-[44px] rounded-lg bg-red-950/40 hover:bg-red-900/50 active:bg-red-600 active:text-white text-red-300 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-red-800/80 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
                         <span>✨ AUTO (Mix)</span>
                     </button>
-                    <button onclick="LiveEngine.atemFtb()" class="py-2.5 rounded-lg bg-[#101722] hover:bg-black text-slate-400 active:text-red-400 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5">
+                    <button onclick="LiveEngine.atemFtb()" class="py-2.5 min-h-[44px] rounded-lg bg-[#101722] hover:bg-black text-slate-400 active:text-red-400 font-bold font-mono text-xs uppercase tracking-wider transition-all border border-[#243242] cursor-pointer flex items-center justify-center gap-1.5">
                         <span>🌑 FTB</span>
                     </button>
                 </div>
@@ -2171,6 +2238,34 @@ const LiveEngine = {
         }
     },
 
+    async atemSuperSourcePreset(preset) {
+        try {
+            const res = await fetch('/api/atem/supersource/preset', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ preset })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!data.success) console.warn('[ATEM] SuperSource preset failed:', data.error);
+        } catch (err) {
+            console.warn('[ATEM] SuperSource preset request failed:', err.message);
+        }
+    },
+
+    async atemRunMacro(index) {
+        try {
+            const res = await fetch('/api/atem/macro/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ index })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!data.success) console.warn('[ATEM] Macro run failed:', data.error);
+        } catch (err) {
+            console.warn('[ATEM] Macro run request failed:', err.message);
+        }
+    },
+
     // ── PTZOptics Camera Controls ──────────────────
     activePtzCamera: 'cam1',
     ptzSpeed: 12,
@@ -2338,25 +2433,28 @@ const LiveEngine = {
 
     applyAtemTally(atem) {
         if (!atem) return;
-        const pgm = atem.programInput || 0;
-        const pvw = atem.previewInput || 0;
+        const pgm = (atem.programInput === undefined || atem.programInput === null) ? 0 : atem.programInput;
+        const pvw = (atem.previewInput === undefined || atem.previewInput === null) ? 0 : atem.previewInput;
 
-        [1, 2, 3, 3010, 0].forEach(id => {
+        const badge = document.getElementById('atem-model-badge');
+        if (badge && atem.modelName) badge.textContent = atem.modelName;
+
+        [1, 2, 3, 4, 5, 6, 7, 8, 6000, 3010, 0].forEach(id => {
             const btnPgm = document.getElementById(`btn-pgm-${id}`);
             if (btnPgm) {
                 if (pgm === id) {
-                    btnPgm.className = 'atem-btn p-2 rounded-lg bg-red-600 border border-red-400 text-white font-black transition-all text-center shadow-lg shadow-red-900/60 scale-[1.02] cursor-pointer';
+                    btnPgm.className = 'atem-btn p-2 min-h-[44px] rounded-lg bg-red-600 border border-red-400 text-white font-black transition-all text-center shadow-lg shadow-red-900/60 scale-[1.02] cursor-pointer';
                 } else {
-                    btnPgm.className = 'atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-400 font-bold transition-all text-center hover:border-red-500 cursor-pointer';
+                    btnPgm.className = 'atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-400 font-bold transition-all text-center hover:border-red-500 cursor-pointer';
                 }
             }
 
             const btnPvw = document.getElementById(`btn-pvw-${id}`);
             if (btnPvw) {
                 if (pvw === id) {
-                    btnPvw.className = 'atem-btn p-2 rounded-lg bg-emerald-600 border border-emerald-400 text-white font-black transition-all text-center shadow-lg shadow-emerald-900/60 scale-[1.02] cursor-pointer';
+                    btnPvw.className = 'atem-btn p-2 min-h-[44px] rounded-lg bg-emerald-600 border border-emerald-400 text-white font-black transition-all text-center shadow-lg shadow-emerald-900/60 scale-[1.02] cursor-pointer';
                 } else {
-                    btnPvw.className = 'atem-btn p-2 rounded-lg bg-[#101722] border border-[#243242] text-slate-400 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer';
+                    btnPvw.className = 'atem-btn p-2 min-h-[44px] rounded-lg bg-[#101722] border border-[#243242] text-slate-400 font-bold transition-all text-center hover:border-emerald-500 cursor-pointer';
                 }
             }
         });

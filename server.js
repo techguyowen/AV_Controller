@@ -663,8 +663,8 @@ app.get('/api/control/status', (req, res) => {
 
 app.post('/api/atem/program', async (req, res) => {
   try {
-    const input = req.body?.input || req.query?.input || 1;
-    const me = req.body?.me || req.query?.me || 0;
+    const input = req.body?.input ?? req.query?.input ?? 1;
+    const me = req.body?.me ?? req.query?.me ?? 0;
     const result = await atem.changeProgramInput(input, me);
     res.json(result);
   } catch (err) {
@@ -674,8 +674,8 @@ app.post('/api/atem/program', async (req, res) => {
 
 app.post('/api/atem/preview', async (req, res) => {
   try {
-    const input = req.body?.input || req.query?.input || 2;
-    const me = req.body?.me || req.query?.me || 0;
+    const input = req.body?.input ?? req.query?.input ?? 2;
+    const me = req.body?.me ?? req.query?.me ?? 0;
     const result = await atem.changePreviewInput(input, me);
     res.json(result);
   } catch (err) {
@@ -685,7 +685,7 @@ app.post('/api/atem/preview', async (req, res) => {
 
 app.post('/api/atem/cut', async (req, res) => {
   try {
-    const me = req.body?.me || req.query?.me || 0;
+    const me = req.body?.me ?? req.query?.me ?? 0;
     reports.recordAtemCut();
     const result = await atem.cut(me);
     res.json(result);
@@ -696,7 +696,7 @@ app.post('/api/atem/cut', async (req, res) => {
 
 app.post('/api/atem/auto', async (req, res) => {
   try {
-    const me = req.body?.me || req.query?.me || 0;
+    const me = req.body?.me ?? req.query?.me ?? 0;
     reports.recordAtemCut();
     const result = await atem.autoTransition(me);
     res.json(result);
@@ -707,8 +707,64 @@ app.post('/api/atem/auto', async (req, res) => {
 
 app.post('/api/atem/ftb', async (req, res) => {
   try {
-    const me = req.body?.me || req.query?.me || 0;
+    const me = req.body?.me ?? req.query?.me ?? 0;
     const result = await atem.fadeToBlack(me);
+    res.json(result);
+  } catch (err) {
+    res.json({ success: false, connected: false, error: err.message });
+  }
+});
+
+// ATEM Mini Extreme: SuperSource, Macro, Aux & Fairlight Audio Endpoints
+app.post('/api/atem/supersource/toggle', async (req, res) => {
+  try {
+    const enable = req.body?.enable ?? req.query?.enable ?? true;
+    const result = await atem.enableSuperSource(enable === 'false' ? false : Boolean(enable));
+    res.json(result);
+  } catch (err) {
+    res.json({ success: false, connected: false, error: err.message });
+  }
+});
+
+app.post('/api/atem/supersource/preset', async (req, res) => {
+  try {
+    const preset = req.body?.preset ?? req.query?.preset ?? 'sideBySide';
+    const result = await atem.setSuperSourcePreset(preset);
+    res.json(result);
+  } catch (err) {
+    res.json({ success: false, connected: false, error: err.message });
+  }
+});
+
+app.post('/api/atem/macro/run', async (req, res) => {
+  try {
+    const index = req.body?.index ?? req.query?.index ?? 0;
+    const result = await atem.runMacro(index);
+    res.json(result);
+  } catch (err) {
+    res.json({ success: false, connected: false, error: err.message });
+  }
+});
+
+app.post('/api/atem/aux', async (req, res) => {
+  try {
+    const auxIndex = req.body?.auxIndex ?? req.query?.auxIndex ?? 0;
+    const input = req.body?.input ?? req.query?.input ?? 1;
+    const result = await atem.setAuxSource(auxIndex, input);
+    res.json(result);
+  } catch (err) {
+    res.json({ success: false, connected: false, error: err.message });
+  }
+});
+
+app.post('/api/atem/audio/mute', async (req, res) => {
+  try {
+    const channelId = req.body?.channelId ?? req.query?.channelId;
+    const muted = req.body?.muted ?? req.query?.muted ?? true;
+    const wantMuted = muted === 'false' ? false : Boolean(muted);
+    const result = channelId === undefined || channelId === null || channelId === ''
+      ? await atem.setAudioInputMaster(wantMuted)
+      : await atem.setAudioChannelMute(channelId, wantMuted);
     res.json(result);
   } catch (err) {
     res.json({ success: false, connected: false, error: err.message });
@@ -1079,7 +1135,7 @@ function getAggregatedState() {
     },
     {
       id: 'atem',
-      name: 'ATEM Mini Pro',
+      name: atemState.modelName || 'ATEM Mini Extreme',
       subtitle: 'Video Switcher',
       status: atemState.connected
         ? (atemState.isStreaming ? 'ok' : 'warn')
