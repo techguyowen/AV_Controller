@@ -536,10 +536,10 @@
                         <div class="space-y-1">
                             <span class="text-[10px] font-mono text-slate-400 block uppercase font-bold">Zoom Lens:</span>
                             <div class="flex gap-1.5 select-none">
-                                <button onpointerdown="LiveEngine.ptzZoom('in')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                <button onpointerdown="LiveEngine.ptzZoom('in')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" onmouseup="LiveEngine.ptzZoom('stop')" ontouchend="LiveEngine.ptzZoom('stop')" ontouchcancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" style="touch-action: none;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
                                     ➕ In
                                 </button>
-                                <button onpointerdown="LiveEngine.ptzZoom('out')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                <button onpointerdown="LiveEngine.ptzZoom('out')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" onmouseup="LiveEngine.ptzZoom('stop')" ontouchend="LiveEngine.ptzZoom('stop')" ontouchcancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" style="touch-action: none;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
                                     ➖ Out
                                 </button>
                             </div>

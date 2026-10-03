@@ -266,6 +266,7 @@ class PTZCamera {
       this.lastAction = 'idle';
       await this.sendVisca([0x81, 0x01, 0x06, 0x01, 0x00, 0x00, 0x03, 0x03, 0xFF]);
       this.sendHttpCgi('ptzstop').catch(() => {});
+      this.sendHttpCgi('zoomstop').catch(() => {});
       return { success: true, camera: this.id, action: 'pan_tilt', direction: 'stop', speed: 0 };
     }
 
@@ -330,9 +331,14 @@ class PTZCamera {
 
     await this.sendVisca(viscaCmd);
 
-    if (action === 'in' || action === 'tele') this.sendHttpCgi(`zoomin&${speed}`).catch(() => {});
-    else if (action === 'out' || action === 'wide') this.sendHttpCgi(`zoomout&${speed}`).catch(() => {});
-    else this.sendHttpCgi('ptzstop').catch(() => {});
+    if (action === 'in' || action === 'tele') {
+      this.sendHttpCgi(`zoomin&${speed}`).catch(() => {});
+    } else if (action === 'out' || action === 'wide') {
+      this.sendHttpCgi(`zoomout&${speed}`).catch(() => {});
+    } else {
+      this.sendHttpCgi('zoomstop').catch(() => {});
+      this.sendHttpCgi('ptzstop').catch(() => {});
+    }
 
     return { success: true, camera: this.id, action: 'zoom', zoomAction: action, speed };
   }
