@@ -60,6 +60,6 @@
   "captionerMonitorIndex": 1,
   "captionerMixType": "preview",
   "youtubeStreamId": "",
-  "cam1Ip": "192.168.1.101",
-  "cam2Ip": "192.168.1.102"
+  "cam1Ip": "192.168.30.50",
+  "cam2Ip": "192.168.30.51"
 }

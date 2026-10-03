@@ -1280,14 +1280,14 @@
                             <span class="font-bold text-slate-200">Camera 1 (Pulpit / Stage)</span>
                             <div>
                                 <label class="block text-slate-400 text-[10px] mb-1">Static IP Address</label>
-                                <input type="text" id="cfg-cam1Ip" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.1.101">
+                                <input type="text" id="cfg-cam1Ip" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.30.50">
                             </div>
                         </div>
                         <div class="bg-black/30 p-2.5 rounded-lg border border-[#243242] space-y-1.5">
                             <span class="font-bold text-slate-200">Camera 2 (Wide Sanctuary)</span>
                             <div>
                                 <label class="block text-slate-400 text-[10px] mb-1">Static IP Address</label>
-                                <input type="text" id="cfg-cam2Ip" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.1.102">
+                                <input type="text" id="cfg-cam2Ip" class="w-full bg-black/60 border border-[#243242] rounded p-1.5 text-slate-100 font-mono text-xs focus:border-[#7BAFD4] outline-none" placeholder="192.168.30.51">
                             </div>
                         </div>
                     </div>
@@ -1913,8 +1913,8 @@ const LiveEngine = {
         if (document.getElementById('cfg-youtubeIngestHost')) document.getElementById('cfg-youtubeIngestHost').value = cfg.youtubeIngestHost || 'a.rtmp.youtube.com';
 
         // PTZOptics Cameras
-        if (document.getElementById('cfg-cam1Ip')) document.getElementById('cfg-cam1Ip').value = cfg.cam1Ip || cfg.ptzCameras?.[0]?.ip || '192.168.1.101';
-        if (document.getElementById('cfg-cam2Ip')) document.getElementById('cfg-cam2Ip').value = cfg.cam2Ip || cfg.ptzCameras?.[1]?.ip || '192.168.1.102';
+        if (document.getElementById('cfg-cam1Ip')) document.getElementById('cfg-cam1Ip').value = cfg.cam1Ip || cfg.ptzCameras?.[0]?.ip || '192.168.30.50';
+        if (document.getElementById('cfg-cam2Ip')) document.getElementById('cfg-cam2Ip').value = cfg.cam2Ip || cfg.ptzCameras?.[1]?.ip || '192.168.30.51';
 
         // Alerts & Rules
         if (document.getElementById('cfg-alertsEnabled')) document.getElementById('cfg-alertsEnabled').checked = cfg.alertsEnabled !== false;
@@ -1995,8 +1995,8 @@ const LiveEngine = {
             gatewayIp: document.getElementById('cfg-gatewayIp')?.value.trim() || '192.168.1.1',
             youtubeIngestHost: document.getElementById('cfg-youtubeIngestHost')?.value.trim() || 'a.rtmp.youtube.com',
             // PTZOptics Cameras
-            cam1Ip: document.getElementById('cfg-cam1Ip')?.value.trim() || '192.168.1.101',
-            cam2Ip: document.getElementById('cfg-cam2Ip')?.value.trim() || '192.168.1.102',
+            cam1Ip: document.getElementById('cfg-cam1Ip')?.value.trim() || '192.168.30.50',
+            cam2Ip: document.getElementById('cfg-cam2Ip')?.value.trim() || '192.168.30.51',
             // Alerts
             alertsEnabled: document.getElementById('cfg-alertsEnabled') ? document.getElementById('cfg-alertsEnabled').checked : true,
             alertSilenceEnabled: document.getElementById('cfg-alertSilenceEnabled') ? document.getElementById('cfg-alertSilenceEnabled').checked : true,

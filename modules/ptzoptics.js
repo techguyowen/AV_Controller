@@ -262,12 +262,10 @@ class PTZCamera {
    * @param {number} [customSpeed] - 1 (slowest) to 24 (fastest)
    */
   async panTilt(direction = 'stop', customSpeed = null) {
-    // Dedicated stop: PTZOptics expects zeroed speed bytes with stop dirs.
-    // VISCA: 81 01 06 01 00 00 03 03 FF
     if ((direction || 'stop').toLowerCase() === 'stop') {
       this.lastAction = 'idle';
-      const res = await this.sendVisca([0x81, 0x01, 0x06, 0x01, 0x00, 0x00, 0x03, 0x03, 0xFF]);
-      if (!res.success) this.sendHttpCgi('ptzstop').catch(() => {});
+      await this.sendVisca([0x81, 0x01, 0x06, 0x01, 0x00, 0x00, 0x03, 0x03, 0xFF]);
+      this.sendHttpCgi('ptzstop').catch(() => {});
       return { success: true, camera: this.id, action: 'pan_tilt', direction: 'stop', speed: 0 };
     }
 
@@ -290,19 +288,15 @@ class PTZCamera {
       case 'stop': default: pDir = 0x03; tDir = 0x03; break;
     }
 
-    this.lastAction = direction === 'stop' ? 'idle' : `moving_${direction}`;
+    this.lastAction = `moving_${direction}`;
 
-    // VISCA: 81 01 06 01 [pSpeed] [tSpeed] [pDir] [tDir] FF
+    // VISCA UDP: 81 01 06 01 [pSpeed] [tSpeed] [pDir] [tDir] FF
     const viscaCmd = [0x81, 0x01, 0x06, 0x01, pSpeed, tSpeed, pDir, tDir, 0xFF];
-    const res = await this.sendVisca(viscaCmd);
+    await this.sendVisca(viscaCmd);
 
-    // If VISCA UDP failed, execute HTTP fallback
-    if (!res.success && direction !== 'stop') {
-      const httpCmd = `${direction}&${pSpeed}&${tSpeed}`;
-      this.sendHttpCgi(httpCmd).catch(() => {});
-    } else if (!res.success && direction === 'stop') {
-      this.sendHttpCgi('ptzstop').catch(() => {});
-    }
+    // Dual dispatch HTTP CGI for 100% control reliability across subnets & firewalls
+    const httpCmd = `${direction}&${pSpeed}&${tSpeed}`;
+    this.sendHttpCgi(httpCmd).catch(() => {});
 
     return { success: true, camera: this.id, action: 'pan_tilt', direction, speed };
   }
@@ -334,12 +328,11 @@ class PTZCamera {
         break;
     }
 
-    const res = await this.sendVisca(viscaCmd);
-    if (!res.success) {
-      if (action === 'in' || action === 'tele') this.sendHttpCgi(`zoomin&${speed}`).catch(() => {});
-      else if (action === 'out' || action === 'wide') this.sendHttpCgi(`zoomout&${speed}`).catch(() => {});
-      else this.sendHttpCgi('ptzstop').catch(() => {});
-    }
+    await this.sendVisca(viscaCmd);
+
+    if (action === 'in' || action === 'tele') this.sendHttpCgi(`zoomin&${speed}`).catch(() => {});
+    else if (action === 'out' || action === 'wide') this.sendHttpCgi(`zoomout&${speed}`).catch(() => {});
+    else this.sendHttpCgi('ptzstop').catch(() => {});
 
     return { success: true, camera: this.id, action: 'zoom', zoomAction: action, speed };
   }
@@ -385,11 +378,10 @@ class PTZCamera {
 
     // VISCA: 81 01 04 3F 02 [presetNumber] FF
     const viscaCmd = [0x81, 0x01, 0x04, 0x3F, 0x02, viscaNum, 0xFF];
-    const res = await this.sendVisca(viscaCmd);
+    await this.sendVisca(viscaCmd);
 
-    if (!res.success) {
-      this.sendHttpCgi(`poscall&${num}`).catch(() => {});
-    }
+    // Dual dispatch HTTP CGI for preset recall
+    this.sendHttpCgi(`poscall&${num}`).catch(() => {});
 
     this.lastPreset = num;
     this.lastAction = `preset_${num}`;
@@ -515,7 +507,7 @@ class PTZOpticsManager {
       {
         id: 'cam1',
         name: 'Camera 1 (Pulpit / Stage)',
-        ip: config.cam1Ip || '192.168.1.101',
+        ip: config.cam1Ip || '192.168.30.50',
         port: 1259,
         presets: [
           { id: 1, name: 'Pulpit / Pastor' },
@@ -529,7 +521,7 @@ class PTZOpticsManager {
       {
         id: 'cam2',
         name: 'Camera 2 (Wide Sanctuary)',
-        ip: config.cam2Ip || '192.168.1.102',
+        ip: config.cam2Ip || '192.168.30.51',
         port: 1259,
         presets: [
           { id: 1, name: 'Full Sanctuary Wide' },
