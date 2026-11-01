@@ -194,6 +194,13 @@ class PTZCamera {
 
       if (!this._socket) this._initSocket();
 
+      // PTZOptics native hardware expects raw VISCA without the Sony 8-byte
+      // header, while Sony endpoints/tests expect the header-encapsulated
+      // packet. Send both so each receiver gets its expected format.
+      try {
+        this._socket.send(payloadBuf, 0, payloadBuf.length, this.port, this.ip, () => {});
+      } catch (e) {}
+
       this._socket.send(packet, 0, packet.length, this.port, this.ip, (err) => {
         if (err) {
           console.warn(`[PTZ:${this.id}] UDP send error to ${this.ip}:${this.port}: ${err.message}`);
@@ -267,6 +274,11 @@ class PTZCamera {
     if ((direction || 'stop').toLowerCase() === 'stop') {
       this.lastAction = 'idle';
       await this.sendVisca([0x81, 0x01, 0x06, 0x01, 0x00, 0x00, 0x03, 0x03, 0xFF]);
+      // Duplicate stop ~35ms later: protects against UDP packet loss causing runaway movement.
+      const stopTimer = setTimeout(() => {
+        this.sendVisca([0x81, 0x01, 0x06, 0x01, 0x00, 0x00, 0x03, 0x03, 0xFF]).catch(() => {});
+      }, 35);
+      if (stopTimer.unref) stopTimer.unref();
       this.sendHttpCgi('ptzstop').catch(() => {});
       this.sendHttpCgi('zoomstop').catch(() => {});
       return { success: true, camera: this.id, action: 'pan_tilt', direction: 'stop', speed: 0 };
@@ -297,8 +309,11 @@ class PTZCamera {
     const viscaCmd = [0x81, 0x01, 0x06, 0x01, pSpeed, tSpeed, pDir, tDir, 0xFF];
     await this.sendVisca(viscaCmd);
 
-    // Dual dispatch HTTP CGI for 100% control reliability across subnets & firewalls
-    const httpCmd = `${direction}&${pSpeed}&${tSpeed}`;
+    // Dual dispatch HTTP CGI for 100% control reliability across subnets & firewalls.
+    // PTZOptics CGI specifies leftup, rightup, leftdown, rightdown for diagonals.
+    const cgiDirMap = { upleft: 'leftup', upright: 'rightup', downleft: 'leftdown', downright: 'rightdown' };
+    const cgiDir = cgiDirMap[String(direction).toLowerCase()] || direction;
+    const httpCmd = `${cgiDir}&${pSpeed}&${tSpeed}`;
     this.sendHttpCgi(httpCmd).catch(() => {});
 
     return { success: true, camera: this.id, action: 'pan_tilt', direction, speed };

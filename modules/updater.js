@@ -514,11 +514,14 @@ class AutoUpdater {
         const serverScript = path.join(this.rootDir, 'server.js');
         const nodeExec = process.execPath || process.argv[0];
         const outLog = path.join(this.rootDir, 'server.log');
-        const outFd = fs.openSync(outLog, 'a');
 
-        const child = spawn(nodeExec, [serverScript], {
+        // Spawn a detached node one-liner that waits 1500ms for this process
+        // to exit (releasing port 3050) before launching the new server with
+        // stdout/stderr piped to server.log. Avoids EADDRINUSE on restart.
+        const launcher = `setTimeout(()=>{try{const fs=require('fs');const{spawn}=require('child_process');const out=fs.openSync(${JSON.stringify(outLog)},'a');const c=spawn(${JSON.stringify(nodeExec)},[${JSON.stringify(serverScript)}],{detached:true,stdio:['ignore',out,out],cwd:${JSON.stringify(this.rootDir)}});c.unref();}catch(e){}},1500);`;
+        const child = spawn(nodeExec, ['-e', launcher], {
           detached: true,
-          stdio: ['ignore', outFd, outFd],
+          stdio: 'ignore',
           cwd: this.rootDir,
           env: process.env,
         });

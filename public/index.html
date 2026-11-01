@@ -536,17 +536,17 @@
                     <!-- 8-Way Pan/Tilt Compass (7 cols) -->
                     <div class="col-span-7 flex flex-col items-center">
                         <div class="grid grid-cols-3 gap-1 w-32 h-32 select-none">
-                            <button onpointerdown="LiveEngine.ptzMove('upleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◤</button>
-                            <button onpointerdown="LiveEngine.ptzMove('up')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▲</button>
-                            <button onpointerdown="LiveEngine.ptzMove('upright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◥</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('upleft')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◤</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('up')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▲</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('upright')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◥</button>
 
-                            <button onpointerdown="LiveEngine.ptzMove('left')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">◀</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('left')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">◀</button>
                             <div class="p-1 rounded bg-[#090D13] border border-[#243242] text-[#7BAFD4] text-xs flex items-center justify-center select-none pointer-events-none shadow-inner">📷</div>
-                            <button onpointerdown="LiveEngine.ptzMove('right')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▶</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('right')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▶</button>
 
-                            <button onpointerdown="LiveEngine.ptzMove('downleft')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◣</button>
-                            <button onpointerdown="LiveEngine.ptzMove('down')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▼</button>
-                            <button onpointerdown="LiveEngine.ptzMove('downright')" onpointerup="LiveEngine.ptzStop()" onpointerleave="LiveEngine.ptzStop()" onpointercancel="LiveEngine.ptzStop()" oncontextmenu="return false;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◢</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('downleft')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◣</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('down')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer transition-all">▼</button>
+                            <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzMove('downright')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzStop()" onmouseup="LiveEngine.ptzStop()" ontouchend="LiveEngine.ptzStop()" ontouchcancel="LiveEngine.ptzStop()" oncontextmenu="return false;" style="touch-action: none;" class="p-1 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-400 text-xs font-bold flex items-center justify-center cursor-pointer transition-all">◢</button>
                         </div>
                     </div>
 
@@ -555,10 +555,10 @@
                         <div class="space-y-1">
                             <span class="text-[10px] font-mono text-slate-400 block uppercase font-bold">Zoom Lens:</span>
                             <div class="flex gap-1.5 select-none">
-                                <button onpointerdown="LiveEngine.ptzZoom('in')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" onmouseup="LiveEngine.ptzZoom('stop')" ontouchend="LiveEngine.ptzZoom('stop')" ontouchcancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" style="touch-action: none;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzZoom('in')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzZoom('stop')" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzZoom('stop')" onmouseup="LiveEngine.ptzZoom('stop')" ontouchend="LiveEngine.ptzZoom('stop')" ontouchcancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" style="touch-action: none;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
                                     ➕ In
                                 </button>
-                                <button onpointerdown="LiveEngine.ptzZoom('out')" onpointerup="LiveEngine.ptzZoom('stop')" onpointerleave="LiveEngine.ptzZoom('stop')" onpointercancel="LiveEngine.ptzZoom('stop')" onmouseup="LiveEngine.ptzZoom('stop')" ontouchend="LiveEngine.ptzZoom('stop')" ontouchcancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" style="touch-action: none;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
+                                <button onpointerdown="this.setPointerCapture(event.pointerId);LiveEngine.ptzZoom('out')" onpointerup="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzZoom('stop')" onpointercancel="try{this.releasePointerCapture(event.pointerId)}catch(e){};LiveEngine.ptzZoom('stop')" onmouseup="LiveEngine.ptzZoom('stop')" ontouchend="LiveEngine.ptzZoom('stop')" ontouchcancel="LiveEngine.ptzZoom('stop')" oncontextmenu="return false;" style="touch-action: none;" class="flex-1 py-1.5 rounded bg-[#101722] hover:bg-[#182230] active:bg-[#7BAFD4] text-[#081018] active:text-slate-950 border border-[#243242] text-slate-100 text-xs font-bold cursor-pointer transition-all">
                                     ➖ Out
                                 </button>
                             </div>
@@ -2366,12 +2366,12 @@ const LiveEngine = {
 
     initPtzLiveViewLoop() {
         if (this.ptzLiveViewTimer) clearInterval(this.ptzLiveViewTimer);
-        // Refresh every 50ms (~20 FPS target) when camera is moving or in continuous live mode
+        // Refresh every 120ms when camera is moving or in continuous live mode
         this.ptzLiveViewTimer = setInterval(() => {
             if (this.isPtzMoving || this.ptzStreamMode === 'always') {
                 this.updatePtzLiveFeed();
             }
-        }, 50);
+        }, 120);
     },
 
     togglePtzLiveViewStream() {
@@ -2394,8 +2394,19 @@ const LiveEngine = {
 
     async ptzMove(direction) {
         this.triggerPtzMovementUI();
+
+        // 1. Send via WebSocket immediately for lowest latency (<1ms) if connected
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'PTZ_PAN_TILT',
+                data: { camera: this.activePtzCamera, direction, speed: this.ptzSpeed }
+            }));
+            return;
+        }
+
+        // 2. HTTP Fallback if WebSocket is disconnected
         try {
-            const resp = await fetch('/api/ptz/control', {
+            await fetch('/api/ptz/control', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2404,24 +2415,24 @@ const LiveEngine = {
                     speed: this.ptzSpeed
                 })
             });
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                console.warn('[PTZ] Move failed:', err);
-            }
         } catch (err) {
-            console.warn('[PTZ] Fetch failed, trying WS:', err.message);
-            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                this.ws.send(JSON.stringify({
-                    type: 'PTZ_PAN_TILT',
-                    data: { camera: this.activePtzCamera, direction, speed: this.ptzSpeed }
-                }));
-            }
+            console.warn('[PTZ] HTTP move failed:', err.message);
         }
     },
 
     async ptzStop() {
+        // 1. Send via WebSocket immediately
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'PTZ_PAN_TILT',
+                data: { camera: this.activePtzCamera, direction: 'stop' }
+            }));
+            return;
+        }
+
+        // 2. HTTP Fallback if WebSocket is disconnected
         try {
-            const resp = await fetch('/api/ptz/control', {
+            await fetch('/api/ptz/control', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2429,25 +2440,30 @@ const LiveEngine = {
                     direction: 'stop'
                 })
             });
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                console.warn('[PTZ] Stop failed:', err);
-            }
         } catch (err) {
-            console.warn('[PTZ] Fetch failed, trying WS:', err.message);
-            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                this.ws.send(JSON.stringify({
-                    type: 'PTZ_PAN_TILT',
-                    data: { camera: this.activePtzCamera, direction: 'stop' }
-                }));
-            }
+            console.warn('[PTZ] HTTP stop failed:', err.message);
         }
     },
 
     async ptzZoom(action) {
         this.triggerPtzMovementUI();
+
+        // 1. Send via WebSocket immediately
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'PTZ_ZOOM',
+                data: {
+                    camera: this.activePtzCamera,
+                    action,
+                    speed: Math.round(this.ptzSpeed / 4) || 3
+                }
+            }));
+            return;
+        }
+
+        // 2. HTTP Fallback
         try {
-            const resp = await fetch('/api/ptz/control', {
+            await fetch('/api/ptz/control', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2457,22 +2473,8 @@ const LiveEngine = {
                     speed: Math.round(this.ptzSpeed / 4) || 3
                 })
             });
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                console.warn('[PTZ] Zoom failed:', err);
-            }
         } catch (err) {
-            console.warn('[PTZ] Fetch failed, trying WS:', err.message);
-            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                this.ws.send(JSON.stringify({
-                    type: 'PTZ_ZOOM',
-                    data: {
-                        camera: this.activePtzCamera,
-                        action,
-                        speed: Math.round(this.ptzSpeed / 4) || 3
-                    }
-                }));
-            }
+            console.warn('[PTZ] HTTP zoom failed:', err.message);
         }
     },
 
