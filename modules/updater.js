@@ -511,10 +511,16 @@ class AutoUpdater {
     setTimeout(() => {
       console.log('[Updater] Spawning detached server process and exiting...');
       try {
-        const child = spawn(process.argv[0], process.argv.slice(1), {
+        const serverScript = path.join(this.rootDir, 'server.js');
+        const nodeExec = process.execPath || process.argv[0];
+        const outLog = path.join(this.rootDir, 'server.log');
+        const outFd = fs.openSync(outLog, 'a');
+
+        const child = spawn(nodeExec, [serverScript], {
           detached: true,
-          stdio: 'inherit',
+          stdio: ['ignore', outFd, outFd],
           cwd: this.rootDir,
+          env: process.env,
         });
         child.unref();
       } catch (err) {
