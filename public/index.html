@@ -2298,6 +2298,7 @@ const LiveEngine = {
     ptzMoveTimeout: null,
     ptzStreamMode: 'auto', // 'auto' | 'always' | 'off'
     presetImgBust: Date.now(),
+    ptzImgLoading: false,
 
     selectPtzCamera(camId) {
         this.activePtzCamera = camId;
@@ -2312,7 +2313,7 @@ const LiveEngine = {
                 tab2.className = 'px-2.5 py-1 rounded bg-[#7BAFD4] text-[#081018] text-slate-950 font-bold transition-all cursor-pointer';
             }
         }
-        this.updatePtzLiveFeed();
+        this.updatePtzLiveFeed(true);
         if (this.lastState && this.lastState.ptz) {
             this.renderPtzPresets(this.lastState.ptz);
         }
@@ -2340,22 +2341,41 @@ const LiveEngine = {
             if (indicator) indicator.classList.add('hidden');
         }, 3000);
 
-        this.updatePtzLiveFeed();
+        this.updatePtzLiveFeed(true);
     },
 
-    updatePtzLiveFeed() {
+    updatePtzLiveFeed(force = false) {
         const img = document.getElementById('ptz-liveview-img');
         if (!img) return;
-        img.src = `/api/ptz/live-snapshot?camera=${this.activePtzCamera}&t=${Date.now()}`;
+
+        // Prevent overlapping requests queueing up
+        if (this.ptzImgLoading && !force) return;
+        this.ptzImgLoading = true;
+
+        const nextImg = new Image();
+        const finish = () => {
+            this.ptzImgLoading = false;
+        };
+
+        nextImg.onload = () => {
+            img.src = nextImg.src;
+            finish();
+        };
+        nextImg.onerror = () => {
+            finish();
+        };
+
+        nextImg.src = `/api/ptz/live-snapshot?camera=${this.activePtzCamera}&t=${Date.now()}`;
     },
 
     initPtzLiveViewLoop() {
         if (this.ptzLiveViewTimer) clearInterval(this.ptzLiveViewTimer);
+        // Refresh every 120ms (~8 FPS) when camera is moving or in continuous live mode
         this.ptzLiveViewTimer = setInterval(() => {
             if (this.isPtzMoving || this.ptzStreamMode === 'always') {
                 this.updatePtzLiveFeed();
             }
-        }, 400);
+        }, 120);
     },
 
     togglePtzLiveViewStream() {

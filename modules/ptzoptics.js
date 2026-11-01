@@ -41,6 +41,8 @@ class PTZCamera {
     this.sequenceNumber = 1;
     this._consecutiveFailures = 0;
     this._lastAckAt = 0;
+    this.workingSnapshotPath = null;
+    this._snapshotInFlight = null;
 
     this._socket = null;
     this._healthTimer = null;
@@ -441,6 +443,71 @@ class PTZCamera {
   }
 
   /**
+   * Fetch a single live snapshot frame from the camera.
+   * Auto-detects and caches the working snapshot endpoint (/jpg/image.jpg, /snapshot.jpg, /cgi-bin/snapshot.cgi).
+   * Coalesces concurrent in-flight requests to prevent socket exhaustion and latency spikes.
+   * @returns {Promise<Buffer|null>}
+   */
+  async getLiveSnapshotFrame() {
+    if (this._snapshotInFlight) {
+      return this._snapshotInFlight;
+    }
+
+    this._snapshotInFlight = (async () => {
+      const candidates = this.workingSnapshotPath
+        ? [this.workingSnapshotPath]
+        : ['/jpg/image.jpg', '/snapshot.jpg', '/cgi-bin/snapshot.cgi'];
+
+      for (const snapPath of candidates) {
+        const url = `http://${this.ip}:${this.httpPort}${snapPath}`;
+        const buffer = await new Promise((resolve) => {
+          const req = http.get(url, {
+            auth: `${this.username}:${this.password}`,
+            timeout: 1000,
+          }, (res) => {
+            if (res.statusCode === 200) {
+              const chunks = [];
+              res.on('data', chunk => chunks.push(chunk));
+              res.on('end', () => {
+                const buf = Buffer.concat(chunks);
+                // Basic validation: ensure non-trivial size and valid JPEG header
+                if (buf.length > 500 && buf[0] === 0xff && buf[1] === 0xd8) {
+                  resolve(buf);
+                } else {
+                  resolve(null);
+                }
+              });
+            } else {
+              res.resume();
+              resolve(null);
+            }
+          });
+          req.on('error', () => resolve(null));
+          req.on('timeout', () => {
+            req.destroy();
+            resolve(null);
+          });
+        });
+
+        if (buffer) {
+          this.workingSnapshotPath = snapPath;
+          return buffer;
+        }
+      }
+
+      // If cached path failed, reset candidate cache for next attempt
+      if (this.workingSnapshotPath) {
+        this.workingSnapshotPath = null;
+      }
+      return null;
+    })().finally(() => {
+      this._snapshotInFlight = null;
+    });
+
+    return this._snapshotInFlight;
+  }
+
+  /**
    * Capture a live frame snapshot from camera HTTP server and save as preset thumbnail
    * @param {number} presetNumber
    */
@@ -451,30 +518,30 @@ class PTZCamera {
     if (!fs.existsSync(presetsDir)) fs.mkdirSync(presetsDir, { recursive: true });
 
     const targetFile = path.join(presetsDir, `${this.id}_preset${presetNumber}.jpg`);
-    const snapshotUrl = `http://${this.ip}:${this.httpPort}/snapshot.jpg`;
+    const buffer = await this.getLiveSnapshotFrame();
 
-    return new Promise((resolve) => {
-      const req = http.get(snapshotUrl, {
-        auth: `${this.username}:${this.password}`,
-        timeout: 3000
-      }, (res) => {
-        if (res.statusCode === 200) {
-          const chunks = [];
-          res.on('data', chunk => chunks.push(chunk));
-          res.on('end', () => {
-            const buffer = Buffer.concat(chunks);
-            fs.writeFileSync(targetFile, buffer);
-            console.log(`[PTZ:${this.id}] 📸 Captured live snapshot for Preset ${presetNumber}`);
-            resolve({ success: true, camera: this.id, preset: presetNumber, imageUrl: `/presets/${this.id}_preset${presetNumber}.jpg?t=${Date.now()}` });
-          });
-        } else {
-          resolve({ success: false, camera: this.id, preset: presetNumber, error: `Camera returned HTTP ${res.statusCode}`, fallbackUrl: `/presets/${this.id}_preset${presetNumber}.svg` });
-        }
-      });
-      req.on('error', (err) => {
-        resolve({ success: false, camera: this.id, preset: presetNumber, error: err.message, fallbackUrl: `/presets/${this.id}_preset${presetNumber}.svg` });
-      });
-    });
+    if (buffer) {
+      try {
+        fs.writeFileSync(targetFile, buffer);
+        console.log(`[PTZ:${this.id}] 📸 Captured live snapshot for Preset ${presetNumber}`);
+        return {
+          success: true,
+          camera: this.id,
+          preset: presetNumber,
+          imageUrl: `/presets/${this.id}_preset${presetNumber}.jpg?t=${Date.now()}`
+        };
+      } catch (err) {
+        console.warn(`[PTZ:${this.id}] Failed to save snapshot file:`, err.message);
+      }
+    }
+
+    return {
+      success: false,
+      camera: this.id,
+      preset: presetNumber,
+      error: 'Could not capture snapshot from camera endpoints',
+      fallbackUrl: `/presets/${this.id}_preset${presetNumber}.svg`
+    };
   }
 
   getState() {
@@ -597,6 +664,12 @@ class PTZOpticsManager {
     const cam = this.getCamera(cameraId);
     if (!cam) throw new Error(`Camera ${cameraId} not found`);
     return await cam.captureSnapshot(presetNumber);
+  }
+
+  async getLiveSnapshotFrame(cameraId) {
+    const cam = this.getCamera(cameraId);
+    if (!cam) return null;
+    return await cam.getLiveSnapshotFrame();
   }
 
   getState() {

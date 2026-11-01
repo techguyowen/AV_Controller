@@ -1016,31 +1016,20 @@ app.post('/api/ptz/snapshot', async (req, res) => {
   }
 });
 
-app.get('/api/ptz/live-snapshot', (req, res) => {
+app.get('/api/ptz/live-snapshot', async (req, res) => {
   const { camera } = req.query;
   const camId = camera || ptz.activeCameraId || 'cam1';
   const cam = ptz.getCamera(camId);
   if (!cam) return res.status(404).send('Camera not found');
 
-  const snapshotUrl = `http://${cam.ip}:${cam.httpPort}/snapshot.jpg`;
-  const options = {
-    auth: `${cam.username}:${cam.password}`,
-    timeout: 2500
-  };
+  const frameBuffer = await cam.getLiveSnapshotFrame();
+  if (frameBuffer) {
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    return res.end(frameBuffer);
+  }
 
-  const proxyReq = http.get(snapshotUrl, options, (camRes) => {
-    if (camRes.statusCode === 200) {
-      res.setHeader('Content-Type', 'image/jpeg');
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      camRes.pipe(res);
-    } else {
-      res.redirect(`/presets/${camId}_preset1.svg`);
-    }
-  });
-
-  proxyReq.on('error', () => {
-    res.redirect(`/presets/${camId}_preset1.svg`);
-  });
+  res.redirect(`/presets/${camId}_preset1.svg`);
 });
 
 app.post('/api/ptz/active-camera', (req, res) => {
