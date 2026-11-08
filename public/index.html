@@ -2202,11 +2202,15 @@ const LiveEngine = {
     // ── ATEM Video Switching Controls ──────────────
     async setAtemProgram(input) {
         try {
-            await fetch('/api/atem/program', {
+            const res = await fetch('/api/atem/program', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ input })
             });
+            const data = await res.json().catch(() => ({}));
+            if (data.connected === false || data.success === false) {
+                this.showToast('ATEM Offline: Cannot switch input');
+            }
         } catch (err) {
             if (this.ws && this.ws.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({ type: 'ATEM_SET_PROGRAM', data: { input } }));
@@ -2216,11 +2220,15 @@ const LiveEngine = {
 
     async setAtemPreview(input) {
         try {
-            await fetch('/api/atem/preview', {
+            const res = await fetch('/api/atem/preview', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ input })
             });
+            const data = await res.json().catch(() => ({}));
+            if (data.connected === false || data.success === false) {
+                this.showToast('ATEM Offline: Cannot switch input');
+            }
         } catch (err) {
             if (this.ws && this.ws.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({ type: 'ATEM_SET_PREVIEW', data: { input } }));

@@ -1376,7 +1376,7 @@ async function handleClientMessage(msg, ws) {
 
     case 'ATEM_SET_PROGRAM':
       try {
-        const input = msg.data?.input || 1;
+        const input = msg.data?.input ?? 1;
         const res = await atem.changeProgramInput(input, msg.data?.me || 0);
         if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ATEM_SET_PROGRAM_RESULT', success: true, data: res }));
       } catch (err) {
@@ -1386,7 +1386,7 @@ async function handleClientMessage(msg, ws) {
 
     case 'ATEM_SET_PREVIEW':
       try {
-        const input = msg.data?.input || 2;
+        const input = msg.data?.input ?? 2;
         const res = await atem.changePreviewInput(input, msg.data?.me || 0);
         if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ATEM_SET_PREVIEW_RESULT', success: true, data: res }));
       } catch (err) {

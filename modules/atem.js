@@ -20,10 +20,13 @@ const { Atem, Enums } = require('atem-connection');
 
 // Numeric ATEM model ids (atem-connection Model enum).
 const MODEL_NAMES = {
+  13: 'ATEM Mini',
   14: 'ATEM Mini Pro',
   15: 'ATEM Mini Pro ISO',
   16: 'ATEM Mini Extreme',
   17: 'ATEM Mini Extreme ISO',
+  21: 'ATEM SDI',
+  22: 'ATEM SDI Pro ISO',
   33: 'ATEM Mini Extreme ISO G2',
 };
 
@@ -204,11 +207,14 @@ class AtemSwitcher {
       this.hasMacros = info.macroPool.macroCount > 0;
     }
 
-    // HDMI input count by model family (Extreme = 8, Pro = 4).
+    // HDMI input count by model family (Extreme = 8, Pro/Mini/SDI = 4).
     if (modelId === 16 || modelId === 17 || modelId === 33) {
       this.inputsCount = 8;
     } else if (modelId === 14 || modelId === 15) {
       this.inputsCount = 4;
+    } else if (modelId === 13 || modelId === 21 || modelId === 22) {
+      this.inputsCount = 4;
+      this.hasSuperSource = false;
     } else if (typeof caps.sources === 'number' && caps.sources >= 4) {
       this.inputsCount = Math.min(caps.sources, 8);
     }
@@ -226,7 +232,7 @@ class AtemSwitcher {
         this.cacheUsed = Math.min(100, Math.max(0, stats.cacheUsed));
       }
     }
-    const duration = state.streaming?.status?.duration;
+    const duration = state.streaming?.duration || state.streaming?.status?.duration;
     if (duration) {
       if (typeof duration === 'number') {
         this.streamDuration = duration;
@@ -244,7 +250,7 @@ class AtemSwitcher {
       if (typeof status.recordingTimeAvailable === 'number') {
         this.recordingTimeAvailable = status.recordingTimeAvailable;
       }
-      const duration = status.duration;
+      const duration = status.duration || state.recording?.duration;
       if (duration) {
         if (typeof duration === 'number') {
           this.recordDuration = duration;
@@ -279,7 +285,7 @@ class AtemSwitcher {
       this._syncStreamingStats(state);
 
       if (state.recording?.status) {
-        this.isRecording = state.recording.status.state === 'recording';
+        this.isRecording = this._isRecordingActive(state.recording.status.state);
       }
       this._syncRecordingStats(state);
     } catch (err) {
@@ -331,7 +337,7 @@ class AtemSwitcher {
 
       if (path.startsWith('recording')) {
         if (state.recording?.status) {
-          this.isRecording = state.recording.status.state === 'recording';
+          this.isRecording = this._isRecordingActive(state.recording.status.state);
         }
         this._syncRecordingStats(state);
       }
@@ -412,10 +418,30 @@ class AtemSwitcher {
     }
   }
 
+  // atem-connection reports RecordingStatus as a number (Idle=0, Recording=1,
+  // Stopping=128) on real hardware, or a string in some mocks.
+  _isRecordingActive(state) {
+    if (typeof state === 'number') return (state & 1) !== 0;
+    if (typeof state === 'string') return state.toLowerCase() === 'recording';
+    return false;
+  }
+
   _updateStreamingState(state) {
     const wasStreaming = this.isStreaming;
 
-    switch (state) {
+    // atem-connection reports StreamingStatus as a number (Idle=1, Connecting=2,
+    // Streaming=4, Stopping=32) on real hardware, or a string in some mocks.
+    let normalized = state;
+    if (typeof state === 'number') {
+      if ((state & 4) !== 0) normalized = 'streaming';
+      else if (state === 2) normalized = 'connecting';
+      else if (state === 32) normalized = 'stopping';
+      else normalized = 'idle';
+    } else if (typeof state === 'string') {
+      normalized = state.toLowerCase();
+    }
+
+    switch (normalized) {
       case 'streaming':
         this.isStreaming = true;
         this.streamingState = 'streaming';

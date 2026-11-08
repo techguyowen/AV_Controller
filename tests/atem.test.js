@@ -429,3 +429,125 @@ describe('model detection and state sync', () => {
     }
   });
 });
+
+describe('numeric ATEM state enums, durations, and Mini/SDI models', () => {
+  it('maps numeric StreamingStatus (Idle=1, Connecting=2, Streaming=4, Stopping=32)', () => {
+    const sw = makeDisconnected();
+    try {
+      sw._updateStreamingState(1);
+      assert.equal(sw.isStreaming, false);
+      assert.equal(sw.streamingState, 'idle');
+
+      sw._updateStreamingState(2);
+      assert.equal(sw.streamingState, 'connecting');
+      assert.equal(sw.isStreaming, false);
+
+      sw._updateStreamingState(4);
+      assert.equal(sw.isStreaming, true);
+      assert.equal(sw.streamingState, 'streaming');
+
+      sw._updateStreamingState(32);
+      assert.equal(sw.streamingState, 'stopping');
+    } finally {
+      sw.stop();
+    }
+  });
+
+  it('treats any numeric streaming state with bit 4 set as streaming', () => {
+    const sw = makeDisconnected();
+    try {
+      sw._updateStreamingState(5); // Idle(1) | Streaming(4)
+      assert.equal(sw.isStreaming, true);
+      assert.equal(sw.streamingState, 'streaming');
+    } finally {
+      sw.stop();
+    }
+  });
+
+  it('keeps string streaming states working', () => {
+    const sw = makeDisconnected();
+    try {
+      sw._updateStreamingState('connecting');
+      assert.equal(sw.streamingState, 'connecting');
+      sw._updateStreamingState('streaming');
+      assert.equal(sw.isStreaming, true);
+      sw._updateStreamingState('stopping');
+      assert.equal(sw.streamingState, 'stopping');
+      sw._updateStreamingState('idle');
+      assert.equal(sw.isStreaming, false);
+      assert.equal(sw.streamingState, 'idle');
+    } finally {
+      sw.stop();
+    }
+  });
+
+  it('detects numeric RecordingStatus (Recording=1) via state changes', () => {
+    const sw = makeDisconnected();
+    try {
+      sw._handleStateChange({ recording: { status: { state: 1 } } }, ['recording.status']);
+      assert.equal(sw.isRecording, true);
+      sw._handleStateChange({ recording: { status: { state: 0 } } }, ['recording.status']);
+      assert.equal(sw.isRecording, false);
+      sw._handleStateChange({ recording: { status: { state: 128 } } }, ['recording.status']);
+      assert.equal(sw.isRecording, false);
+      sw._handleStateChange({ recording: { status: { state: 'recording' } } }, ['recording.status']);
+      assert.equal(sw.isRecording, true);
+    } finally {
+      sw.stop();
+    }
+  });
+
+  it('detects numeric recording state in _readInitialState', () => {
+    const { sw } = makeConnected({
+      info: { model: 16 },
+      recording: { status: { state: 1 } },
+      streaming: { status: { state: 4 } },
+    });
+    try {
+      sw._readInitialState();
+      assert.equal(sw.isRecording, true);
+      assert.equal(sw.isStreaming, true);
+    } finally {
+      sw.stop();
+    }
+  });
+
+  it('reads streaming duration from state.streaming.duration Timecode', () => {
+    const sw = makeDisconnected();
+    try {
+      sw._syncStreamingStats({ streaming: { duration: { hours: 1, minutes: 2, seconds: 3 } } });
+      assert.equal(sw.streamDuration, 3723);
+      sw._syncStreamingStats({ streaming: { status: { duration: { hours: 0, minutes: 1, seconds: 30 } } } });
+      assert.equal(sw.streamDuration, 90);
+    } finally {
+      sw.stop();
+    }
+  });
+
+  it('reads recording duration from status.duration or state.recording.duration', () => {
+    const sw = makeDisconnected();
+    try {
+      sw._syncRecordingStats({ recording: { status: {}, duration: { hours: 0, minutes: 2, seconds: 5 } } });
+      assert.equal(sw.recordDuration, 125);
+      sw._syncRecordingStats({ recording: { status: { duration: { hours: 0, minutes: 0, seconds: 42 } } } });
+      assert.equal(sw.recordDuration, 42);
+    } finally {
+      sw.stop();
+    }
+  });
+
+  it('detects ATEM Mini (13) and SDI models (21, 22) with 4 inputs and no SuperSource', () => {
+    for (const model of [13, 21, 22]) {
+      const sw = makeDisconnected();
+      try {
+        sw._updateModelInfo({ model });
+        const s = sw.getState();
+        assert.equal(s.modelId, model);
+        assert.equal(s.inputsCount, 4, `model ${model} should expose 4 inputs`);
+        assert.equal(s.hasSuperSource, false, `model ${model} should have no SuperSource`);
+      } finally {
+        sw.stop();
+      }
+    }
+  });
+});
